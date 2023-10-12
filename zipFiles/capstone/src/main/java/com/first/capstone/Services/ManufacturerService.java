@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 //import com.first.capstone.DTO.ManufacturerDTO;
 import com.first.capstone.Entity.Manufacturer;
 import com.first.capstone.Respositories.ManufacturerRepository;
-import com.first.capstone.dto.ManufacturerDTO;
+
 
 @Service
 public class ManufacturerService {

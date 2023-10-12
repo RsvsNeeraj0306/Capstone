@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.first.capstone.Entity.Location;
 import com.first.capstone.Respositories.LocationRepository;
-import com.first.capstone.dto.LocationDTO;
+
 
 @Service
 public class LocationService {

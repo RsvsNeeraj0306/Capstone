@@ -1,7 +1,7 @@
 package com.first.capstone.controller;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.first.capstone.Entity.DeviceType;
 import com.first.capstone.Entity.Location;
-//import com.first.capstone.DTO.ManufacturerDTO;
+
 import com.first.capstone.Entity.Manufacturer;
 import com.first.capstone.Entity.NetworkDevice;
-import com.first.capstone.Entity.Software;
 import com.first.capstone.Respositories.DeviceTypeRepository;
-import com.first.capstone.Respositories.ManufacturerRepository;
+import com.first.capstone.Respositories.LocationRepository;
 import com.first.capstone.Services.DeviceTypeService;
 import com.first.capstone.Services.LocationService;
 import com.first.capstone.Services.ManufacturerService;
 import com.first.capstone.Services.NetworkDeviceService;
-import com.first.capstone.Services.SoftwareLicenseHistoryService;
-import com.first.capstone.Services.SoftwareService;
-import com.first.capstone.dto.LocationDTO;
-import com.first.capstone.dto.ManufacturerDTO;
+
 import com.first.capstone.dto.NetworkDeviceDTO;
 
 import jakarta.transaction.Transactional;
@@ -37,10 +33,10 @@ import jakarta.transaction.Transactional;
 public class HardwareController {
 
   @Autowired
-  private DeviceTypeService deviceTypeService;
+  private DeviceTypeRepository deviceTypeRepository;
 
   @Autowired
-  private LocationService locationService;
+  private LocationRepository locationRepository;
 
   @Autowired
   private ManufacturerService manufacturerService;
@@ -84,8 +80,8 @@ public ResponseEntity<String> addNetworkDevice(@RequestBody NetworkDeviceDTO net
     networkDevice.setHardwareName(networkDeviceDTO.getHardwareName());
     networkDevice.setPurchaseDate(networkDeviceDTO.getPurchaseDate());
     networkDevice.setWarrantyEndDate(networkDeviceDTO.getWarrantyEndDate());
-    DeviceType deviceType = deviceTypeService.saveDeviceType(networkDeviceDTO.getDeviceType());
-    Location location = locationService.saveLocation(networkDeviceDTO.getLocation());
+    DeviceType deviceType = deviceTypeRepository.save(networkDeviceDTO.getDeviceType());
+    Location location = locationRepository.save(networkDeviceDTO.getLocation());
     networkDevice.setDeviceType(deviceType);
     networkDevice.setLocation(location);
     networkDevice.setSerialNumber(networkDeviceDTO.getSerialNumber());
