@@ -1,8 +1,18 @@
 package com.first.capstone.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +25,11 @@ import com.first.capstone.Entity.SoftwareLicenseHistory;
 import com.first.capstone.Respositories.SoftwareLicenseHistoryRepository;
 import com.first.capstone.Respositories.SoftwareRepository;
 import com.first.capstone.Services.ManufacturerService;
+import com.first.capstone.dto.LicenseCountDTO;
 import com.first.capstone.dto.SoftwareDeviceDTO;
 
 
-
+@CrossOrigin()
 @RestController
 @RequestMapping("/api")
 public class SoftwareController {
@@ -73,7 +84,7 @@ public class SoftwareController {
     }
 
     
-     @PostMapping("/addSoftwareHistory")
+    @PostMapping("/addSoftwareHistory")
     public ResponseEntity<String> addLicenseHistory(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
    
     Software software = softwareDeviceDTO.getSoftware();
@@ -98,5 +109,69 @@ public class SoftwareController {
         return new ResponseEntity<>("Software not found", HttpStatus.BAD_REQUEST);
     }
 }
+
+
+
+@GetMapping("/allSoftware")
+public List<Software> getSoftwareByManufacturerFieldOfWork() {
+    return softwareRepository.findAllByManufacturer();
+}
+
+@GetMapping("/licenseCounts")
+public ResponseEntity<Map<String, Long>> getLicenseCounts() {
+    // Retrieve licenses from the database
+    List<Software> licenses = softwareRepository.findAll();
+
+    // Calculate the counts based on criteria
+    long totalLicenses = licenses.size();
+    
+    long licensesLessThanZeroCount = licenses.stream()
+            .filter(license -> {
+                LocalDate purchaseDate = license.getPurchaseDate().toLocalDate();
+                LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+                long daysDifference = ChronoUnit.DAYS.between(purchaseDate, expiryDate);
+                return daysDifference < 0;
+            })
+            .count();
+
+    long licensesGreaterThan45Count = licenses.stream()
+            .filter(license -> {
+                LocalDate purchaseDate = license.getPurchaseDate().toLocalDate();
+                LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+                long daysDifference = ChronoUnit.DAYS.between(purchaseDate, expiryDate);
+                return daysDifference > 45;
+            })
+            .count();
+
+    long licensesLessThan45Count = licenses.stream()
+            .filter(license -> {
+                LocalDate purchaseDate = license.getPurchaseDate().toLocalDate();
+                LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+                long daysDifference = ChronoUnit.DAYS.between(purchaseDate, expiryDate);
+                return daysDifference < 45;
+            })
+            .count();
+
+        
+
+    // Create a map to store the counts
+
+    LicenseCountDTO licenseCountDTO = new LicenseCountDTO();
+    licenseCountDTO.setTotalLicenses(totalLicenses);
+    licenseCountDTO.setLicensesLessThanZero(licensesLessThanZeroCount);
+    licenseCountDTO.setLicensesGreaterThan45(licensesGreaterThan45Count);
+    licenseCountDTO.setLicensesLessThanZero(licensesLessThan45Count);
+
+    Map<String, Long> counts = new HashMap<>();
+    counts.put("totalLicenses", totalLicenses);
+    counts.put("licensesLessThanZero", licensesLessThanZeroCount);
+    counts.put("licensesGreaterThan45", licensesGreaterThan45Count);
+    counts.put("licensesLessThan45Count",licensesLessThan45Count);
+
+
+    return new ResponseEntity<>(counts, HttpStatus.OK);
+}
+
+
 
 }
