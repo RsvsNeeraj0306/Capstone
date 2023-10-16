@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +18,10 @@ import com.first.capstone.Entity.Location;
 
 import com.first.capstone.Entity.Manufacturer;
 import com.first.capstone.Entity.NetworkDevice;
+import com.first.capstone.Entity.Software;
 import com.first.capstone.Respositories.DeviceTypeRepository;
 import com.first.capstone.Respositories.LocationRepository;
+import com.first.capstone.Respositories.NetworkDeviceRepository;
 import com.first.capstone.Services.DeviceTypeService;
 import com.first.capstone.Services.LocationService;
 import com.first.capstone.Services.ManufacturerService;
@@ -28,6 +31,7 @@ import com.first.capstone.dto.NetworkDeviceDTO;
 
 import jakarta.transaction.Transactional;
 
+@CrossOrigin()
 @RestController
 @RequestMapping("/api")
 public class HardwareController {
@@ -44,6 +48,8 @@ public class HardwareController {
   @Autowired
   private NetworkDeviceService networkDeviceService;
 
+  @Autowired
+  private NetworkDeviceRepository networkDeviceRepository;
   
 
 
@@ -69,6 +75,11 @@ public class HardwareController {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).body(manufacturers);
     }
     return ResponseEntity.ok(manufacturers);
+  }
+
+  @GetMapping("/allHardware")
+  public List<NetworkDevice> getAllNetworkDevices() {
+    return networkDeviceRepository.findAllNetworkDevicesByManufacturer();
   }
 
   @PostMapping("/addNetwork-devices")

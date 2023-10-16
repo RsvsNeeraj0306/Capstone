@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.first.capstone.Entity.Manufacturer;
@@ -117,6 +118,23 @@ public List<Software> getSoftwareByManufacturerFieldOfWork() {
     return softwareRepository.findAllByManufacturer();
 }
 
+
+@GetMapping("/calculate-differences")
+public Map<Long, Long> calculateDifferences() {
+    LocalDate currentDate = LocalDate.now();
+    List<Software> licenses = softwareRepository.findAll();
+
+    Map<Long, Long> daysDifferenceMap = licenses.stream().collect(Collectors.toMap(
+        Software::getId, // Software ID
+        license -> {
+            LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+            return ChronoUnit.DAYS.between(currentDate, expiryDate);
+        }
+    ));
+
+    return daysDifferenceMap;
+}
+
 @GetMapping("/licenseCounts")
 public ResponseEntity<Map<String, Long>> getLicenseCounts() {
     // Retrieve licenses from the database
@@ -151,6 +169,8 @@ public ResponseEntity<Map<String, Long>> getLicenseCounts() {
                 return daysDifference < 45;
             })
             .count();
+
+            
 
         
 
