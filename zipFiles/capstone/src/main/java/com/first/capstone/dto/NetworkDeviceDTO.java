@@ -2,9 +2,9 @@ package com.first.capstone.dto;
 
 import java.sql.Date;
 
-import com.first.capstone.Entity.DeviceType;
-import com.first.capstone.Entity.Location;
-import com.first.capstone.Entity.Manufacturer;
+import com.first.capstone.entity.DeviceType;
+import com.first.capstone.entity.Location;
+import com.first.capstone.entity.Manufacturer;
 
 import lombok.Data;
 

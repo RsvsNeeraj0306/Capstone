@@ -16,7 +16,8 @@ import {
 } from "react-icons/bs";
 import { Card, Space, Statistic, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getCustomers, getInventory, getLicenseCounts, getOrders, getRevenue } from "../../API";
+import { getLicenseCounts, getOrders, getRevenue } from "../../API";
+import { useNavigate } from 'react-router-dom';
 
 
 import {
@@ -40,6 +41,22 @@ ChartJS.register(
 );
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const handleNavigateToSoftwareDevices = () => {
+    navigate('/TotalSoftwareDevices'); // Change the route as needed
+  };
+
+  const handleNavigateLessThan45Days = () => {
+    navigate('/LessThan45Days'); // Change the route as needed    
+  };
+
+  const handleNavigateLessThanZeroDays =( ) => {  
+    navigate('/LessThanZeroDays'); // Change the route as needed
+  };
+
+  const handleNavigateMoreThan45Days = () => {
+    navigate('/MoreThan45Days'); // Change the route as needed
+  };
 
     const [licenseCounts, setLicenseCounts] = useState(
       {totalLicenses: 0, 
@@ -60,28 +77,28 @@ function Dashboard() {
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Dashboard</Typography.Title>
       <div className='main-cards'>
-        <div className='card'>
+      <div className='card' onClick={handleNavigateToSoftwareDevices} style={{ cursor: 'pointer' }}>
           <div className='card-inner'>
             <h3>TOTAL LICENSE</h3>
             <BsFillArchiveFill className='card_icon' />
           </div>
           <h1>{licenseCounts.totalLicenses}</h1>
         </div>
-        <div className='card'>
+        <div className='card' onClick={handleNavigateLessThan45Days} style={{cursor:'pointer'}}>
           <div className='card-inner'>
             <h3>ABOUT TO EXPIRE</h3>
             <BsFillGrid3X3GapFill className='card_icon' />
           </div>
           <h1>{licenseCounts.licensesLessThan45Count}</h1>
         </div>
-        <div className='card'>
+        <div className='card' onClick={handleNavigateMoreThan45Days} style={{cursor:'pointer'}}>
           <div className='card-inner'>
             <h3>ACTIVE LICENSE</h3>
             <BsPeopleFill className='card_icon' />
           </div>
           <h1>{licenseCounts.licensesGreaterThan45}</h1>
         </div>
-        <div className='card'>
+        <div className='card' onClick={handleNavigateLessThanZeroDays} style={{cursor:'pointer'}}>
           <div className='card-inner'>
             <h3>EXPIRED LICENSE</h3>
             <BsFillBellFill className='card_icon' />

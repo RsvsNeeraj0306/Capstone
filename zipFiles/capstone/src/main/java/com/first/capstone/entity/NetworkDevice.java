@@ -1,4 +1,4 @@
-package com.first.capstone.Entity;
+package com.first.capstone.entity;
 
 import lombok.Data;
 import jakarta.persistence.CascadeType;

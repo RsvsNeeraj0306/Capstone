@@ -1,13 +1,13 @@
-package com.first.capstone.Services;
+package com.first.capstone.services;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
-import com.first.capstone.Entity.Location;
-import com.first.capstone.Respositories.LocationRepository;
+import com.first.capstone.entity.Location;
+import com.first.capstone.respositories.LocationRepository;
 
 
 @Service
@@ -15,7 +15,6 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    @Autowired
     public LocationService(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }

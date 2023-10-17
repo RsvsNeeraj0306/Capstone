@@ -1,15 +1,14 @@
-package com.first.capstone.Services;
+package com.first.capstone.services;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
-//import com.first.capstone.DTO.ManufacturerDTO;
-import com.first.capstone.Entity.Manufacturer;
-import com.first.capstone.Respositories.ManufacturerRepository;
+import com.first.capstone.entity.Manufacturer;
+import com.first.capstone.respositories.ManufacturerRepository;
 
 
 @Service
@@ -17,7 +16,6 @@ public class ManufacturerService {
 
     private final ManufacturerRepository manufacturerRepository;
 
-    @Autowired
     public ManufacturerService(ManufacturerRepository manufacturerRepository) {
         this.manufacturerRepository = manufacturerRepository;
     }
@@ -45,7 +43,6 @@ public class ManufacturerService {
         newManufacturer.setFieldOfWork(manufacturer.getFieldOfWork());
         newManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
         newManufacturer.setEmailId(manufacturer.getEmailId());
-        System.out.println(manufacturer+"before saving");
         return manufacturerRepository.save(newManufacturer);
 
     });

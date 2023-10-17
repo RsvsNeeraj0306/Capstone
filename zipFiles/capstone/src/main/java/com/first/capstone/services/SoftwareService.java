@@ -1,19 +1,17 @@
-package com.first.capstone.Services;
+package com.first.capstone.services;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.first.capstone.Entity.Software;
-import com.first.capstone.Respositories.SoftwareRepository;
+import com.first.capstone.entity.Software;
+import com.first.capstone.respositories.SoftwareRepository;
 
 @Service
 public class SoftwareService {
 
     private final SoftwareRepository softwareRepository;
 
-    @Autowired
+
     public SoftwareService(SoftwareRepository softwareRepository) {
         this.softwareRepository = softwareRepository;
     }

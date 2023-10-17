@@ -1,11 +1,11 @@
-package com.first.capstone.Respositories;
+package com.first.capstone.respositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.first.capstone.Entity.Location;
+import com.first.capstone.entity.Location;
 
 import java.util.Optional;
-import java.util.List;
+
 
 
 

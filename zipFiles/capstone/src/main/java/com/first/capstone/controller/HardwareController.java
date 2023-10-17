@@ -2,7 +2,6 @@ package com.first.capstone.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.first.capstone.Entity.DeviceType;
-import com.first.capstone.Entity.Location;
-
-import com.first.capstone.Entity.Manufacturer;
-import com.first.capstone.Entity.NetworkDevice;
-import com.first.capstone.Entity.Software;
-import com.first.capstone.Respositories.DeviceTypeRepository;
-import com.first.capstone.Respositories.LocationRepository;
-import com.first.capstone.Respositories.NetworkDeviceRepository;
-import com.first.capstone.Services.DeviceTypeService;
-import com.first.capstone.Services.LocationService;
-import com.first.capstone.Services.ManufacturerService;
-import com.first.capstone.Services.NetworkDeviceService;
-
 import com.first.capstone.dto.NetworkDeviceDTO;
+import com.first.capstone.entity.DeviceType;
+import com.first.capstone.entity.Location;
+import com.first.capstone.entity.Manufacturer;
+import com.first.capstone.entity.NetworkDevice;
+import com.first.capstone.respositories.DeviceTypeRepository;
+import com.first.capstone.respositories.LocationRepository;
+import com.first.capstone.respositories.NetworkDeviceRepository;
+import com.first.capstone.services.ManufacturerService;
+import com.first.capstone.services.NetworkDeviceService;
 
 import jakarta.transaction.Transactional;
 
@@ -50,8 +44,6 @@ public class HardwareController {
 
   @Autowired
   private NetworkDeviceRepository networkDeviceRepository;
-  
-
 
   @GetMapping("/hello")
   public String getHello() {
@@ -84,7 +76,7 @@ public class HardwareController {
 
   @PostMapping("/addNetwork-devices")
   @Transactional
-public ResponseEntity<String> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
+  public ResponseEntity<String> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
     Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
     NetworkDevice networkDevice = new NetworkDevice();
     networkDevice.setManufacturer(manufacturer);
@@ -96,14 +88,10 @@ public ResponseEntity<String> addNetworkDevice(@RequestBody NetworkDeviceDTO net
     networkDevice.setDeviceType(deviceType);
     networkDevice.setLocation(location);
     networkDevice.setSerialNumber(networkDeviceDTO.getSerialNumber());
-   
+
     networkDeviceService.saveNetworkDevice(networkDevice);
 
     return new ResponseEntity<>("Network device added successfully", HttpStatus.CREATED);
-}
-
-
-
-
+  }
 
 }

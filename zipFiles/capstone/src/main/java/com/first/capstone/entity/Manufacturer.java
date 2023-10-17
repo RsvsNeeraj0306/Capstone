@@ -1,21 +1,25 @@
-package com.first.capstone.Entity;
-import lombok.Data;
-import jakarta.persistence.Column;
+package com.first.capstone.entity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 @Entity
 @Data
-public class Location {
+public class Manufacturer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
-    @Column(name = "location_name")
-    private String locationName;
+    private String name;
+    private String fieldOfWork;
+    private String companyWebsiteLink;
+    private String emailId;
 
 }
+
+
+

@@ -1,11 +1,10 @@
 package com.first.capstone.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
 
-import com.first.capstone.Entity.Manufacturer;
-import com.first.capstone.Entity.Software;
-import com.first.capstone.Entity.SoftwareLicenseHistory;
+
+import com.first.capstone.entity.Manufacturer;
+import com.first.capstone.entity.Software;
+import com.first.capstone.entity.SoftwareLicenseHistory;
 
 import lombok.Data;
 

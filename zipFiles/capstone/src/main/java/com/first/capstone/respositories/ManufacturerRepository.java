@@ -1,11 +1,10 @@
-package com.first.capstone.Respositories;
+package com.first.capstone.respositories;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-//import com.first.capstone.DTO.ManufacturerDTO;
-import com.first.capstone.Entity.Manufacturer;
+import com.first.capstone.entity.Manufacturer;
 
 public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long> {
 

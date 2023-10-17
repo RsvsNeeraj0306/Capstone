@@ -1,19 +1,17 @@
-package com.first.capstone.Services;
+package com.first.capstone.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.first.capstone.Entity.DeviceType;
-import com.first.capstone.Respositories.DeviceTypeRepository;
+import com.first.capstone.entity.DeviceType;
+import com.first.capstone.respositories.DeviceTypeRepository;
 
 @Service
 public class DeviceTypeService {
 
     private final DeviceTypeRepository deviceTypeRepository;
 
-    @Autowired
     public DeviceTypeService(DeviceTypeRepository deviceTypeRepository) {
         this.deviceTypeRepository = deviceTypeRepository;
     }

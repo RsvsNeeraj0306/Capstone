@@ -1,11 +1,11 @@
-package com.first.capstone.Respositories;
+package com.first.capstone.respositories;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.first.capstone.Entity.NetworkDevice;
+import com.first.capstone.entity.NetworkDevice;
 
 
 public interface NetworkDeviceRepository extends JpaRepository<NetworkDevice, Long> {

@@ -1,24 +1,26 @@
-package com.first.capstone.Entity;
+package com.first.capstone.entity;
 
-import java.math.BigDecimal;
+import lombok.Data;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
-
+import jakarta.persistence.ManyToOne;
 
 
 @Entity
 @Data
-public class DeviceType {
+public class SoftwareLicenseHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String deviceTypeName;
-    private Integer quantity;
-    private BigDecimal cost;
+    @ManyToOne
+    private Software software;
+
+    private String licenseKey;
+
 }
