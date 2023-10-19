@@ -1,7 +1,6 @@
 package com.first.capstone.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import com.first.capstone.dto.NetworkDeviceDTO;
-import com.first.capstone.entity.DeviceType;
-import com.first.capstone.entity.Location;
+
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
-import com.first.capstone.respositories.DeviceTypeRepository;
-import com.first.capstone.respositories.LocationRepository;
+
 import com.first.capstone.respositories.NetworkDeviceRepository;
 import com.first.capstone.services.ManufacturerService;
 import com.first.capstone.services.NetworkDeviceService;
@@ -30,11 +28,8 @@ import jakarta.transaction.Transactional;
 @RequestMapping("/api")
 public class HardwareController {
 
-  @Autowired
-  private DeviceTypeRepository deviceTypeRepository;
 
-  @Autowired
-  private LocationRepository locationRepository;
+
 
   @Autowired
   private ManufacturerService manufacturerService;
@@ -78,20 +73,16 @@ public class HardwareController {
   @Transactional
   public ResponseEntity<String> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
     Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
-    NetworkDevice networkDevice = new NetworkDevice();
+    NetworkDevice networkDevice = networkDeviceService.getOrCreaNetworkDevice(networkDeviceDTO.getNetworkDevice());
     networkDevice.setManufacturer(manufacturer);
     networkDevice.setHardwareName(networkDeviceDTO.getHardwareName());
     networkDevice.setPurchaseDate(networkDeviceDTO.getPurchaseDate());
     networkDevice.setWarrantyEndDate(networkDeviceDTO.getWarrantyEndDate());
-    DeviceType deviceType = deviceTypeRepository.save(networkDeviceDTO.getDeviceType());
-    Location location = locationRepository.save(networkDeviceDTO.getLocation());
-    networkDevice.setDeviceType(deviceType);
-    networkDevice.setLocation(location);
     networkDevice.setSerialNumber(networkDeviceDTO.getSerialNumber());
-
-    networkDeviceService.saveNetworkDevice(networkDevice);
 
     return new ResponseEntity<>("Network device added successfully", HttpStatus.CREATED);
   }
 
+
+      
 }

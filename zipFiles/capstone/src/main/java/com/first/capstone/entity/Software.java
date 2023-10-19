@@ -1,6 +1,9 @@
 package com.first.capstone.entity;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -12,7 +15,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@Data
+ @Getter
+ @Setter
+ @RequiredArgsConstructor
 public class Software {
 
     @Id
@@ -29,4 +34,5 @@ public class Software {
     private String typeOfPlan;
     private Integer usersCanUse;
     private BigDecimal priceOfSoftware;
+
 }

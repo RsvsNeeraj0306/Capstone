@@ -1,6 +1,7 @@
 package com.first.capstone.respositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,6 @@ public interface NetworkDeviceRepository extends JpaRepository<NetworkDevice, Lo
 
      @Query(value = "SELECT n FROM NetworkDevice n  WHERE n.manufacturer.fieldOfWork='Hardware'")
     List<NetworkDevice> findAllNetworkDevicesByManufacturer();
+
+    Optional<NetworkDevice> findByIdAndHardwareName(Long id, String hardwareName);
 }

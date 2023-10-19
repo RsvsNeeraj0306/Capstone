@@ -1,6 +1,9 @@
 package com.first.capstone.entity;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,10 +11,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Data
+ @Getter
+ @Setter
+ @RequiredArgsConstructor
 public class NetworkDevice {
 
     @Id
@@ -24,14 +30,10 @@ public class NetworkDevice {
     private String hardwareName;
     private Date purchaseDate;
     private Date warrantyEndDate;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private DeviceType deviceType;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Location location;
-
+    private String location;
     private String serialNumber;
+    private Integer quantity;
+    private BigDecimal cost;
 }
 
 

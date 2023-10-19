@@ -1,31 +1,30 @@
 package com.first.capstone.entity;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
  @Getter
  @Setter
  @RequiredArgsConstructor
- @Table(name = "SOFTWARE_LICENSE_HISTORY")
-public class SoftwareLicenseHistory {
+public class SoftwareAnalysis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private double averageTimeUsage;
+    private int activeUsers;
+    private double globalRating;
+
     @ManyToOne
     private Software software;
-
-    private String licenseKey;
-
 }

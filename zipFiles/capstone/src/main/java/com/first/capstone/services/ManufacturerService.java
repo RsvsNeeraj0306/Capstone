@@ -1,15 +1,12 @@
 package com.first.capstone.services;
 
-
 import java.util.List;
 import java.util.Optional;
-
 
 import org.springframework.stereotype.Service;
 
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.respositories.ManufacturerRepository;
-
 
 @Service
 public class ManufacturerService {
@@ -25,7 +22,6 @@ public class ManufacturerService {
     }
 
     public Manufacturer saveManufacturer(Manufacturer manufacturer) {
-        // Implement the logic to save the manufacturer to the database.
         return manufacturerRepository.save(manufacturer);
     }
 
@@ -35,18 +31,23 @@ public class ManufacturerService {
 
     public Manufacturer getOrCreateManufacturer(Manufacturer manufacturer) {
 
-    Optional<Manufacturer> existingManufacturer = manufacturerRepository.findByNameAndFieldOfWork(manufacturer.getName(), manufacturer.getFieldOfWork());
+        Optional<Manufacturer> existingManufacturer = manufacturerRepository
+                .findByNameAndFieldOfWork(manufacturer.getName(), manufacturer.getFieldOfWork());
 
-    return existingManufacturer.orElseGet(() -> {
-        Manufacturer newManufacturer = new Manufacturer();
-        newManufacturer.setName(manufacturer.getName());
-        newManufacturer.setFieldOfWork(manufacturer.getFieldOfWork());
-        newManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
-        newManufacturer.setEmailId(manufacturer.getEmailId());
-        return manufacturerRepository.save(newManufacturer);
+        return existingManufacturer.orElseGet(() -> {
+            Manufacturer newManufacturer = new Manufacturer();
+            newManufacturer.setName(manufacturer.getName());
+            newManufacturer.setFieldOfWork(manufacturer.getFieldOfWork());
+            newManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
+            newManufacturer.setEmailId(manufacturer.getEmailId());
+            return manufacturerRepository.save(newManufacturer);
 
-    });
-}
+        });
+
+
+
+    }
 
     
+
 }
