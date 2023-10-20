@@ -6,6 +6,7 @@ import java.sql.Date;
 
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
+import com.first.capstone.entity.NetworkDevicesHistory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class NetworkDeviceDTO {
     private String location;
     private Integer quantity;
     private BigDecimal cost;
+    private NetworkDevicesHistory networkDevicesHistory;
    
     // Constructors, getters, and setters
 }

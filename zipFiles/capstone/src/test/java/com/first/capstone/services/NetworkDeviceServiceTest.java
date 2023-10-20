@@ -1,8 +1,12 @@
 package com.first.capstone.services;
 
-
+import com.first.capstone.dto.NetworkDeviceDTO;
+import com.first.capstone.dto.ResponseDTO;
+import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
+import com.first.capstone.entity.NetworkDevicesHistory;
 import com.first.capstone.respositories.NetworkDeviceRepository;
+import com.first.capstone.respositories.NetworkDevicesHistoryRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,21 +15,41 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.http.ResponseEntity;
+
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+
+import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
- class NetworkDeviceServiceTest {
+class NetworkDeviceServiceTest {
 
     @InjectMocks
     private NetworkDeviceService networkDeviceService;
 
+    private ManufacturerService manufacturerService;
+
+    @Mock
+    private Manufacturer manufacturer;
+
     @Mock
     private NetworkDeviceRepository networkDeviceRepository;
+
+    @Mock
+    private NetworkDevicesHistoryRepository networkDeviceHistoryRepository;
+
+    @Mock
+    private NetworkDevice networkDevice;
+
+   
 
     @BeforeEach
     public void setUp() {
@@ -71,12 +95,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         networkDevice.setId(1L);
         networkDevice.setHardwareName("TestDevice");
 
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName("TestManufacturer");
+        manufacturer.setFieldOfWork("TestField");
+
         // Mock the behavior of the networkDeviceRepository for an existing device
         Mockito.when(networkDeviceRepository.findByIdAndHardwareName(1L, "TestDevice"))
                 .thenReturn(Optional.of(networkDevice));
 
         // Perform the test
-        NetworkDevice result = networkDeviceService.getOrCreaNetworkDevice(networkDevice);
+        NetworkDevice result = networkDeviceService.getOrCreaNetworkDevice(networkDevice, manufacturer);
 
         // Assertions
         assertNotNull(result);
@@ -91,20 +119,23 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         networkDevice.setId(1L);
         networkDevice.setHardwareName("TestDevice");
 
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName("TestManufacturer");
+        manufacturer.setFieldOfWork("TestField");
+
         // Mock the behavior of the networkDeviceRepository to return an empty Optional
         Mockito.when(networkDeviceRepository.findByIdAndHardwareName(1L, "TestDevice"))
                 .thenReturn(Optional.empty());
 
         // Mock the behavior of networkDeviceRepository when saving the new device
-        Mockito.when(networkDeviceRepository.save(Mockito.any(NetworkDevice.class))
-        ).thenAnswer(invocation -> {
+        Mockito.when(networkDeviceRepository.save(Mockito.any(NetworkDevice.class))).thenAnswer(invocation -> {
             NetworkDevice savedDevice = invocation.getArgument(0);
             savedDevice.setId(2L); // Simulate that the device gets an ID when saved
             return savedDevice;
         });
 
         // Perform the test
-        NetworkDevice result = networkDeviceService.getOrCreaNetworkDevice(networkDevice);
+        NetworkDevice result = networkDeviceService.getOrCreaNetworkDevice(networkDevice, manufacturer);
 
         // Assertions
         assertNotNull(result);
@@ -112,4 +143,102 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         assertNotEquals(1L, result.getId()); // The ID should be different after saving
         assertEquals("TestDevice", result.getHardwareName());
     }
+
+    @Test
+    void testAddNetworkDeviceHistory_DeviceNotFound() {
+        // Create a sample NetworkDeviceDTO with a networkDevice
+        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+
+        // Create a sample network device
+        NetworkDevice networkDevice = new NetworkDevice();
+        networkDevice.setId(1L);
+        networkDeviceDTO.setNetworkDevice(networkDevice);
+
+        // Mock the behavior of the networkDeviceRepository to return an existing
+        // network device
+        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Mock the behavior of networkDeviceHistoryRepository when saving the new
+        // history
+        Mockito.when(networkDeviceHistoryRepository.save(Mockito.any(NetworkDevicesHistory.class)))
+                .thenAnswer(invocation -> {
+                    NetworkDevicesHistory savedHistory = invocation.getArgument(0);
+                    savedHistory.setId(2L); // Simulate that the history gets an ID when saved
+                    return savedHistory;
+                });
+        // Perform the test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
+
+        // Assertions
+        assertEquals("Network device not found", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testAddNetworkDeviceHistory_DeviceFound() {
+        // Create a sample NetworkDeviceDTO without a networkDevice
+        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+        NetworkDevice networkDevice = new NetworkDevice();
+        networkDevice.setId(1L);
+        networkDeviceDTO.setNetworkDevice(networkDevice);
+        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
+        networkDevicesHistory.setId(1L);
+        networkDevicesHistory.setNetworkDevice(networkDevice);
+        networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
+        networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+        networkDeviceDTO.setNetworkDevicesHistory(networkDevicesHistory);
+
+        networkDeviceHistoryRepository = mock(NetworkDevicesHistoryRepository.class);
+
+        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.of(networkDevice));
+       
+        // Perform the test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
+
+        assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
+    }
+
+
+    @Test
+    void testAddNetworkDevice() {
+        // Create a sample NetworkDeviceDTO with a networkDevice
+        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(1L);
+        networkDeviceDTO.setManufacturer(manufacturer);
+    
+        manufacturerService = mock(ManufacturerService.class);
+        networkDeviceRepository = mock(NetworkDeviceRepository.class);
+        networkDeviceHistoryRepository = mock(NetworkDevicesHistoryRepository.class);
+    
+        networkDeviceService = new NetworkDeviceService(networkDeviceRepository, manufacturerService, networkDeviceHistoryRepository);
+    
+        NetworkDevice networkDevice = new NetworkDevice();
+        networkDevice.setId(1L);
+        networkDevice.setHardwareName("Test Hardware");
+        networkDevice.setWarrantyEndDate(Date.valueOf(LocalDate.now().plusYears(1)));
+        networkDevice.setPurchaseDate(Date.valueOf(LocalDate.now()));
+    
+        // Set the networkDevice in the NetworkDeviceDTO
+        networkDeviceDTO.setNetworkDevice(networkDevice);
+    
+        when(manufacturerService.getOrCreateManufacturer(manufacturer)).thenReturn(manufacturer);
+        when(networkDeviceRepository.save(networkDevice)).thenReturn(networkDevice);
+// Mock the behavior of networkDeviceRepository when saving the new device
+        // Mock the behavior of networkDeviceRepository when saving the new device
+        when(networkDeviceRepository.save(Mockito.any(NetworkDevice.class))).thenReturn(networkDevice);
+
+    
+        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
+        networkDevicesHistory.setId(1L);
+        networkDevicesHistory.setNetworkDevice(networkDevice);
+        networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
+        networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+        networkDeviceDTO.setNetworkDevicesHistory(networkDevicesHistory);
+    
+        // Perform the test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDevice(networkDeviceDTO);
+    
+        assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
+    }
+    
 }

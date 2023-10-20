@@ -32,7 +32,6 @@ public class SoftwareService {
     @Autowired
     private SoftwareLicenseHistoryRepository softwareLicenseHistoryRepository;
 
-    @Autowired
     public SoftwareService(
             SoftwareRepository softwareRepository,
             ManufacturerService manufacturerService,
@@ -51,12 +50,12 @@ public class SoftwareService {
         return softwareRepository.save(software);
     }
 
-    public Software getOrCreateNewSoftware(Software software) {
-        return softwareRepository.findByIdAndSoftwareName(software.getId(), software.getSoftwareName())
+    public Software getOrCreateNewSoftware(Software software, Manufacturer manufacturer) {
+        return softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName())//id:manufucturer id name:software name
                 .orElseGet(() -> {
                     Software newSoftware = new Software();
                     newSoftware.setSoftwareName(software.getSoftwareName());
-                    newSoftware.setManufacturer(software.getManufacturer());
+                    newSoftware.setManufacturer(manufacturer);
                     newSoftware.setPurchaseDate(software.getPurchaseDate());
                     newSoftware.setExpiryDate(software.getExpiryDate());
                     newSoftware.setUsersCanUse(software.getUsersCanUse());
@@ -69,28 +68,17 @@ public class SoftwareService {
     public ResponseEntity<ResponseDTO> addSoftware(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(softwareDeviceDTO.getManufacturer());
 
-        Software software = softwareDeviceDTO.getSoftware();
+        Software software = getOrCreateNewSoftware(softwareDeviceDTO.getSoftware(),manufacturer);
         SoftwareLicenseHistory softwareLicenseHistory = softwareDeviceDTO.getSoftwareLicenseHistory();
         ResponseDTO responseDTO = new ResponseDTO();
-        if (software != null) {
-            software.setManufacturer(manufacturer);
-
-            // Correct the setters for software properties
-            software.setSoftwareName(software.getSoftwareName());
-            software.setPurchaseDate(software.getPurchaseDate());
-            software.setExpiryDate(software.getExpiryDate());
-            software.setTypeOfPlan(software.getTypeOfPlan());
-            software.setUsersCanUse(software.getUsersCanUse());
-            software.setPriceOfSoftware(software.getPriceOfSoftware());
-
-            softwareRepository.save(software);
-           
             if (softwareLicenseHistory != null) {
                 // Set the software for the software license history
                 softwareLicenseHistory.setSoftware(software);
 
                 // Correct the setter for license key
                 softwareLicenseHistory.setLicenseKey(softwareLicenseHistory.getLicenseKey());
+                softwareLicenseHistory.setExpiryDate(software.getExpiryDate());
+                softwareLicenseHistory.setPurchaseDate(software.getPurchaseDate());
 
                 // Save the software license history to the database
                 softwareLicenseHistoryRepository.save(softwareLicenseHistory);
@@ -98,12 +86,6 @@ public class SoftwareService {
             responseDTO.setResponseBody("Software added successfully");
             return ResponseEntity.ok().body(responseDTO);
         } 
-        else {
-            responseDTO.setResponseBody("Software not found");
-            return ResponseEntity.badRequest().body(responseDTO);
-
-        }
-    }
 
     public ResponseEntity<ResponseDTO> addLicenseHistory(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         Software software = softwareDeviceDTO.getSoftware();
@@ -111,12 +93,16 @@ public class SoftwareService {
 
         if (existingSoftware != null) {
             // Update the purchase date and expiry date
-            existingSoftware.setPurchaseDate(software.getPurchaseDate());
-            existingSoftware.setExpiryDate(software.getExpiryDate());
-
             SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
             softwareLicenseHistory.setSoftware(existingSoftware);
             softwareLicenseHistory.setLicenseKey(softwareDeviceDTO.getSoftwareLicenseHistory().getLicenseKey());
+            softwareLicenseHistory.setExpiryDate(existingSoftware.getExpiryDate());
+            softwareLicenseHistory.setPurchaseDate(existingSoftware.getPurchaseDate());
+
+            existingSoftware.setPurchaseDate(software.getPurchaseDate());
+            existingSoftware.setExpiryDate(software.getExpiryDate());
+
+          
 
             // Save the updated software and the new software license history
             softwareRepository.save(existingSoftware);

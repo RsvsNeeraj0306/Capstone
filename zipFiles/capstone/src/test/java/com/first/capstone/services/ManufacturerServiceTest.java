@@ -1,10 +1,12 @@
 package com.first.capstone.services;
+
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.respositories.ManufacturerRepository;
-import com.first.capstone.services.ManufacturerService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -114,6 +116,7 @@ class ManufacturerServiceTest {
         // Add more specific assertions based on your expected results
     }
 
+
     private Manufacturer createManufacturer(Long id, String name, String fieldOfWork) {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(id);
@@ -121,4 +124,6 @@ class ManufacturerServiceTest {
         manufacturer.setFieldOfWork(fieldOfWork);
         return manufacturer;
     }
+
+ 
 }

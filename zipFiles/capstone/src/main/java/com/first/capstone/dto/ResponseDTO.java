@@ -1,9 +1,12 @@
 package com.first.capstone.dto;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 public class ResponseDTO {
     private String responseBody;
 }
