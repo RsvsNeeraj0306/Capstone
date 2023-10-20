@@ -1,7 +1,5 @@
 import {
   AppstoreOutlined,
-  ShopOutlined,
-  ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
@@ -9,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TerminalIcon from '@mui/icons-material/Terminal';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
-import StoreIcon from '@mui/icons-material/Store';
+
 
 function SideMenu() {
   const location = useLocation();

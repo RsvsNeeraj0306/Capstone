@@ -7,6 +7,7 @@ import TotalSoftwareDevices from "../../Pages/SoftwareDevices/TotalSoftwareDevic
 import LessThan45Days from "../../Pages/SoftwareDevices/LessThan45Days";
 import LessThanZeroDays from "../../Pages/SoftwareDevices/LessThanZeroDays";
 import MoreThan45Days from "../../Pages/SoftwareDevices/MoreThan45days";
+import SoftwareForm from "../../Pages/SoftwareDevices/SoftwareForm";
 
 function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ function AppRoutes() {
       <Route path='/LessThan45Days' element={<LessThan45Days />}></Route>
       <Route path='/MoreThan45Days' element={<MoreThan45Days />}></Route>
       <Route path='/LessThanZeroDays' element={<LessThanZeroDays />}></Route>
+      <Route path='/softwareForm' element={<SoftwareForm />}></Route>
     </Routes>
   );
 }

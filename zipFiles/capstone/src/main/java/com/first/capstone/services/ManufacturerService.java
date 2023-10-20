@@ -3,10 +3,10 @@ package com.first.capstone.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
-import com.first.capstone.dto.ResponseDTO;
+
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.respositories.ManufacturerRepository;
 

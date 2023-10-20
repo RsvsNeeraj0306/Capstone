@@ -2,7 +2,8 @@ import { Space, Typography, Tabs} from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"; // Import Tabs and Tab from Material-UI
-import MoreThan45Days from "./MoreThan45days";
+
+import SoftwareForm from "./SoftwareForm";
 
 function SoftwareDevices() {
   const [softwareList, setSoftwareList] = useState([]);
@@ -14,7 +15,7 @@ function SoftwareDevices() {
 
   useEffect(() => {
     // Fetch software data from your API or backend here
-    axios.get('http://localhost:8080/api/SelectedSoftware')  // Adjust the API endpoint as needed
+    axios.get('http://localhost:8080/api/allSoftware')  // Adjust the API endpoint as needed
       .then((response) => {
         setSoftwareList(response.data);
       })
@@ -28,7 +29,7 @@ function SoftwareDevices() {
       <Typography.Title level={4}>Software Devices</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
         <Tab key="softwareDevices" tab="Total Software" />
-        <Tab key="moreThan45Days" tab="More Than 45" />
+        <Tab key="softwareForm" tab="Add software" />
       </Tabs>
       {activeTab === "softwareDevices" && (
         <TableContainer>
@@ -64,7 +65,7 @@ function SoftwareDevices() {
           </Table>
         </TableContainer>
       )}
-      {activeTab === "moreThan45Days" && <MoreThan45Days />} {/* Render MoreThan45Days component */}
+      {activeTab === "softwareForm" && <SoftwareForm />} {/* Render MoreThan45Days component */}
     </Space>
   );
 

@@ -99,17 +99,19 @@ class NetworkDeviceServiceTest {
         manufacturer.setName("TestManufacturer");
         manufacturer.setFieldOfWork("TestField");
 
+        NetworkDevice existingNetworkDevice = new NetworkDevice();
+        existingNetworkDevice.setId(1L);
         // Mock the behavior of the networkDeviceRepository for an existing device
-        Mockito.when(networkDeviceRepository.findByIdAndHardwareName(1L, "TestDevice"))
-                .thenReturn(Optional.of(networkDevice));
+        when(networkDeviceRepository.findByIdAndHardwareName(manufacturer.getId(), networkDevice.getHardwareName() ))
+                .thenReturn(Optional.of(existingNetworkDevice));
 
         // Perform the test
         NetworkDevice result = networkDeviceService.getOrCreaNetworkDevice(networkDevice, manufacturer);
 
         // Assertions
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("TestDevice", result.getHardwareName());
+
+    
+        assertEquals(existingNetworkDevice, result);
     }
 
     @Test

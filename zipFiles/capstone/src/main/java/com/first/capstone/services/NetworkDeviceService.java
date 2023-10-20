@@ -11,11 +11,10 @@ import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
 import com.first.capstone.entity.NetworkDevicesHistory;
-import com.first.capstone.respositories.NetworkDevicePastHistoryRepository;
+
 import com.first.capstone.respositories.NetworkDeviceRepository;
 import com.first.capstone.respositories.NetworkDevicesHistoryRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class NetworkDeviceService {
@@ -28,8 +27,8 @@ public class NetworkDeviceService {
     @Autowired
     private NetworkDevicesHistoryRepository networkDeviceHistoryRepository;
 
-
-    public NetworkDeviceService(NetworkDeviceRepository networkDeviceRepository,ManufacturerService manufacturerService,NetworkDevicesHistoryRepository networkDeviceHistoryRepository) {
+    public NetworkDeviceService(NetworkDeviceRepository networkDeviceRepository,
+            ManufacturerService manufacturerService, NetworkDevicesHistoryRepository networkDeviceHistoryRepository) {
         this.networkDeviceRepository = networkDeviceRepository;
         this.manufacturerService = manufacturerService;
         this.networkDeviceHistoryRepository = networkDeviceHistoryRepository;
@@ -39,74 +38,67 @@ public class NetworkDeviceService {
         return networkDeviceRepository.findAll();
     }
 
-    @Transactional
     public NetworkDevice saveNetworkDevice(NetworkDevice networkDevice) {
         return networkDeviceRepository.save(networkDevice);
     }
 
     public NetworkDevice getOrCreaNetworkDevice(NetworkDevice networkDevice, Manufacturer manufacturer) {
-        return networkDeviceRepository.findByIdAndHardwareName(networkDevice.getId(), networkDevice.getHardwareName())
+        return networkDeviceRepository.findByIdAndHardwareName(manufacturer.getId(), networkDevice.getHardwareName())
                 .orElseGet(() -> {
-                   NetworkDevice newNetworkDevice = new NetworkDevice();
-            newNetworkDevice.setHardwareName(networkDevice.getHardwareName());
-            newNetworkDevice.setManufacturer(manufacturer);
-            newNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
-            newNetworkDevice.setSerialNumber(networkDevice.getSerialNumber());
-            newNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
-            newNetworkDevice.setLocation(networkDevice.getLocation());
-            newNetworkDevice.setQuantity(networkDevice.getQuantity());
-            newNetworkDevice.setCost(networkDevice.getCost());
-            return saveNetworkDevice(networkDevice);
+                    NetworkDevice newNetworkDevice = new NetworkDevice();
+                    newNetworkDevice.setHardwareName(networkDevice.getHardwareName());
+                    newNetworkDevice.setManufacturer(manufacturer);
+                    newNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
+                    newNetworkDevice.setSerialNumber(networkDevice.getSerialNumber());
+                    newNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+                    newNetworkDevice.setLocation(networkDevice.getLocation());
+                    newNetworkDevice.setQuantity(networkDevice.getQuantity());
+                    newNetworkDevice.setCost(networkDevice.getCost());
+                    return networkDeviceRepository.save(newNetworkDevice);
                 });
     }
 
+    public ResponseEntity<ResponseDTO> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
+        Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
 
-  public ResponseEntity<ResponseDTO> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
-    Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
-    NetworkDevice networkDevice = getOrCreaNetworkDevice(networkDeviceDTO.getNetworkDevice(), manufacturer);
-    NetworkDevicesHistory networkDevicesHistory = networkDeviceDTO.getNetworkDevicesHistory();
+        NetworkDevice networkDevice = getOrCreaNetworkDevice(networkDeviceDTO.getNetworkDevice(), manufacturer);
+        NetworkDevicesHistory networkDevicesHistory = networkDeviceDTO.getNetworkDevicesHistory();
+        ResponseDTO responseDTO = new ResponseDTO();
+        if (networkDevicesHistory != null) {
+            networkDevicesHistory.setNetworkDevice(networkDevice);
+            networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
+            networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
 
-    ResponseDTO responseDTO = new ResponseDTO();
-    if(networkDevicesHistory != null) {
-      networkDevicesHistory.setNetworkDevice(networkDevice);
-      networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
-      networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+            networkDeviceHistoryRepository.save(networkDevicesHistory);
 
-      networkDeviceHistoryRepository.save(networkDevicesHistory);
-
+        }
+        responseDTO.setResponseBody("Network device added successfully");
+        return ResponseEntity.ok().body(responseDTO);
     }
-    responseDTO.setResponseBody("Network device added successfully");
-    return ResponseEntity.ok().body(responseDTO);
-  }
 
-
-  public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
-    NetworkDevice networkDevice= networkDeviceDTO.getNetworkDevice();
-    NetworkDevice exisNetworkDevice= networkDeviceRepository.findById(networkDevice.getId()).orElse(null);
-    if (exisNetworkDevice == null) {
-            ResponseDTO responseDTO = new ResponseDTO();  
+    public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
+        NetworkDevice networkDevice = networkDeviceDTO.getNetworkDevice();
+        NetworkDevice exisNetworkDevice = networkDeviceRepository.findById(networkDevice.getId()).orElse(null);
+        if (exisNetworkDevice == null) {
+            ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Network device not found");
             return ResponseEntity.ok().body(responseDTO);
         }
-            NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-            networkDevicesHistory.setNetworkDevice(exisNetworkDevice);
-            networkDevicesHistory.setPurchaseDate(exisNetworkDevice.getPurchaseDate());
-            networkDevicesHistory.setWarrantyEndDate(exisNetworkDevice.getWarrantyEndDate());
+        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
+        networkDevicesHistory.setNetworkDevice(exisNetworkDevice);
+        networkDevicesHistory.setPurchaseDate(exisNetworkDevice.getPurchaseDate());
+        networkDevicesHistory.setWarrantyEndDate(exisNetworkDevice.getWarrantyEndDate());
 
-            exisNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
-            exisNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+        exisNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
+        exisNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
 
-            networkDeviceRepository.save(exisNetworkDevice);
-            networkDeviceHistoryRepository.save(networkDevicesHistory);
+        networkDeviceRepository.save(exisNetworkDevice);
+        networkDeviceHistoryRepository.save(networkDevicesHistory);
 
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Network device added successfully");
-            return ResponseEntity.ok().body(responseDTO);
-   
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setResponseBody("Network device added successfully");
+        return ResponseEntity.ok().body(responseDTO);
+
     }
 
-  }
-
-
-    
-
+}
