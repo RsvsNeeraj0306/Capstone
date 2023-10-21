@@ -6,14 +6,18 @@ import axios from "axios";
 function TotalSoftwareDevices() {
   const [softwareList, setSoftwareList] = useState([]);
 
+  
+
   useEffect(() => {
     // Fetch software data from your API or backend here
     axios.get('http://localhost:8080/api/allSoftware')  // Adjust the API endpoint as needed
       .then((response) => {
         setSoftwareList(response.data);
+        
       })
       .catch((error) => {
         console.error(error);
+        
       });
   }, []);
 
@@ -36,6 +40,7 @@ function TotalSoftwareDevices() {
           </TableHead>
           <TableBody>
             {softwareList.map((software) => (
+              
               <TableRow key={software.id}>
                 <TableCell>{serialNumber++}</TableCell>
                 <TableCell>{software.id}</TableCell>
@@ -49,6 +54,7 @@ function TotalSoftwareDevices() {
         </Table>
       </TableContainer>
     </Space>
+    
   );
 }
 

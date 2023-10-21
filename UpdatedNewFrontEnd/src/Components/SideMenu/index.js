@@ -47,7 +47,7 @@ function SideMenu() {
           },
           {
             label: "Compamy Manufaturers",
-            key: "/customers",
+            key: "/Manufacturer",
             icon: <UserOutlined />,
           },
         ]}

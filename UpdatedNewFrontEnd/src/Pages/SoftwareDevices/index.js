@@ -24,6 +24,8 @@ function SoftwareDevices() {
       });
   }, []);
 
+  let serialNumber = 1; // Initialize the serial number
+
   return (
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Software Devices</Typography.Title>
@@ -32,10 +34,11 @@ function SoftwareDevices() {
         <Tab key="softwareForm" tab="Add software" />
       </Tabs>
       {activeTab === "softwareDevices" && (
-        <TableContainer>
-          <Table>
+       <TableContainer sx={{ maxHeight: 440 }}>
+       <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
+                <TableCell>Serial Number</TableCell>
                 <TableCell>Software Name</TableCell>
                 <TableCell>Purchase Date</TableCell>
                 <TableCell>Expiry Date</TableCell>
@@ -49,6 +52,7 @@ function SoftwareDevices() {
             <TableBody>
               {softwareList.map((software) => (
                 <TableRow key={software.id}>
+                  <TableCell>{serialNumber++}</TableCell>
                   <TableCell>{software.softwareName}</TableCell>
                   <TableCell>{software.purchaseDate}</TableCell>
                   <TableCell>{software.expiryDate}</TableCell>

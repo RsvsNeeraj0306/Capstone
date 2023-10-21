@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const SoftwareForm = () => {
   const [softwareData, setSoftwareData] = useState({
     manufacturer: {
-      fieldOfWork: 'Software', // Set the default value to 'Software'
+      name: '', // Updated to store the selected manufacturer's name
+      fieldOfWork: 'Software',
     },
     softwareName: '',
     purchaseDate: '',
@@ -13,6 +15,7 @@ const SoftwareForm = () => {
     priceOfSoftware: '',
   });
 
+  const [error, setError] = useState('');
   const [manufacturers, setManufacturers] = useState([]);
   const [responseMessage, setResponseMessage] = useState('');
 
@@ -25,14 +28,41 @@ const SoftwareForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSoftwareData({
-      ...softwareData,
-      [name]: value,
-    });
+    if (name === "manufacturer.name") {
+      setSoftwareData({
+        ...softwareData,
+        manufacturer: {
+          name: value, // Update manufacturer.name
+          fieldOfWork: softwareData.manufacturer.fieldOfWork,
+        },
+      });
+    } else {
+      setSoftwareData({
+        ...softwareData,
+        [name]: value,
+      });
+    }
+  };
+
+  const isSubmitDisabled = () => {
+    // Check if any of the required fields are empty
+    return (
+      !softwareData.softwareName ||
+      !softwareData.purchaseDate ||
+      !softwareData.expiryDate ||
+      !softwareData.typeOfPlan ||
+      !softwareData.usersCanUse ||
+      !softwareData.priceOfSoftware
+    );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (isSubmitDisabled()) {
+      setError('Please fill in all required fields before submitting.');
+      return;
+    }
 
     const softwareDTO = {
       software: {
@@ -56,41 +86,61 @@ const SoftwareForm = () => {
       },
       body: JSON.stringify(softwareDTO),
     })
-      .then((response) => response.json())
-      .then((data) => setResponseMessage(data.responseBody))
-      .catch((error) => console.error('Error adding software: ', error));
+    .then((response) => response.json())
+    .then((data) => {
+      setResponseMessage(data.responseBody);
+      setSoftwareData({
+        manufacturer: {
+          name: '', // Reset manufacturer name
+          fieldOfWork: 'Software',
+        },
+        softwareName: '',
+        purchaseDate: '',
+        expiryDate: '',
+        typeOfPlan: '',
+        usersCanUse: '',
+        priceOfSoftware: '',
+      });
+    })
+    .catch((error) => console.error('Error adding software: ', error));
+
+    setError('');
   };
 
   return (
-    <div>
-      <h2>Add Software</h2>
+    <div className="form-container">
+      <h2 className="form-label">Add Software</h2>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label className="form-label">
           Manufacturer:
           <select
             name="manufacturer.name"
             value={softwareData.manufacturer.name}
             onChange={handleChange}
+            className="form-input"
           >
             <option value="">Select a manufacturer</option>
-            {manufacturers.map((manufacturer) => (
-              <option key={manufacturer.id} value={manufacturer.name}>
-                {manufacturer.name}
-              </option>
-            ))}
+            {manufacturers
+              .filter((manufacturer) => manufacturer.fieldOfWork === 'Software')
+              .map((manufacturer) => (
+                <option key={manufacturer.id} value={manufacturer.name}>
+                  {manufacturer.name}
+                </option>
+              ))}
           </select>
         </label>
-        <label>
+        <Link to="/manufacturerForm">Add New Manufacturer</Link>
+        <label className="form-label">
           Field of Work:
           <input
             type="text"
             name="manufacturer.fieldOfWork"
             value={softwareData.manufacturer.fieldOfWork}
-            onChange={handleChange}
             readOnly
+            className="form-input"
           />
         </label>
-        <label>
+        <label className="form-label">
           Software Name:
           <input
             type="text"
@@ -99,7 +149,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label>
+        <label className="form-label">
           Purchase Date:
           <input
             type="date"
@@ -108,7 +158,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label>
+        <label className="form-label">
           Expiry Date:
           <input
             type="date"
@@ -117,7 +167,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label>
+        <label className="form-label">
           Type of Plan:
           <input
             type="text"
@@ -126,7 +176,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label>
+        <label className="form-label">
           Users Can Use:
           <input
             type="number"
@@ -135,7 +185,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label>
+        <label className="form-label">
           Price of Software:
           <input
             type="number"
@@ -144,9 +194,12 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Add Software</button>
+        <button type="submit" disabled={isSubmitDisabled()} className="form-button">
+          Add Software
+        </button>
+        {error && <div className="form-error">{error}</div>}
       </form>
-      <div>{responseMessage}</div>
+      <div className="form-message">{responseMessage}</div>
     </div>
   );
 };

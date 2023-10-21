@@ -48,6 +48,16 @@ public class ManufacturerService {
 
     }
 
+    public List<Manufacturer> getAllManufacturersBysoftware() {
+        return manufacturerRepository.findByFieldOfWorkHardware();
+    }
+
+    public List<Manufacturer> getAllManufacturersByhardware() {
+        return manufacturerRepository.findByFieldOfWorkSoftware();
+    }
+
+    
+
 
     
 }

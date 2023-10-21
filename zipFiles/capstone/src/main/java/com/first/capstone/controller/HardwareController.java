@@ -40,14 +40,14 @@ public class HardwareController {
     return networkDeviceService.findAllNetworkDevices();
   }
 
-  @PostMapping("/addNetwork-devices")
+  @PostMapping("/addNetworkDevices")
   @Transactional
   public ResponseEntity<ResponseDTO> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
     return networkDeviceService.addNetworkDevice(networkDeviceDTO);
   }
 
 
-  @PostMapping("/addNetwork-devices-history")
+  @PostMapping("/addNetworkDevicesHistory")
   @Transactional
   public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
     return networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);

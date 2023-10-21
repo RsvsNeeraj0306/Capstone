@@ -34,6 +34,15 @@ public class ManufactureController {
         return manufacturerService.getAllManufacturers();
     }
 
+    @GetMapping("/allManufactureBySoftware")
+    public List<Manufacturer> getAllManufacturersBySoftware() {
+        return manufacturerService.getAllManufacturersBysoftware();
+    }
+
+    @GetMapping("/allManufactureByHardware")
+    public List<Manufacturer> getAllManufacturersByHardware() {
+        return manufacturerService.getAllManufacturersByhardware();
+    }
     
 
 
