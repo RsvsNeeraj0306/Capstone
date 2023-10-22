@@ -120,6 +120,7 @@ class SoftwareServiceTest {
         Software software = new Software();
         software.setSoftwareName("New Software");
 
+
         // Mock the repository to return an empty Optional
         when(softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName()))
             .thenReturn(java.util.Optional.empty());
@@ -153,6 +154,8 @@ class SoftwareServiceTest {
         Software software = new Software();
         software.setSoftwareName("Test Software");
         software.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
+        software.setLicenseKey("123-456-789");
+
         
         when(manufacturerService.getOrCreateManufacturer(manufacturer)).thenReturn(manufacturer);
         when(softwareRepository.save(any(Software.class))).thenReturn(software); // Mock save method to return software
@@ -261,6 +264,81 @@ class SoftwareServiceTest {
 
         assertEquals("Software not found", responseEntity.getBody().getResponseBody());
     }
+
+    @Test
+    void testGetters() {
+        SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
+        
+        // Set values for the software license history
+        softwareLicenseHistory.setId(1L);
+        softwareLicenseHistory.setSoftware(software);
+        softwareLicenseHistory.setLicenseKey("TestLicenseKey");
+        softwareLicenseHistory.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
+        softwareLicenseHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
+
+        // Check the getters
+        assertEquals(1L, softwareLicenseHistory.getId());
+        assertEquals(software, softwareLicenseHistory.getSoftware());
+        assertEquals("TestLicenseKey", softwareLicenseHistory.getLicenseKey());
+        assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), softwareLicenseHistory.getExpiryDate());
+        assertEquals(Date.valueOf(LocalDate.now()), softwareLicenseHistory.getPurchaseDate());
+    }
+
+    
+    @Test
+    void testRenewSoftware_ExistingSoftware() {
+        // Create a sample SoftwareDeviceDTO with the existing software
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        Software existingSoftware = new Software();
+        existingSoftware.setId(1L);
+        existingSoftware.setSoftwareName("Existing Software");
+        softwareDeviceDTO.setSoftware(existingSoftware);
+
+        // Mock the behavior of the softwareRepository to return the existing software
+        when(softwareRepository.findById(existingSoftware.getId())).thenReturn(Optional.of(existingSoftware));
+
+        // Define the updated software information
+        Software updatedSoftware = new Software();
+        updatedSoftware.setId(existingSoftware.getId());
+        updatedSoftware.setPurchaseDate(Date.valueOf(LocalDate.now().plusDays(10)));
+        updatedSoftware.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(365)));
+        updatedSoftware.setLicenseKey("NewLicenseKey");
+        softwareDeviceDTO.setSoftware(updatedSoftware);
+
+        // Call the renewSoftware method
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.renewSoftware(softwareDeviceDTO);
+
+        // Assertions
+        verify(softwareRepository, times(1)).findById(existingSoftware.getId());
+        verify(softwareRepository, times(1)).save(existingSoftware);
+        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class));
+        assertEquals("Software renewed successfully", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testRenewSoftware_NonExistingSoftware() {
+        // Create a sample SoftwareDeviceDTO with a non-existing software
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        Software nonExistingSoftware = new Software();
+        nonExistingSoftware.setId(2L);
+        nonExistingSoftware.setSoftwareName("Non-Existing Software");
+        softwareDeviceDTO.setSoftware(nonExistingSoftware);
+
+        // Mock the behavior of the softwareRepository to return no existing software
+        when(softwareRepository.findById(nonExistingSoftware.getId())).thenReturn(Optional.empty());
+
+        // Call the renewSoftware method
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.renewSoftware(softwareDeviceDTO);
+
+        // Assertions
+        verify(softwareRepository, times(1)).findById(nonExistingSoftware.getId());
+        verifyNoMoreInteractions(softwareRepository);
+
+        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
+    }
+
+
+    
 
     @Test
     void testGetLicenseCounts() {

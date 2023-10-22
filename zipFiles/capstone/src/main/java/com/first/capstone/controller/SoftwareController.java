@@ -42,11 +42,6 @@ public class SoftwareController {
         return softwareService.addSoftware(softwareDeviceDTO);
     }
 
-    @PostMapping("/renewSoftware")
-    public ResponseEntity<ResponseDTO> addLicenseHistory(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
-        return softwareService.addLicenseHistory(softwareDeviceDTO);
-    }
-
     @GetMapping("/SelectedSoftware")
     public List<Software> getSoftwareByManufacturerFieldOfWork() {
         return softwareRepository.findAllByManufacturer();
@@ -60,6 +55,16 @@ public class SoftwareController {
     @GetMapping("/licenseCounts")
     public ResponseEntity<Map<String, Long>> getLicenseCounts() {
         return softwareService.getLicenseCounts();
+    }
+
+    @PostMapping("/renewSoftware")
+    public ResponseEntity<ResponseDTO> renewSoftware(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+        return softwareService.renewSoftware(softwareDeviceDTO);
+    }
+
+    @PostMapping("/changePlan") // Update the API endpoint name
+    public ResponseEntity<ResponseDTO> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+        return softwareService.changePlan(softwareDeviceDTO); // Update method call.
     }
 
 }

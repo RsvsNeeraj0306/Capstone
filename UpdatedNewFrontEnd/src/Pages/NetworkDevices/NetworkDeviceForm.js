@@ -7,12 +7,14 @@ const NetworkDeviceForm = () => {
             name: '', // Updated to store the selected manufacturer's name
             fieldOfWork: 'Hardware',
         },
+        networkDevice: {
         hardwareName: '',
         purchaseDate: '',
         warrantyEndDate: '',
         hardwareNameSerialnumber: '',
         quantity: '',
         cost: ''
+        },
     });
 
     const [error, setError] = useState('');
@@ -77,6 +79,14 @@ const NetworkDeviceForm = () => {
                 name: networkDeviceData.manufacturer.name,
                 fieldOfWork: networkDeviceData.manufacturer.fieldOfWork,
             },
+            networkDeviceHistory: {
+                networkDeviceName: networkDeviceData.hardwareName,
+                purchaseDate: networkDeviceData.purchaseDate,
+                warrantyEndDate: networkDeviceData.warrantyEndDate,
+                networkDeviceHistory: networkDeviceData.networkDeviceHistory,
+            }
+
+            
         };
 
         fetch('http://localhost:8080/api/addNetworkDevices', {

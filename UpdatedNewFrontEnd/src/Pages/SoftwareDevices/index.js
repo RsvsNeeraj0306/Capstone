@@ -4,6 +4,8 @@ import axios from "axios";
 import { Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"; // Import Tabs and Tab from Material-UI
 
 import SoftwareForm from "./SoftwareForm";
+import SoftwareRenewalForm from "./SoftwareRenewalForm"; // Import SoftwareRenewalForm
+
 
 function SoftwareDevices() {
   const [softwareList, setSoftwareList] = useState([]);
@@ -32,6 +34,7 @@ function SoftwareDevices() {
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
         <Tab key="softwareDevices" tab="Total Software" />
         <Tab key="softwareForm" tab="Add software" />
+        <Tab key="softwareRenewal" tab="Software Renewal or Update" /> {/* Add this line for the renewal tab */}
       </Tabs>
       {activeTab === "softwareDevices" && (
        <TableContainer sx={{ maxHeight: 440 }}>
@@ -70,6 +73,7 @@ function SoftwareDevices() {
         </TableContainer>
       )}
       {activeTab === "softwareForm" && <SoftwareForm />} {/* Render MoreThan45Days component */}
+      {activeTab === "softwareRenewal" && <SoftwareRenewalForm />} {/* Render SoftwareRenewalForm */}
     </Space>
   );
 

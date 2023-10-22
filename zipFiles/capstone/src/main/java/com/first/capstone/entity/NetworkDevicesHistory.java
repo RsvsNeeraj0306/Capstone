@@ -1,6 +1,8 @@
 package com.first.capstone.entity;
 
-import java.util.Date;
+
+
+import java.sql.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +27,7 @@ public class NetworkDevicesHistory {
 
     @ManyToOne
     private NetworkDevice networkDevice;
-
+    private String licenseKey;
     private Date purchaseDate;
     private Date warrantyEndDate;
 }

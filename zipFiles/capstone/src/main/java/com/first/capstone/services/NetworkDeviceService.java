@@ -68,6 +68,8 @@ public class NetworkDeviceService {
             networkDevicesHistory.setNetworkDevice(networkDevice);
             networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
             networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+            networkDevicesHistory.setLicenseKey(networkDevice.getSerialNumber());
+            
 
             networkDeviceHistoryRepository.save(networkDevicesHistory);
 
@@ -88,6 +90,7 @@ public class NetworkDeviceService {
         networkDevicesHistory.setNetworkDevice(exisNetworkDevice);
         networkDevicesHistory.setPurchaseDate(exisNetworkDevice.getPurchaseDate());
         networkDevicesHistory.setWarrantyEndDate(exisNetworkDevice.getWarrantyEndDate());
+        networkDevicesHistory.setLicenseKey(exisNetworkDevice.getSerialNumber());
 
         exisNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
         exisNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());

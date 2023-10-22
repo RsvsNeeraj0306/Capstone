@@ -61,6 +61,7 @@ public class SoftwareService {
                     newSoftware.setUsersCanUse(software.getUsersCanUse());
                     newSoftware.setPriceOfSoftware(software.getPriceOfSoftware());
                     newSoftware.setTypeOfPlan(software.getTypeOfPlan());
+                    newSoftware.setLicenseKey(software.getLicenseKey());
                     return softwareRepository.save(newSoftware);
                 });
     }
@@ -76,7 +77,7 @@ public class SoftwareService {
                 softwareLicenseHistory.setSoftware(software);
 
                 // Correct the setter for license key
-                softwareLicenseHistory.setLicenseKey(softwareLicenseHistory.getLicenseKey());
+                softwareLicenseHistory.setLicenseKey(software.getLicenseKey());
                 softwareLicenseHistory.setExpiryDate(software.getExpiryDate());
                 softwareLicenseHistory.setPurchaseDate(software.getPurchaseDate());
 
@@ -98,6 +99,7 @@ public class SoftwareService {
             softwareLicenseHistory.setLicenseKey(softwareDeviceDTO.getSoftwareLicenseHistory().getLicenseKey());
             softwareLicenseHistory.setExpiryDate(existingSoftware.getExpiryDate());
             softwareLicenseHistory.setPurchaseDate(existingSoftware.getPurchaseDate());
+            softwareLicenseHistory.setLicenseKey(existingSoftware.getLicenseKey());
 
             existingSoftware.setPurchaseDate(software.getPurchaseDate());
             existingSoftware.setExpiryDate(software.getExpiryDate());
@@ -117,6 +119,73 @@ public class SoftwareService {
         }
     }
 
+
+    public ResponseEntity<ResponseDTO> renewSoftware(SoftwareDeviceDTO softwareDeviceDTO) {
+        Software software = softwareDeviceDTO.getSoftware();
+        Software existingSoftware = softwareRepository.findById(software.getId()).orElse(null);
+    
+        if (existingSoftware != null) {
+            // Update the purchase date, expiry date, and license key
+            existingSoftware.setPurchaseDate(software.getPurchaseDate());
+            existingSoftware.setExpiryDate(software.getExpiryDate());
+            existingSoftware.setLicenseKey(software.getLicenseKey());
+    
+            // Create a new entry in SoftwareLicenseHistory
+            SoftwareLicenseHistory renewalHistory = new SoftwareLicenseHistory();
+            renewalHistory.setSoftware(existingSoftware);
+            renewalHistory.setPurchaseDate(software.getPurchaseDate());
+            renewalHistory.setExpiryDate(software.getExpiryDate());
+            renewalHistory.setLicenseKey(software.getLicenseKey());
+    
+            // Save the updated software and the renewal history
+            softwareRepository.save(existingSoftware);
+            softwareLicenseHistoryRepository.save(renewalHistory);
+    
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software renewed successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software not found");
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+    
+    public ResponseEntity<ResponseDTO> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+        Software software = softwareDeviceDTO.getSoftware();
+        Software existingSoftware = softwareRepository.findById(software.getId()).orElse(null);
+    
+        if (existingSoftware != null) {
+            // Update the purchase date, expiry date, license key, type of plan, users can use, and price of software
+            existingSoftware.setPurchaseDate(software.getPurchaseDate());
+            existingSoftware.setExpiryDate(software.getExpiryDate());
+            existingSoftware.setLicenseKey(software.getLicenseKey());
+            existingSoftware.setTypeOfPlan(software.getTypeOfPlan());
+            existingSoftware.setUsersCanUse(software.getUsersCanUse());
+            existingSoftware.setPriceOfSoftware(software.getPriceOfSoftware());
+    
+            // Create a new entry in SoftwareLicenseHistory to reflect the changes
+            SoftwareLicenseHistory renewalHistory = new SoftwareLicenseHistory();
+            renewalHistory.setSoftware(existingSoftware);
+            renewalHistory.setPurchaseDate(software.getPurchaseDate());
+            renewalHistory.setExpiryDate(software.getExpiryDate());
+            renewalHistory.setLicenseKey(software.getLicenseKey());
+    
+            // Save the updated software and the renewal history
+            softwareRepository.save(existingSoftware);
+            softwareLicenseHistoryRepository.save(renewalHistory);
+    
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software Plan changed successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software not found");
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+    
+
     public ResponseEntity<Map<String, Long>> getLicenseCounts() {
         // Retrieve licenses from the database
         List<Software> licenses = softwareRepository.findAll();
@@ -129,7 +198,7 @@ public class SoftwareService {
                     LocalDate expiryDate = license.getExpiryDate().toLocalDate();
                     LocalDate today = LocalDate.now();
                     long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
-                    return daysDifference < 0;
+                    return daysDifference <= 0;
                 })
                 .count();
 
@@ -147,7 +216,7 @@ public class SoftwareService {
                     LocalDate today = LocalDate.now();
                     LocalDate expiryDate = license.getExpiryDate().toLocalDate();
                     long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
-                    return daysDifference >= 0 && daysDifference <= 45;
+                    return daysDifference >= 1 && daysDifference <= 45;
                 })
                 .count();
 

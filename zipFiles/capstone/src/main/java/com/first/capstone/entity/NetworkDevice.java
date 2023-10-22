@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+
 import java.math.BigDecimal;
 import java.sql.Date;
 
@@ -32,6 +33,7 @@ public class NetworkDevice {
     private Date purchaseDate;
     private Date warrantyEndDate;
     private String location;
+
     private String serialNumber;
     private Integer quantity;
     private BigDecimal cost;

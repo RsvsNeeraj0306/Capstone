@@ -199,6 +199,26 @@ class NetworkDeviceServiceTest {
         assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
     }
 
+    @Test
+    void testGetters() {
+        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
+
+        // Set values for the network devices history
+        networkDevicesHistory.setId(1L);
+        networkDevicesHistory.setNetworkDevice(networkDevice);
+        networkDevicesHistory.setLicenseKey("TestLicenseKey");
+        networkDevicesHistory.setWarrantyEndDate(Date.valueOf(LocalDate.now().plusDays(30)));
+        networkDevicesHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
+
+        // Check the getters
+        assertEquals(1L, networkDevicesHistory.getId());
+        assertEquals(networkDevice, networkDevicesHistory.getNetworkDevice());
+        assertEquals("TestLicenseKey", networkDevicesHistory.getLicenseKey());
+        assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), networkDevicesHistory.getWarrantyEndDate());
+        assertEquals(Date.valueOf(LocalDate.now()), networkDevicesHistory.getPurchaseDate());
+    }
+   
+
 
     @Test
     void testAddNetworkDevice() {

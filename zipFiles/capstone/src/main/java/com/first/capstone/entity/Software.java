@@ -32,6 +32,7 @@ public class Software {
     private Date purchaseDate;
     private Date expiryDate;
     private String typeOfPlan;
+    private String licenseKey;
     private Integer usersCanUse;
     private BigDecimal priceOfSoftware;
 

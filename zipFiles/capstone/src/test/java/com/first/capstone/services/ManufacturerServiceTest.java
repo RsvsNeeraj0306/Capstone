@@ -116,6 +116,44 @@ class ManufacturerServiceTest {
         // Add more specific assertions based on your expected results
     }
 
+    @Test
+    void testGetAllManufacturersBysoftware() {
+        // Create a list of manufacturers for testing
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.add(createManufacturer(1L, "Manufacturer1", "Software"));
+        manufacturers.add(createManufacturer(2L, "Manufacturer2", "Software"));
+
+        // Mock the behavior of the repository
+        when(manufacturerRepository.findByFieldOfWorkHardware()).thenReturn(manufacturers);
+
+        // Call the service method
+        List<Manufacturer> result = manufacturerService.getAllManufacturersBysoftware();
+
+        // Assertions
+        assertEquals(2, result.size()); // Ensure the correct number of items
+        assertEquals("Manufacturer1", result.get(0).getName());
+        assertEquals("Manufacturer2", result.get(1).getName());
+    }
+
+    @Test
+    void testGetAllManufacturersByhardware() {
+        // Create a list of manufacturers for testing
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.add(createManufacturer(1L, "Manufacturer1", "Hardware"));
+        manufacturers.add(createManufacturer(2L, "Manufacturer2", "Hardware"));
+
+        // Mock the behavior of the repository
+        when(manufacturerRepository.findByFieldOfWorkSoftware()).thenReturn(manufacturers);
+
+        // Call the service method
+        List<Manufacturer> result = manufacturerService.getAllManufacturersByhardware();
+
+        // Assertions
+        assertEquals(2, result.size()); // Ensure the correct number of items
+        assertEquals("Manufacturer1", result.get(0).getName());
+        assertEquals("Manufacturer2", result.get(1).getName());
+    }
+
 
     private Manufacturer createManufacturer(Long id, String name, String fieldOfWork) {
         Manufacturer manufacturer = new Manufacturer();

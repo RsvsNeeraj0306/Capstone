@@ -7,12 +7,16 @@ const SoftwareForm = () => {
       name: '', // Updated to store the selected manufacturer's name
       fieldOfWork: 'Software',
     },
-    softwareName: '',
-    purchaseDate: '',
-    expiryDate: '',
-    typeOfPlan: '',
-    usersCanUse: '',
-    priceOfSoftware: '',
+    software:{
+      softwareName: '',
+      purchaseDate: '',
+      expiryDate: '',
+      typeOfPlan: '',
+      usersCanUse: '',
+      priceOfSoftware: '',
+      licenseKey: ''
+    },
+   
   });
 
   const [error, setError] = useState('');
@@ -52,7 +56,8 @@ const SoftwareForm = () => {
       !softwareData.expiryDate ||
       !softwareData.typeOfPlan ||
       !softwareData.usersCanUse ||
-      !softwareData.priceOfSoftware
+      !softwareData.priceOfSoftware||
+      !softwareData.licenseKey
     );
   };
 
@@ -72,11 +77,20 @@ const SoftwareForm = () => {
         typeOfPlan: softwareData.typeOfPlan,
         usersCanUse: softwareData.usersCanUse,
         priceOfSoftware: softwareData.priceOfSoftware,
+        licenseKey: softwareData.licenseKey
       },
       manufacturer: {
         name: softwareData.manufacturer.name,
         fieldOfWork: softwareData.manufacturer.fieldOfWork,
       },
+      softwareLicenseHistory:{
+        softwareName: softwareData.softwareName,
+        purchaseDate: softwareData.purchaseDate,
+        expiryDate: softwareData.expiryDate,
+        softwareLicenseHistory: softwareData.softwareLicenseHistory,
+      }
+
+
     };
 
     fetch('http://localhost:8080/api/addSoftware', {
@@ -100,6 +114,7 @@ const SoftwareForm = () => {
         typeOfPlan: '',
         usersCanUse: '',
         priceOfSoftware: '',
+        licenseKey: '',
       });
     })
     .catch((error) => console.error('Error adding software: ', error));
@@ -148,6 +163,16 @@ const SoftwareForm = () => {
             value={softwareData.softwareName}
             onChange={handleChange}
           />
+        </label>
+          <label className="form-label">
+          License Key:
+          <input
+            type="text"
+            name="licenseKey"
+            value={softwareData.licenseKey}
+            onChange={handleChange}
+          />
+
         </label>
         <label className="form-label">
           Purchase Date:
