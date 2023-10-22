@@ -2,6 +2,7 @@ import { Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import axios from "axios";
+import { Button } from "@mui/material";
 
 function LessThan45Days() {
   const [softwareList, setSoftwareList] = useState([]);
@@ -26,6 +27,20 @@ function LessThan45Days() {
     return daysLeft;
   };
 
+  // Function to handle software renewal
+  const handleRenew = (softwareId) => {
+    // Implement your renewal logic here, for example, make an API request
+    axios.post(`http://localhost:8080/api/renewSoftware/${softwareId}`)
+      .then((response) => {
+        // Handle the renewal success
+        console.log(`Software with ID ${softwareId} renewed successfully`);
+      })
+      .catch((error) => {
+        // Handle the renewal error
+        console.error(`Error renewing software with ID ${softwareId}:`, error);
+      });
+  };
+
   let serialNumber = 1; // Initialize the serial number
 
   return (
@@ -42,6 +57,7 @@ function LessThan45Days() {
               <TableCell>Manufacturer Name</TableCell>
               <TableCell>Users Can Use</TableCell>
               <TableCell>Days Left</TableCell>
+              <TableCell>Action</TableCell> {/* New column for Renew button */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,6 +74,15 @@ function LessThan45Days() {
                     <TableCell>{software.manufacturer.name}</TableCell>
                     <TableCell>{software.usersCanUse}</TableCell>
                     <TableCell>{daysLeft}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleRenew(software.id)}
+                      >
+                        Renew
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               }

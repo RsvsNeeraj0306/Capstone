@@ -127,6 +127,7 @@ const SoftwareForm = () => {
       <h2 className="form-label">Add Software</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
+        <Link to="/manufacturerForm">New Manufacturer?</Link><br />
           Manufacturer:
           <select
             name="manufacturer.name"
@@ -143,8 +144,9 @@ const SoftwareForm = () => {
                 </option>
               ))}
           </select>
+        
         </label>
-        <Link to="/manufacturerForm">Add New Manufacturer</Link>
+       
         <label className="form-label">
           Field of Work:
           <input
