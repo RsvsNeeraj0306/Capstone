@@ -1,7 +1,8 @@
 import { Space, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function MoreThan45Days() {
   const [softwareList, setSoftwareList] = useState([]);
@@ -31,23 +32,23 @@ function MoreThan45Days() {
   return (
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Software Devices</Typography.Title>
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{ maxHeight: 440 }}>
+       <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>Serial Number</TableCell>
               <TableCell>ID</TableCell>
               <TableCell>Software Name</TableCell>
               <TableCell>Type of Plan</TableCell>
-              <TableCell>Manufacturer Name</TableCell>
+              <TableCell>Publisher Name</TableCell>
               <TableCell>Users Can Use</TableCell>
               <TableCell>Days Left</TableCell>
+              <TableCell>Action</TableCell> {/* New column for Action button */}
             </TableRow>
           </TableHead>
           <TableBody>
             {softwareList.map((software) => {
               const daysLeft = calculateDaysLeft(software.expiryDate);
-              // Show software if days left is less than 45
               if (daysLeft > 45) {
                 return (
                   <TableRow key={software.id}>
@@ -58,6 +59,13 @@ function MoreThan45Days() {
                     <TableCell>{software.manufacturer.name}</TableCell>
                     <TableCell>{software.usersCanUse}</TableCell>
                     <TableCell>{daysLeft}</TableCell>
+                    <TableCell>
+                      <Link to="/SoftwareDevices">
+                        <Button variant="contained" color="primary">
+                          Update
+                        </Button>
+                      </Link>
+                    </TableCell>
                   </TableRow>
                 );
               }

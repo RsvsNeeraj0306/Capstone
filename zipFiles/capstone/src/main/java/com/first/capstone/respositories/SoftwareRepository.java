@@ -16,4 +16,6 @@ public interface SoftwareRepository extends JpaRepository<Software, Long> {
     List<Software> findAllByManufacturer();
 
     Optional <Software> findByIdAndSoftwareName(Long id, String softwareName);
+
+    
 }

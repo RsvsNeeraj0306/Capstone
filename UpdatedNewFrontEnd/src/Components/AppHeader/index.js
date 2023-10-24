@@ -3,6 +3,7 @@ import { Badge, Drawer, Image, List, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getComments, getOrders } from "../../API";
 import LocalPoliceSharpIcon from '@mui/icons-material/LocalPoliceSharp';
+import { ToastContainer } from "react-toastify";
 function AppHeader() {
   const [comments, setComments] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -75,7 +76,34 @@ function AppHeader() {
           }}
         ></List>
       </Drawer>
+      <ToastContainer
+
+position="top-right"
+
+autoClose={2000}
+
+hideProgressBar={false}
+
+newestOnTop={false}
+
+closeOnClick
+
+rtl={false}
+
+pauseOnFocusLoss
+
+draggable
+
+pauseOnHover
+
+theme="light"
+
+style={{ position: "fixed", top: "60px", right: "0" }}
+
+/>
     </div>
   );
+
+  
 }
 export default AppHeader;

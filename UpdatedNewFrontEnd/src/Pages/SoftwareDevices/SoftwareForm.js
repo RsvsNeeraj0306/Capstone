@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const SoftwareForm = () => {
   const [softwareData, setSoftwareData] = useState({
@@ -7,16 +10,13 @@ const SoftwareForm = () => {
       name: '', // Updated to store the selected manufacturer's name
       fieldOfWork: 'Software',
     },
-    software:{
-      softwareName: '',
-      purchaseDate: '',
-      expiryDate: '',
-      typeOfPlan: '',
-      usersCanUse: '',
-      priceOfSoftware: '',
-      licenseKey: ''
-    },
-   
+    softwareName: '',
+    purchaseDate: '',
+    expiryDate: '',
+    typeOfPlan: '',
+    usersCanUse: '',
+    priceOfSoftware: '',
+    licenseKey: '',
   });
 
   const [error, setError] = useState('');
@@ -32,7 +32,7 @@ const SoftwareForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "manufacturer.name") {
+    if (name === 'manufacturer.name') {
       setSoftwareData({
         ...softwareData,
         manufacturer: {
@@ -56,7 +56,7 @@ const SoftwareForm = () => {
       !softwareData.expiryDate ||
       !softwareData.typeOfPlan ||
       !softwareData.usersCanUse ||
-      !softwareData.priceOfSoftware||
+      !softwareData.priceOfSoftware ||
       !softwareData.licenseKey
     );
   };
@@ -77,20 +77,12 @@ const SoftwareForm = () => {
         typeOfPlan: softwareData.typeOfPlan,
         usersCanUse: softwareData.usersCanUse,
         priceOfSoftware: softwareData.priceOfSoftware,
-        licenseKey: softwareData.licenseKey
+        licenseKey: softwareData.licenseKey,
       },
       manufacturer: {
         name: softwareData.manufacturer.name,
         fieldOfWork: softwareData.manufacturer.fieldOfWork,
       },
-      softwareLicenseHistory:{
-        softwareName: softwareData.softwareName,
-        purchaseDate: softwareData.purchaseDate,
-        expiryDate: softwareData.expiryDate,
-        softwareLicenseHistory: softwareData.softwareLicenseHistory,
-      }
-
-
     };
 
     fetch('http://localhost:8080/api/addSoftware', {
@@ -100,26 +92,33 @@ const SoftwareForm = () => {
       },
       body: JSON.stringify(softwareDTO),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      setResponseMessage(data.responseBody);
-      setSoftwareData({
-        manufacturer: {
-          name: '', // Reset manufacturer name
-          fieldOfWork: 'Software',
-        },
-        softwareName: '',
-        purchaseDate: '',
-        expiryDate: '',
-        typeOfPlan: '',
-        usersCanUse: '',
-        priceOfSoftware: '',
-        licenseKey: '',
-      });
-    })
-    .catch((error) => console.error('Error adding software: ', error));
+      .then((response) => response.json())
+      .then((data) => {
+        setResponseMessage(data.responseBody);
+        setSoftwareData({
+          manufacturer: {
+            name: '', // Reset manufacturer name
+            fieldOfWork: 'Software',
+          },
+          softwareName: '',
+          purchaseDate: '',
+          expiryDate: '',
+          typeOfPlan: '',
+          usersCanUse: '',
+          priceOfSoftware: '',
+          licenseKey: '',
+        });
 
-    setError('');
+        // Show a success toast
+        toast.success('Software added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding software: ', error);
+        setError('An error occurred.');
+
+        // Show an error toast
+        toast.error('An error occurred while adding software');
+      });
   };
 
   return (
@@ -127,7 +126,8 @@ const SoftwareForm = () => {
       <h2 className="form-label">Add Software</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
-        <Link to="/manufacturerForm">New Manufacturer?</Link><br />
+          <Link to="/manufacturerForm">New Manufacturer?</Link>
+          <br />
           Manufacturer:
           <select
             name="manufacturer.name"
@@ -144,9 +144,8 @@ const SoftwareForm = () => {
                 </option>
               ))}
           </select>
-        
         </label>
-       
+
         <label className="form-label">
           Field of Work:
           <input
@@ -166,7 +165,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-          <label className="form-label">
+        <label className="form-label">
           License Key:
           <input
             type="text"
@@ -174,7 +173,6 @@ const SoftwareForm = () => {
             value={softwareData.licenseKey}
             onChange={handleChange}
           />
-
         </label>
         <label className="form-label">
           Purchase Date:
@@ -227,6 +225,32 @@ const SoftwareForm = () => {
         {error && <div className="form-error">{error}</div>}
       </form>
       <div className="form-message">{responseMessage}</div>
+
+      <ToastContainer
+
+position="top-right"
+
+autoClose={2000}
+
+hideProgressBar={false}
+
+newestOnTop={false}
+
+closeOnClick
+
+rtl={false}
+
+pauseOnFocusLoss
+
+draggable
+
+pauseOnHover
+
+theme="light"
+
+style={{ position: "fixed", top: "60px", right: "0" }}
+
+/>
     </div>
   );
 };

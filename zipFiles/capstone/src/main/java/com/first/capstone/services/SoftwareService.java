@@ -5,10 +5,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,7 +23,10 @@ import com.first.capstone.entity.SoftwareLicenseHistory;
 import com.first.capstone.respositories.SoftwareLicenseHistoryRepository;
 import com.first.capstone.respositories.SoftwareRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class SoftwareService {
 
     private final SoftwareRepository softwareRepository;
@@ -31,6 +36,9 @@ public class SoftwareService {
 
     @Autowired
     private SoftwareLicenseHistoryRepository softwareLicenseHistoryRepository;
+
+    @Autowired
+    private GmailService gmailService;
 
     public SoftwareService(
             SoftwareRepository softwareRepository,
@@ -74,7 +82,7 @@ public class SoftwareService {
         ResponseDTO responseDTO = new ResponseDTO();
             if (softwareLicenseHistory != null) {
                 // Set the software for the software license history
-                softwareLicenseHistory.setSoftware(software);
+                //softwareLicenseHistory.setSoftware(software);
 
                 // Correct the setter for license key
                 softwareLicenseHistory.setLicenseKey(software.getLicenseKey());
@@ -95,11 +103,13 @@ public class SoftwareService {
         if (existingSoftware != null) {
             // Update the purchase date and expiry date
             SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
-            softwareLicenseHistory.setSoftware(existingSoftware);
+           // softwareLicenseHistory.setSoftware(existingSoftware);
             softwareLicenseHistory.setLicenseKey(softwareDeviceDTO.getSoftwareLicenseHistory().getLicenseKey());
             softwareLicenseHistory.setExpiryDate(existingSoftware.getExpiryDate());
             softwareLicenseHistory.setPurchaseDate(existingSoftware.getPurchaseDate());
             softwareLicenseHistory.setLicenseKey(existingSoftware.getLicenseKey());
+            softwareLicenseHistory.setSoftwareName(existingSoftware.getSoftwareName());
+            softwareLicenseHistory.setPriceOfSoftware(existingSoftware.getPriceOfSoftware());
 
             existingSoftware.setPurchaseDate(software.getPurchaseDate());
             existingSoftware.setExpiryDate(software.getExpiryDate());
@@ -133,10 +143,12 @@ public class SoftwareService {
     
             // Create a new entry in SoftwareLicenseHistory
             SoftwareLicenseHistory renewalHistory = new SoftwareLicenseHistory();
-            renewalHistory.setSoftware(existingSoftware);
+            //renewalHistory.setSoftware(existingSoftware);
             renewalHistory.setPurchaseDate(software.getPurchaseDate());
             renewalHistory.setExpiryDate(software.getExpiryDate());
             renewalHistory.setLicenseKey(software.getLicenseKey());
+            renewalHistory.setSoftwareName(software.getSoftwareName());
+            renewalHistory.setPriceOfSoftware(software.getPriceOfSoftware());
     
             // Save the updated software and the renewal history
             softwareRepository.save(existingSoftware);
@@ -170,10 +182,12 @@ public class SoftwareService {
     
             // Create a new entry in SoftwareLicenseHistory to reflect the changes
             SoftwareLicenseHistory renewalHistory = new SoftwareLicenseHistory();
-            renewalHistory.setSoftware(existingSoftware);
+            //renewalHistory.setSoftware(existingSoftware);
             renewalHistory.setPurchaseDate(software.getPurchaseDate());
             renewalHistory.setExpiryDate(software.getExpiryDate());
             renewalHistory.setLicenseKey(software.getLicenseKey());
+            renewalHistory.setSoftwareName(software.getSoftwareName());
+            renewalHistory.setPriceOfSoftware(software.getPriceOfSoftware());
     
             // Save the updated software and the renewal history
             softwareRepository.save(existingSoftware);
@@ -189,6 +203,38 @@ public class SoftwareService {
         }
     }
     
+    public ResponseEntity<ResponseDTO> deleteSoftwareById(Long softwareId) {
+        // Retrieve the software by its ID
+      Optional<Software> softwareOptional = softwareRepository.findById(softwareId);
+    
+        if (softwareOptional.isPresent()) {
+            // Create a new entry in SoftwareLicenseHistory to store the details before deletion
+            SoftwareLicenseHistory historyEntry = new SoftwareLicenseHistory();
+            historyEntry.setPurchaseDate(softwareOptional.get().getPurchaseDate());
+            historyEntry.setExpiryDate(softwareOptional.get().getExpiryDate());
+            historyEntry.setLicenseKey(softwareOptional.get().getLicenseKey());
+            historyEntry.setSoftwareName(softwareOptional.get().getSoftwareName());
+            historyEntry.setPriceOfSoftware(softwareOptional.get().getPriceOfSoftware());
+            
+    
+            // Save the history entry to the SoftwareLicenseHistory table
+            softwareLicenseHistoryRepository.save(historyEntry);
+    
+            // Delete the software from the SoftwareRepository
+            softwareRepository.delete(softwareOptional.get());
+    
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software deleted successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Software not found");
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+    
+    
+
 
     public ResponseEntity<Map<String, Long>> getLicenseCounts() {
         // Retrieve licenses from the database
@@ -238,6 +284,71 @@ public class SoftwareService {
 
         return new ResponseEntity<>(counts, HttpStatus.OK);
     }
+
+    public ResponseEntity<List<Software>> getSoftwareLessThan45days(){
+        List<Software> licenses = softwareRepository.findAll();
+        Software software = licenses.stream()
+                .filter(license -> {
+                    LocalDate today = LocalDate.now();
+                    LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+                    long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
+                    return daysDifference >= 1 && daysDifference <= 45;
+                })
+                .findFirst().orElse(null);
+        if(software != null){
+            return ResponseEntity.ok().body(licenses);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<List<Software>>getSoftwareLessThanZeroDays(){
+        List<Software> licenses = softwareRepository.findAll();
+        Software software = licenses.stream()
+                .filter(license -> {
+                    LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+                    LocalDate today = LocalDate.now();
+                    long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
+                    return daysDifference <= 0;
+                })
+                .findFirst().orElse(null);
+        if(software != null){
+            return ResponseEntity.ok().body(licenses);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Run at midnight every day
+    public void scheduleLicenseExpirationNotifications() {
+        checkAndSendLicenseExpirationNotifications();
+    }
+
+    public ResponseEntity<ResponseDTO> checkAndSendLicenseExpirationNotifications() {
+        List<Software> licenses = softwareRepository.findAll();
+        for (Software license : licenses) {
+            if (isLicenseLessThanZeroDays(license)) {
+                sendLicenseExpirationEmail(license);
+            }
+        }
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setResponseBody("License expiration notifications sent successfully");
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    private boolean isLicenseLessThanZeroDays(Software license) {
+        LocalDate today = LocalDate.now();
+        LocalDate expiryDate = license.getExpiryDate().toLocalDate();
+        long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
+        return daysDifference < 0;
+    }
+
+    private void sendLicenseExpirationEmail(Software license) {
+        gmailService.sendLicenseExpirationEmail(license);
+    }
+
+
 
     // Implement other service methods as needed
 }

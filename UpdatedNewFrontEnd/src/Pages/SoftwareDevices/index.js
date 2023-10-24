@@ -48,7 +48,7 @@ function SoftwareDevices() {
                 <TableCell>Type of Plan</TableCell>
                 <TableCell>Total Licenses</TableCell>
                 <TableCell>Price of Software</TableCell>
-                <TableCell>Manufacturer Name</TableCell>
+                <TableCell>Publisher Name</TableCell>
                 <TableCell>Days Left to Expiry</TableCell>
               </TableRow>
             </TableHead>

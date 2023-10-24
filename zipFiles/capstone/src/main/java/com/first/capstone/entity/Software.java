@@ -1,6 +1,7 @@
 package com.first.capstone.entity;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import jakarta.persistence.ManyToOne;
  @Getter
  @Setter
  @RequiredArgsConstructor
+ @EqualsAndHashCode
 public class Software {
 
     @Id

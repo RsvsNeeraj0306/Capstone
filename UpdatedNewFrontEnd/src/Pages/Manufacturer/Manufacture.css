@@ -1,0 +1,48 @@
+/* Manufacturer.css */
+
+/* Style for the title */
+.manufacturer-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the tabs */
+  .manufacturer-tabs {
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the table container */
+  .manufacturer-table-container {
+    max-height: 440px;
+  }
+  
+  /* Style for the table */
+  .manufacturer-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Style for table header cells */
+  .manufacturer-table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Style for table rows */
+  .manufacturer-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  /* Style for the "Update" button */
+  .manufacturer-update-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .manufacturer-update-button:hover {
+    background-color: #0056b3;
+  }
+  

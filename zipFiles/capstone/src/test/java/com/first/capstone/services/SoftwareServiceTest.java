@@ -164,10 +164,12 @@ class SoftwareServiceTest {
         softwareDeviceDTO.setSoftware(software);
     
         SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
-        softwareLicenseHistory.setSoftware(software);
+        //softwareLicenseHistory.setSoftware(software);
         softwareLicenseHistory.setLicenseKey("123-456-789");
         softwareLicenseHistory.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
         softwareLicenseHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
+        softwareLicenseHistory.setSoftwareName("Test Software");
+        softwareLicenseHistory.setPriceOfSoftware(software.getPriceOfSoftware());
         softwareDeviceDTO.setSoftwareLicenseHistory(softwareLicenseHistory);
     
         SoftwareAnalysis softwareAnalysis = new SoftwareAnalysis();
@@ -224,7 +226,7 @@ class SoftwareServiceTest {
         softwareDeviceDTO.setSoftware(software);
         SoftwareLicenseHistory licenseHistory = new SoftwareLicenseHistory();
         licenseHistory.setId(1L);
-        licenseHistory.setSoftware(software);
+       // licenseHistory.setSoftware(software);
         licenseHistory.setLicenseKey("TestLicenseKey");
         softwareDeviceDTO.setSoftwareLicenseHistory(licenseHistory);
 
@@ -271,14 +273,14 @@ class SoftwareServiceTest {
         
         // Set values for the software license history
         softwareLicenseHistory.setId(1L);
-        softwareLicenseHistory.setSoftware(software);
+        //softwareLicenseHistory.setSoftware(software);
         softwareLicenseHistory.setLicenseKey("TestLicenseKey");
         softwareLicenseHistory.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
         softwareLicenseHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
 
         // Check the getters
         assertEquals(1L, softwareLicenseHistory.getId());
-        assertEquals(software, softwareLicenseHistory.getSoftware());
+       // assertEquals(software, softwareLicenseHistory.getSoftware());
         assertEquals("TestLicenseKey", softwareLicenseHistory.getLicenseKey());
         assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), softwareLicenseHistory.getExpiryDate());
         assertEquals(Date.valueOf(LocalDate.now()), softwareLicenseHistory.getPurchaseDate());
@@ -303,6 +305,8 @@ class SoftwareServiceTest {
         updatedSoftware.setPurchaseDate(Date.valueOf(LocalDate.now().plusDays(10)));
         updatedSoftware.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(365)));
         updatedSoftware.setLicenseKey("NewLicenseKey");
+        updatedSoftware.setSoftwareName(existingSoftware.getSoftwareName());
+        updatedSoftware.setPriceOfSoftware(existingSoftware.getPriceOfSoftware());
         softwareDeviceDTO.setSoftware(updatedSoftware);
 
         // Call the renewSoftware method
@@ -337,6 +341,60 @@ class SoftwareServiceTest {
         assertEquals("Software not found", responseEntity.getBody().getResponseBody());
     }
 
+   
+    @Test
+    void testChangePlan_ExistingSoftware() {
+        // Create a sample SoftwareDeviceDTO with the existing software
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        Software existingSoftware = new Software();
+        existingSoftware.setId(1L);
+        existingSoftware.setSoftwareName("Existing Software");
+        softwareDeviceDTO.setSoftware(existingSoftware);
+    
+        // Mock the behavior of the softwareRepository to return the existing software
+        when(softwareRepository.findById(existingSoftware.getId())).thenReturn(Optional.of(existingSoftware));
+    
+        // Define the updated software information
+        Software updatedSoftware = new Software();
+        updatedSoftware.setId(existingSoftware.getId());
+        updatedSoftware.setPurchaseDate(Date.valueOf(LocalDate.now().plusDays(10)));
+        updatedSoftware.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(365)));
+        updatedSoftware.setLicenseKey("NewLicenseKey");
+        updatedSoftware.setSoftwareName(existingSoftware.getSoftwareName());
+        updatedSoftware.setPriceOfSoftware(existingSoftware.getPriceOfSoftware());
+        softwareDeviceDTO.setSoftware(updatedSoftware);
+    
+        // Call the changePlan method
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.changePlan(softwareDeviceDTO);
+    
+        // Assertions
+        verify(softwareRepository, times(1)).findById(existingSoftware.getId());
+        verify(softwareRepository, times(1)).save(existingSoftware);
+        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class));
+        assertEquals("Software Plan changed successfully", responseEntity.getBody().getResponseBody());
+    }
+    
+    @Test
+    void testChangePlan_NonExistingSoftware() {
+        // Create a sample SoftwareDeviceDTO with a non-existing software
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        Software nonExistingSoftware = new Software();
+        nonExistingSoftware.setId(2L);
+        nonExistingSoftware.setSoftwareName("Non-Existing Software");
+        softwareDeviceDTO.setSoftware(nonExistingSoftware);
+    
+        // Mock the behavior of the softwareRepository to return no existing software
+        when(softwareRepository.findById(nonExistingSoftware.getId())).thenReturn(Optional.empty());
+    
+        // Call the changePlan method
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.changePlan(softwareDeviceDTO);
+    
+        // Assertions
+        verify(softwareRepository, times(1)).findById(nonExistingSoftware.getId());
+        verifyNoMoreInteractions(softwareRepository);
+    
+        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
+    }
 
     
 

@@ -45,7 +45,7 @@ function NetworkDevices() {
               <TableCell>Device Name</TableCell>
               <TableCell>Purchase Date</TableCell>
               <TableCell>Warranty Period</TableCell>
-              <TableCell>Manufacturer ID</TableCell>
+              <TableCell>Manufacturer Name</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

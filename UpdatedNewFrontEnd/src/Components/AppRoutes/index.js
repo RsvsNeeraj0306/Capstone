@@ -9,6 +9,7 @@ import LessThanZeroDays from "../../Pages/SoftwareDevices/LessThanZeroDays";
 import MoreThan45Days from "../../Pages/SoftwareDevices/MoreThan45days";
 import SoftwareForm from "../../Pages/SoftwareDevices/SoftwareForm";
 import ManufacturerForm from "../../Pages/Manufacturer/ManufacturerForm";
+import SoftwareRenewalForm from "../../Pages/SoftwareDevices/SoftwareRenewalForm";
 
 
 
@@ -26,6 +27,7 @@ function AppRoutes() {
       <Route path='/LessThanZeroDays' element={<LessThanZeroDays />}></Route>
       <Route path='/softwareForm' element={<SoftwareForm />}></Route>
       <Route path='/manufacturerForm' element={<ManufacturerForm />}></Route>
+      <Route path='/softwareRenewalForm' element={<SoftwareRenewalForm />}></Route>
     </Routes>
   );
 }

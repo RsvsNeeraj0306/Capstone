@@ -1,6 +1,7 @@
 package com.first.capstone.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,6 @@ public class SoftwareAnalysis {
     private int activeUsers;
     private double globalRating;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Software software;
 }

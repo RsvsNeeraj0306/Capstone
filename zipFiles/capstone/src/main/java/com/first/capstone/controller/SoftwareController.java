@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +67,29 @@ public class SoftwareController {
     @PostMapping("/changePlan") // Update the API endpoint name
     public ResponseEntity<ResponseDTO> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         return softwareService.changePlan(softwareDeviceDTO); // Update method call.
+    }
+
+    @DeleteMapping("/deleteSoftware/{softwareId}")
+    public ResponseEntity<ResponseDTO> deleteSoftwareById(@PathVariable Long softwareId) {
+        return softwareService.deleteSoftwareById(softwareId);
+    }
+
+    @GetMapping("/getSoftwareLessThan45day")
+    public ResponseEntity<List<Software>> getSoftwareLessThan45day()
+    {
+        return softwareService.getSoftwareLessThan45days();
+    }
+
+    @GetMapping("/getSoftwareLessThanZeroday")
+    public ResponseEntity<List<Software>> getSoftwareLessThanZeroday()
+    {
+            return softwareService.getSoftwareLessThanZeroDays();
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseDTO> licenseNotification()
+    {
+        return softwareService.checkAndSendLicenseExpirationNotifications();
     }
 
 }

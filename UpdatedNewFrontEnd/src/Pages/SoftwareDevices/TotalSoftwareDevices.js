@@ -26,8 +26,8 @@ function TotalSoftwareDevices() {
   return (
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Software Devices</Typography.Title>
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{ maxHeight: 440 }}>
+       <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>Serial Number</TableCell>
