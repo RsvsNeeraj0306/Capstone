@@ -28,6 +28,8 @@ public class HardwareController {
   @Autowired
   private NetworkDeviceService networkDeviceService;
 
+ 
+
 
 
   @GetMapping("/hello")
@@ -50,7 +52,7 @@ public class HardwareController {
   @PostMapping("/addNetworkDevicesHistory")
   @Transactional
   public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
-    return networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
+    return networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO.getNetworkDevice(), "ADD");
   }
 
 

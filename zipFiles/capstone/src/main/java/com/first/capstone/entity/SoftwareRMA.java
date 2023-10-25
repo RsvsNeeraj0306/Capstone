@@ -16,15 +16,16 @@ import lombok.Setter;
 @Getter 
 @Setter
 @RequiredArgsConstructor
-public class SoftwarePastHistory {
+public class SoftwareRMA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date pastupdatedate;
-    private Date pastRefunDate;
-    private Integer pastRefundAmount; 
+    private Date refunDate;
+    private Integer refundAmount; 
+    private String refundReason;
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Software software;

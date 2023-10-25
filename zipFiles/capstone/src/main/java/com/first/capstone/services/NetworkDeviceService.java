@@ -1,6 +1,8 @@
 package com.first.capstone.services;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,17 +17,25 @@ import com.first.capstone.entity.NetworkDevicesHistory;
 import com.first.capstone.respositories.NetworkDeviceRepository;
 import com.first.capstone.respositories.NetworkDevicesHistoryRepository;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
+@Transactional
 public class NetworkDeviceService {
 
-    private final NetworkDeviceRepository networkDeviceRepository;
+    @Autowired
+    private NetworkDeviceRepository networkDeviceRepository;
 
     @Autowired
     private ManufacturerService manufacturerService;
 
     @Autowired
     private NetworkDevicesHistoryRepository networkDeviceHistoryRepository;
+
+    enum Action {
+        ADD, UPDATE, DELETED
+    }
 
     public NetworkDeviceService(NetworkDeviceRepository networkDeviceRepository,
             ManufacturerService manufacturerService, NetworkDevicesHistoryRepository networkDeviceHistoryRepository) {
@@ -58,50 +68,52 @@ public class NetworkDeviceService {
                 });
     }
 
+    
     public ResponseEntity<ResponseDTO> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
         Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
 
         NetworkDevice networkDevice = getOrCreaNetworkDevice(networkDeviceDTO.getNetworkDevice(), manufacturer);
-        NetworkDevicesHistory networkDevicesHistory = networkDeviceDTO.getNetworkDevicesHistory();
+        addNetworkDeviceHistory(networkDevice, Action.ADD.toString());
+
         ResponseDTO responseDTO = new ResponseDTO();
-        if (networkDevicesHistory != null) {
-            networkDevicesHistory.setNetworkDevice(networkDevice);
-            networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
-            networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
-            networkDevicesHistory.setLicenseKey(networkDevice.getSerialNumber());
-            
-
-            networkDeviceHistoryRepository.save(networkDevicesHistory);
-
-        }
         responseDTO.setResponseBody("Network device added successfully");
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
-        NetworkDevice networkDevice = networkDeviceDTO.getNetworkDevice();
-        NetworkDevice exisNetworkDevice = networkDeviceRepository.findById(networkDevice.getId()).orElse(null);
-        if (exisNetworkDevice == null) {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Network device not found");
-            return ResponseEntity.ok().body(responseDTO);
-        }
+    public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDevice networkDevice, String action) {
+
         NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-        networkDevicesHistory.setNetworkDevice(exisNetworkDevice);
-        networkDevicesHistory.setPurchaseDate(exisNetworkDevice.getPurchaseDate());
-        networkDevicesHistory.setWarrantyEndDate(exisNetworkDevice.getWarrantyEndDate());
-        networkDevicesHistory.setLicenseKey(exisNetworkDevice.getSerialNumber());
+        networkDevicesHistory.setDeviceNameAndId(networkDevice.getHardwareName()+ " ID: " + networkDevice.getId());
+        networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
+        networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
+        networkDevicesHistory.setSerialNumber(networkDevice.getSerialNumber());
+        networkDevicesHistory.setCost(networkDevice.getCost());
+        networkDevicesHistory.setQuantity(networkDevice.getQuantity());
+        networkDevicesHistory.setAction(action);
 
-        exisNetworkDevice.setPurchaseDate(networkDevice.getPurchaseDate());
-        exisNetworkDevice.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
-
-        networkDeviceRepository.save(exisNetworkDevice);
         networkDeviceHistoryRepository.save(networkDevicesHistory);
 
         ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setResponseBody("Network device added successfully");
+        responseDTO.setResponseBody("Network device history added successfully");
         return ResponseEntity.ok().body(responseDTO);
 
+    }
+
+    public ResponseEntity<ResponseDTO> deleteNetworkDeviceById(Long id) {
+        Optional<NetworkDevice> networkDevice = networkDeviceRepository.findById(id);
+        if (networkDevice.isPresent()) {
+
+            addNetworkDeviceHistory(networkDevice.get(), Action.DELETED.toString());    
+            networkDeviceRepository.deleteById(networkDevice.get().getId());
+            
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Network device deleted successfully");
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Network device not found");
+            return ResponseEntity.ok(responseDTO);
+        }
     }
 
 }

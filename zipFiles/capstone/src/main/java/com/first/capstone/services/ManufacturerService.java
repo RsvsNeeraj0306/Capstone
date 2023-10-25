@@ -3,19 +3,33 @@ package com.first.capstone.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.first.capstone.dto.ResponseDTO;
+import com.first.capstone.entity.ManufactureHistory;
 import com.first.capstone.entity.Manufacturer;
+import com.first.capstone.respositories.ManufactureHistoryRepository;
 import com.first.capstone.respositories.ManufacturerRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class ManufacturerService {
 
     private final ManufacturerRepository manufacturerRepository;
+
+    private ManufactureHistory manufacturerHistory = new ManufactureHistory();
+
+    @Autowired
+    private ManufactureHistoryRepository manufacturerHistoryRepository;
+
+    enum Action {
+        ADD, UPDATE, DELETED
+    }
 
     public ManufacturerService(ManufacturerRepository manufacturerRepository) {
         this.manufacturerRepository = manufacturerRepository;
@@ -44,7 +58,9 @@ public class ManufacturerService {
             newManufacturer.setFieldOfWork(manufacturer.getFieldOfWork());
             newManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
             newManufacturer.setEmailId(manufacturer.getEmailId());
-            return manufacturerRepository.save(newManufacturer);
+
+            addManufactureHistory(newManufacturer, Action.ADD.toString());
+            return saveManufacturer(manufacturer);
 
         });
 
@@ -58,6 +74,7 @@ public class ManufacturerService {
         return manufacturerRepository.findByFieldOfWorkSoftware();
     }
 
+
     public ResponseEntity<Manufacturer> getManufacturerById(Long id) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findById(id);
         if (manufacturer.isPresent()) {
@@ -70,6 +87,8 @@ public class ManufacturerService {
     public ResponseEntity<ResponseDTO> deleteManufacturerById(Long id) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findById(id);
         if (manufacturer.isPresent()) {
+
+            addManufactureHistory(manufacturer.get(), Action.DELETED.toString());
             manufacturerRepository.deleteById(id);
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Manufacturer deleted successfully");
@@ -91,6 +110,8 @@ public class ManufacturerService {
             updatedManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
             updatedManufacturer.setEmailId(manufacturer.getEmailId());
             manufacturerRepository.save(updatedManufacturer);
+
+            addManufactureHistory(updatedManufacturer, Action.UPDATE.toString());
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Manufacturer updated successfully");
             return ResponseEntity.ok(responseDTO);
@@ -100,6 +121,19 @@ public class ManufacturerService {
              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
     
+    }
+
+    public ResponseEntity<ResponseDTO> addManufactureHistory(Manufacturer manufacturer, String action) {
+        manufacturerHistory.setName(manufacturer.getName());
+        manufacturerHistory.setFieldOfWork(manufacturer.getFieldOfWork());
+        manufacturerHistory.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
+        manufacturerHistory.setEmailId(manufacturer.getEmailId());
+        manufacturerHistory.setAction(action);
+        manufacturerHistoryRepository.save(manufacturerHistory);
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setResponseBody("Manufacturer history added successfully");
+        return ResponseEntity.ok(responseDTO);
     }
 
     

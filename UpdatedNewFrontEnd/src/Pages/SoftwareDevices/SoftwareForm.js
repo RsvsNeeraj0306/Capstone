@@ -14,8 +14,9 @@ const SoftwareForm = () => {
     purchaseDate: '',
     expiryDate: '',
     typeOfPlan: '',
-    usersCanUse: '',
+    quantity: '',
     priceOfSoftware: '',
+    version: '',
     licenseKey: '',
   });
 
@@ -55,8 +56,9 @@ const SoftwareForm = () => {
       !softwareData.purchaseDate ||
       !softwareData.expiryDate ||
       !softwareData.typeOfPlan ||
-      !softwareData.usersCanUse ||
+      !softwareData.quantity ||
       !softwareData.priceOfSoftware ||
+      !softwareData.version ||
       !softwareData.licenseKey
     );
   };
@@ -75,9 +77,10 @@ const SoftwareForm = () => {
         purchaseDate: softwareData.purchaseDate,
         expiryDate: softwareData.expiryDate,
         typeOfPlan: softwareData.typeOfPlan,
-        usersCanUse: softwareData.usersCanUse,
+        quantity: softwareData.quantity,
         priceOfSoftware: softwareData.priceOfSoftware,
         licenseKey: softwareData.licenseKey,
+        version: softwareData.version,
       },
       manufacturer: {
         name: softwareData.manufacturer.name,
@@ -104,9 +107,10 @@ const SoftwareForm = () => {
           purchaseDate: '',
           expiryDate: '',
           typeOfPlan: '',
-          usersCanUse: '',
+          quantity: '',
           priceOfSoftware: '',
           licenseKey: '',
+          version: '',
         });
 
         // Show a success toast
@@ -126,9 +130,8 @@ const SoftwareForm = () => {
       <h2 className="form-label">Add Software</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
-          <Link to="/manufacturerForm">New Manufacturer?</Link>
-          <br />
-          Manufacturer:
+        
+          Publisher:
           <select
             name="manufacturer.name"
             value={softwareData.manufacturer.name}
@@ -144,6 +147,8 @@ const SoftwareForm = () => {
                 </option>
               ))}
           </select>
+          <Link to="/manufacturerForm">New Publisher?</Link>
+          <br />
         </label>
 
         <label className="form-label">
@@ -174,6 +179,16 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
+          <label className="form-label">
+          Version:
+          <input
+            type="text"
+            name="version"
+            value={softwareData.version}
+            onChange={handleChange}
+          />
+
+        </label>
         <label className="form-label">
           Purchase Date:
           <input
@@ -202,11 +217,11 @@ const SoftwareForm = () => {
           />
         </label>
         <label className="form-label">
-          Users Can Use:
+          Quantity:
           <input
             type="number"
-            name="usersCanUse"
-            value={softwareData.usersCanUse}
+            name="quantity"
+            value={softwareData.quantity}
             onChange={handleChange}
           />
         </label>

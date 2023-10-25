@@ -64,7 +64,7 @@ function LessThanZeroDays() {
             <TableBody>
               {softwareList.map((software) => {
                 const daysLeft = calculateDaysLeft(software.expiryDate);
-                if (daysLeft < 0) {
+                if (daysLeft <= 0) {
                   return (
                     <TableRow key={software.id}>
                       <TableCell>{serialNumber++}</TableCell>
@@ -72,7 +72,7 @@ function LessThanZeroDays() {
                       <TableCell>{software.softwareName}</TableCell>
                       <TableCell>{software.typeOfPlan}</TableCell>
                       <TableCell>{software.manufacturer.name}</TableCell>
-                      <TableCell>{software.usersCanUse}</TableCell>
+                      <TableCell>{software.quantity}</TableCell>
                       <TableCell>{daysLeft < 0 ? "Expired" : daysLeft}</TableCell>
                       <TableCell>
                         <Link to="/SoftwareDevices">

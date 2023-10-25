@@ -27,12 +27,14 @@ public class SoftwareLicenseHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String softwareNameAndId;
     private String licenseKey;
     private Date purchaseDate;
     private Date expiryDate;
     private String typeOfPlan;
-    private Integer usersCanUse;
-    private String softwareName;
+    private Integer quantity;
     private BigDecimal priceOfSoftware;
+    private String version;
+    private String action;
 
 }

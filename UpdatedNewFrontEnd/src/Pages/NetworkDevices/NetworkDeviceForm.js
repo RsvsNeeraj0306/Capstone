@@ -140,6 +140,7 @@ const NetworkDeviceForm = () => {
                                 </option>
                             ))}
                     </select>
+                    <Link to="/manufacturer">New Manufacturer ?</Link>
                 </label>
                 <label className='form-label'>Hardware Name:
                     <input
@@ -201,7 +202,7 @@ const NetworkDeviceForm = () => {
                     {responseMessage && <div className="form-success">{responseMessage}</div>}
                 </div>
             </form>
-            <Link to="/manufacturer">Add New Manufacturer ?</Link>
+           
         </div>
     );
 };

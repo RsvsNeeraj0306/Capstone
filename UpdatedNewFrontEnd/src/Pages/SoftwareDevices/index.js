@@ -47,6 +47,7 @@ function SoftwareDevices() {
                 <TableCell>Expiry Date</TableCell>
                 <TableCell>Type of Plan</TableCell>
                 <TableCell>Total Licenses</TableCell>
+                <TableCell>Version</TableCell>
                 <TableCell>Price of Software</TableCell>
                 <TableCell>Publisher Name</TableCell>
                 <TableCell>Days Left to Expiry</TableCell>
@@ -60,7 +61,8 @@ function SoftwareDevices() {
                   <TableCell>{software.purchaseDate}</TableCell>
                   <TableCell>{software.expiryDate}</TableCell>
                   <TableCell>{software.typeOfPlan}</TableCell>
-                  <TableCell>{software.usersCanUse}</TableCell>
+                  <TableCell>{software.quantity}</TableCell>
+                  <TableCell>{software.version}</TableCell>
                   <TableCell>{software.priceOfSoftware}</TableCell>
                   <TableCell>{software.manufacturer.name}</TableCell>
                   <TableCell>

@@ -45,7 +45,7 @@ public class GmailService {
         try {
            helper.setTo("neerajrenkireddy01@gmail.com");
             helper.setSubject("License Expiration Notification");
-            helper.setText("Your license for software " + software.getSoftwareName() + " has expired. Please renew the license.");
+            helper.setText("Your license for software "  + "'"+ software.getSoftwareName() + "'" +" has expired. Please renew the license.");
         } catch (MessagingException e) {
             e.printStackTrace();
             // Handle the exception

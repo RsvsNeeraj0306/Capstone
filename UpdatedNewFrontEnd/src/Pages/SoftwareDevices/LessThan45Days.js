@@ -73,7 +73,7 @@ function LessThan45Days() {
                     <TableCell>{software.softwareName}</TableCell>
                     <TableCell>{software.typeOfPlan}</TableCell>
                     <TableCell>{software.manufacturer.name}</TableCell>
-                    <TableCell>{software.usersCanUse}</TableCell>
+                    <TableCell>{software.quantity}</TableCell>
                     <TableCell>{daysLeft}</TableCell>
                     <TableCell>
                       <Link to="/SoftwareDevices">

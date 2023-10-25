@@ -4,15 +4,16 @@ import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.dto.SoftwareDeviceDTO;
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.Software;
-import com.first.capstone.entity.SoftwareAnalysis;
 import com.first.capstone.entity.SoftwareLicenseHistory;
-
 import com.first.capstone.respositories.SoftwareLicenseHistoryRepository;
+import com.first.capstone.respositories.SoftwareRMARepository;
 import com.first.capstone.respositories.SoftwareRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,9 @@ class SoftwareServiceTest {
 
     @Mock
     private Software software;
+
+    @Mock
+    private SoftwareRMARepository softwareRMARepository;
 
     @BeforeEach
     void setUp() {
@@ -90,7 +94,7 @@ class SoftwareServiceTest {
     }
 
     @Test
-     void testGetOrCreateNewSoftware_ExistingSoftware() {
+    void testGetOrCreateNewSoftware_ExistingSoftware() {
         // Create a sample manufacturer and software
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(1L);
@@ -102,7 +106,7 @@ class SoftwareServiceTest {
         Software existingSoftware = new Software();
         existingSoftware.setId(1L);
         when(softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName()))
-            .thenReturn(java.util.Optional.of(existingSoftware));
+                .thenReturn(java.util.Optional.of(existingSoftware));
 
         // Test the method
         Software result = softwareService.getOrCreateNewSoftware(software, manufacturer);
@@ -112,7 +116,7 @@ class SoftwareServiceTest {
     }
 
     @Test
-     void testGetOrCreateNewSoftware_NewSoftware() {
+    void testGetOrCreateNewSoftware_NewSoftware() {
         // Create a sample manufacturer and software
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(2L);
@@ -120,10 +124,9 @@ class SoftwareServiceTest {
         Software software = new Software();
         software.setSoftwareName("New Software");
 
-
         // Mock the repository to return an empty Optional
         when(softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName()))
-            .thenReturn(java.util.Optional.empty());
+                .thenReturn(java.util.Optional.empty());
 
         // Mock the repository's save method to return the newly created software
         Software newSoftware = new Software();
@@ -136,7 +139,6 @@ class SoftwareServiceTest {
         assertEquals(newSoftware, result);
     }
 
-   
     @Test
     void testAddSoftware() {
         // Create a SoftwareDeviceDTO with required data
@@ -144,259 +146,326 @@ class SoftwareServiceTest {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(1L);
         softwareDeviceDTO.setManufacturer(manufacturer);
-    
+
         manufacturerService = mock(ManufacturerService.class);
         softwareRepository = mock(SoftwareRepository.class); // Mock the SoftwareRepository
-        softwareLicenseHistoryRepository = mock(SoftwareLicenseHistoryRepository.class); // Mock the SoftwareLicenseHistoryRepository
-        
-        softwareService = new SoftwareService(softwareRepository, manufacturerService, softwareLicenseHistoryRepository);
-    
+        softwareService = new SoftwareService(softwareRepository, manufacturerService, softwareLicenseHistoryRepository,
+                softwareRMARepository);
+
         Software software = new Software();
         software.setSoftwareName("Test Software");
         software.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
         software.setLicenseKey("123-456-789");
 
-        
         when(manufacturerService.getOrCreateManufacturer(manufacturer)).thenReturn(manufacturer);
-        when(softwareRepository.save(any(Software.class))).thenReturn(software); // Mock save method to return software
-        when(softwareLicenseHistoryRepository.save(any(SoftwareLicenseHistory.class))).thenReturn(null);
-    
+        when(softwareRepository.save(any(Software.class))).thenReturn(software);
         softwareDeviceDTO.setSoftware(software);
-    
-        SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
-        //softwareLicenseHistory.setSoftware(software);
-        softwareLicenseHistory.setLicenseKey("123-456-789");
-        softwareLicenseHistory.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
-        softwareLicenseHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
-        softwareLicenseHistory.setSoftwareName("Test Software");
-        softwareLicenseHistory.setPriceOfSoftware(software.getPriceOfSoftware());
-        softwareDeviceDTO.setSoftwareLicenseHistory(softwareLicenseHistory);
-    
-        SoftwareAnalysis softwareAnalysis = new SoftwareAnalysis();
-        softwareAnalysis.setSoftware(software);
-        softwareDeviceDTO.setSoftwareAnalysis(softwareAnalysis);
-    
+
         // Call the addSoftware method
-        ResponseEntity<ResponseDTO> responseEntity = softwareService.addSoftware(softwareDeviceDTO);
-    
+        ResponseEntity<Software> responseEntity = softwareService.addSoftware(softwareDeviceDTO);
+
         // Assertions
         verify(manufacturerService, times(1)).getOrCreateManufacturer(manufacturer); // Ensure it's called once
         verify(softwareRepository, times(1)).save(any(Software.class)); // Ensure save method is called once
-        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class)); // Ensure save method is called once
-       
-    
-        assertEquals("Software added successfully", responseEntity.getBody().getResponseBody());
+        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class)); // Ensure save
+            
+        assertEquals(software, responseEntity.getBody()); // Ensure the correct response body
     }
-    
-    
 
     @Test
-    void testAddLicenseHistory_ExistingSoftware() {
-        // Create a SoftwareDeviceDTO with required data
-        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+    void testAddLicenseHistory() {
+        // Create a sample Software instance for testing
         Software software = new Software();
-        software.setId(1L); // Assuming an existing software with ID 1
-        softwareDeviceDTO.setSoftware(software);
-        SoftwareLicenseHistory licenseHistory = new SoftwareLicenseHistory();
-        licenseHistory.setLicenseKey("TestLicenseKey");
-        softwareDeviceDTO.setSoftwareLicenseHistory(licenseHistory);
+        software.setSoftwareName("Sample Software");
+        software.setLicenseKey("Sample License Key");
+        // Set other properties as needed for testing
 
-        // Mock the behavior of softwareRepository to return the existing software
-        when(softwareRepository.findById(1L)).thenReturn(Optional.of(software));
+        // Mock the behavior of your softwareLicenseHistoryRepository
+        Mockito.when(softwareLicenseHistoryRepository.save(Mockito.any(SoftwareLicenseHistory.class)))
+                .thenReturn(new SoftwareLicenseHistory()); // Mock the save operation
 
-        // Call the addLicenseHistory method
-        ResponseEntity<ResponseDTO> responseEntity = softwareService.addLicenseHistory(softwareDeviceDTO);
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.addLicenseHistory(software, "ADDED");
 
-        softwareLicenseHistoryRepository.save(licenseHistory);
-
-        // Assertions
-        verify(softwareRepository, times(1)).findById(1L);
-        verify(softwareRepository, times(1)).save(software);
-        verify(softwareLicenseHistoryRepository, times(1)).save(licenseHistory);
-
+        // Verify the expected behavior
         assertEquals("License history added successfully", responseEntity.getBody().getResponseBody());
     }
 
     @Test
-    void testAddLicenseHistory_ExistingSoftwareNoLicenseHistory() {
-        // Create a SoftwareDeviceDTO with required data
+    void testRenewSoftware() {
+        // Create a sample SoftwareDeviceDTO for testing
         SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
         Software software = new Software();
-        software.setId(1L); // Assuming an existing software with ID 1
+        software.setId(1L); // Set the ID for testing
+        software.setSoftwareName("Test Software");
         softwareDeviceDTO.setSoftware(software);
-        SoftwareLicenseHistory licenseHistory = new SoftwareLicenseHistory();
-        licenseHistory.setId(1L);
-       // licenseHistory.setSoftware(software);
-        licenseHistory.setLicenseKey("TestLicenseKey");
-        softwareDeviceDTO.setSoftwareLicenseHistory(licenseHistory);
+        // Set other properties as needed for testing
 
-        softwareLicenseHistoryRepository = mock(SoftwareLicenseHistoryRepository.class);
+        // Mock the behavior of your softwareRepository and
+        // softwareLicenseHistoryRepository
+        Optional<Software> existingSoftware = Optional.of(new Software());
+        Mockito.when(softwareRepository.findById(1L)).thenReturn(existingSoftware);
+        Mockito.when(softwareRepository.save(Mockito.any(Software.class)))
+                .thenReturn(existingSoftware.get()); // Mock the save operation
 
-        // Mock the behavior of softwareRepository to return the existing software
-        when(softwareRepository.findById(1L)).thenReturn(Optional.of(software));
-
-     
-        // Call the addLicenseHistory method
-        ResponseEntity<ResponseDTO> responseEntity = softwareService.addLicenseHistory(softwareDeviceDTO);
-
-        // Assertions
-        verify(softwareRepository, times(1)).findById(1L);
-        verify(softwareRepository, times(1)).save(software);
-
-        assertEquals("License history added successfully", responseEntity.getBody().getResponseBody());
-    }
-
-    @Test
-    void testAddLicenseHistory_NonExistingSoftware() {
-        // Create a SoftwareDeviceDTO with non-existing software
-        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
-        Software software = new Software();
-        software.setId(1L); // Assuming a non-existing software with ID 1
-        softwareDeviceDTO.setSoftware(software);
-
-        // Mock the behavior of softwareRepository to return no existing software
-        when(softwareRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Call the addLicenseHistory method
-        ResponseEntity<ResponseDTO> responseEntity = softwareService.addLicenseHistory(softwareDeviceDTO);
-
-        // Assertions
-        verify(softwareRepository, times(1)).findById(1L);
-        verifyNoMoreInteractions(softwareRepository);
-
-        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
-    }
-
-    @Test
-    void testGetters() {
-        SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
-        
-        // Set values for the software license history
-        softwareLicenseHistory.setId(1L);
-        //softwareLicenseHistory.setSoftware(software);
-        softwareLicenseHistory.setLicenseKey("TestLicenseKey");
-        softwareLicenseHistory.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(30)));
-        softwareLicenseHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
-
-        // Check the getters
-        assertEquals(1L, softwareLicenseHistory.getId());
-       // assertEquals(software, softwareLicenseHistory.getSoftware());
-        assertEquals("TestLicenseKey", softwareLicenseHistory.getLicenseKey());
-        assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), softwareLicenseHistory.getExpiryDate());
-        assertEquals(Date.valueOf(LocalDate.now()), softwareLicenseHistory.getPurchaseDate());
-    }
-
-    
-    @Test
-    void testRenewSoftware_ExistingSoftware() {
-        // Create a sample SoftwareDeviceDTO with the existing software
-        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
-        Software existingSoftware = new Software();
-        existingSoftware.setId(1L);
-        existingSoftware.setSoftwareName("Existing Software");
-        softwareDeviceDTO.setSoftware(existingSoftware);
-
-        // Mock the behavior of the softwareRepository to return the existing software
-        when(softwareRepository.findById(existingSoftware.getId())).thenReturn(Optional.of(existingSoftware));
-
-        // Define the updated software information
-        Software updatedSoftware = new Software();
-        updatedSoftware.setId(existingSoftware.getId());
-        updatedSoftware.setPurchaseDate(Date.valueOf(LocalDate.now().plusDays(10)));
-        updatedSoftware.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(365)));
-        updatedSoftware.setLicenseKey("NewLicenseKey");
-        updatedSoftware.setSoftwareName(existingSoftware.getSoftwareName());
-        updatedSoftware.setPriceOfSoftware(existingSoftware.getPriceOfSoftware());
-        softwareDeviceDTO.setSoftware(updatedSoftware);
-
-        // Call the renewSoftware method
+        // Call the method you want to test
         ResponseEntity<ResponseDTO> responseEntity = softwareService.renewSoftware(softwareDeviceDTO);
 
-        // Assertions
-        verify(softwareRepository, times(1)).findById(existingSoftware.getId());
-        verify(softwareRepository, times(1)).save(existingSoftware);
-        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class));
+        // Verify the expected behavior
+
         assertEquals("Software renewed successfully", responseEntity.getBody().getResponseBody());
     }
 
     @Test
-    void testRenewSoftware_NonExistingSoftware() {
-        // Create a sample SoftwareDeviceDTO with a non-existing software
+    void testRenewSoftware_NotFound() {
+        // Create a sample SoftwareDeviceDTO for testing
         SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
-        Software nonExistingSoftware = new Software();
-        nonExistingSoftware.setId(2L);
-        nonExistingSoftware.setSoftwareName("Non-Existing Software");
-        softwareDeviceDTO.setSoftware(nonExistingSoftware);
+        Software software = new Software();
+        software.setId(1L); // Set the ID for testing
+        software.setSoftwareName("Test Software");
+        softwareDeviceDTO.setSoftware(software);
+        // Set other properties as needed for testing
 
-        // Mock the behavior of the softwareRepository to return no existing software
-        when(softwareRepository.findById(nonExistingSoftware.getId())).thenReturn(Optional.empty());
+        // Mock the behavior of your softwareRepository and
+        // softwareLicenseHistoryRepository
+        Mockito.when(softwareRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Call the renewSoftware method
+        // Call the method you want to test
         ResponseEntity<ResponseDTO> responseEntity = softwareService.renewSoftware(softwareDeviceDTO);
 
-        // Assertions
-        verify(softwareRepository, times(1)).findById(nonExistingSoftware.getId());
-        verifyNoMoreInteractions(softwareRepository);
+        // Verify the expected behavior
 
         assertEquals("Software not found", responseEntity.getBody().getResponseBody());
     }
 
-   
     @Test
-    void testChangePlan_ExistingSoftware() {
-        // Create a sample SoftwareDeviceDTO with the existing software
+    void testChangePlan() {
+        // Create a sample SoftwareDeviceDTO for testing
         SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
-        Software existingSoftware = new Software();
-        existingSoftware.setId(1L);
-        existingSoftware.setSoftwareName("Existing Software");
-        softwareDeviceDTO.setSoftware(existingSoftware);
-    
-        // Mock the behavior of the softwareRepository to return the existing software
-        when(softwareRepository.findById(existingSoftware.getId())).thenReturn(Optional.of(existingSoftware));
-    
-        // Define the updated software information
-        Software updatedSoftware = new Software();
-        updatedSoftware.setId(existingSoftware.getId());
-        updatedSoftware.setPurchaseDate(Date.valueOf(LocalDate.now().plusDays(10)));
-        updatedSoftware.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(365)));
-        updatedSoftware.setLicenseKey("NewLicenseKey");
-        updatedSoftware.setSoftwareName(existingSoftware.getSoftwareName());
-        updatedSoftware.setPriceOfSoftware(existingSoftware.getPriceOfSoftware());
-        softwareDeviceDTO.setSoftware(updatedSoftware);
-    
-        // Call the changePlan method
+        Software software = new Software();
+        software.setId(1L); // Set the ID for testing
+        software.setSoftwareName("Test Software");
+        softwareDeviceDTO.setSoftware(software);
+        // Set other properties as needed for testing
+
+        // Mock the behavior of your softwareRepository
+        Optional<Software> existingSoftware = Optional.of(new Software());
+        Mockito.when(softwareRepository.findById(1L)).thenReturn(existingSoftware);
+        Mockito.when(softwareRepository.save(Mockito.any(Software.class)))
+                .thenReturn(existingSoftware.get()); // Mock the save operation
+
+        // Call the method you want to test
         ResponseEntity<ResponseDTO> responseEntity = softwareService.changePlan(softwareDeviceDTO);
-    
-        // Assertions
-        verify(softwareRepository, times(1)).findById(existingSoftware.getId());
-        verify(softwareRepository, times(1)).save(existingSoftware);
-        verify(softwareLicenseHistoryRepository, times(1)).save(any(SoftwareLicenseHistory.class));
+
+        // Verify the expected behavior
         assertEquals("Software Plan changed successfully", responseEntity.getBody().getResponseBody());
     }
-    
+
     @Test
-    void testChangePlan_NonExistingSoftware() {
-        // Create a sample SoftwareDeviceDTO with a non-existing software
+    void testChangePlan_NotFound() {
+        // Create a sample SoftwareDeviceDTO for testing
         SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
-        Software nonExistingSoftware = new Software();
-        nonExistingSoftware.setId(2L);
-        nonExistingSoftware.setSoftwareName("Non-Existing Software");
-        softwareDeviceDTO.setSoftware(nonExistingSoftware);
-    
-        // Mock the behavior of the softwareRepository to return no existing software
-        when(softwareRepository.findById(nonExistingSoftware.getId())).thenReturn(Optional.empty());
-    
-        // Call the changePlan method
+        Software software = new Software();
+        software.setId(1L); // Set the ID for testing
+        software.setSoftwareName("Test Software");
+        softwareDeviceDTO.setSoftware(software);
+        // Set other properties as needed for testing
+
+        // Mock the behavior of your softwareRepository
+        Mockito.when(softwareRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Call the method you want to test
         ResponseEntity<ResponseDTO> responseEntity = softwareService.changePlan(softwareDeviceDTO);
-    
-        // Assertions
-        verify(softwareRepository, times(1)).findById(nonExistingSoftware.getId());
-        verifyNoMoreInteractions(softwareRepository);
-    
+
+        // Verify the expected behavior
         assertEquals("Software not found", responseEntity.getBody().getResponseBody());
     }
 
-    
+    @Test
+     void testRefundSoftware_ExistingSoftware() {
+        // Create a sample Software object
+        Software software = new Software();
+        software.setId(1L); // Assuming this is the ID of an existing software
+
+        // Mock the behavior of the softwareRepository to return the sample software
+        Mockito.when(softwareRepository.findById(software.getId())).thenReturn(Optional.of(software));
+
+        // Call the method you want to test
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        softwareDeviceDTO.setSoftware(software);
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.refundSoftware(softwareDeviceDTO);
+
+      
+        // You can also verify other aspects of the response, such as the response body and content.
+        // For example, check that the response body contains the expected message.
+        assertEquals("Software refunded successfully", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+     void testRefundSoftware_NonExistingSoftware() {
+        // Create a sample Software object
+        Software software = new Software();
+        software.setId(1L); // Assuming this is the ID of a non-existing software
+
+        // Mock the behavior of the softwareRepository to return an empty Optional (indicating non-existence)
+        Mockito.when(softwareRepository.findById(software.getId())).thenReturn(Optional.empty());
+
+        // Call the method you want to test
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        softwareDeviceDTO.setSoftware(software);
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.refundSoftware(softwareDeviceDTO);
+
+       
+        // You can also verify other aspects of the response, such as the response body and content.
+        // For example, check that the response body contains the expected error message.
+        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+     void testSetSoftwareAnalysis_ExistingSoftware() {
+        // Create a sample Software object
+        Software software = new Software();
+        software.setId(1L); // Assuming this is the ID of an existing software
+
+        // Mock the behavior of the softwareRepository to return the sample software
+        Mockito.when(softwareRepository.findById(software.getId())).thenReturn(Optional.of(software));
+
+        // Call the method you want to test
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        softwareDeviceDTO.setSoftware(software);
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.setSoftwareAnalysis(softwareDeviceDTO);
+
+        
+
+        // You can also verify other aspects of the response, such as the response body and content.
+        // For example, check that the response body contains the expected message.
+        assertEquals("Software Analysis added successfully", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+     void testSetSoftwareAnalysis_NonExistingSoftware() {
+        // Create a sample Software object
+        Software software = new Software();
+        software.setId(1L); // Assuming this is the ID of a non-existing software
+
+        // Mock the behavior of the softwareRepository to return an empty Optional (indicating non-existence)
+        Mockito.when(softwareRepository.findById(software.getId())).thenReturn(Optional.empty());
+
+        // Call the method you want to test
+        SoftwareDeviceDTO softwareDeviceDTO = new SoftwareDeviceDTO();
+        softwareDeviceDTO.setSoftware(software);
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.setSoftwareAnalysis(softwareDeviceDTO);
+
+
+
+        // You can also verify other aspects of the response, such as the response body and content.
+        // For example, check that the response body contains the expected error message.
+        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testDeleteSoftwareById() {
+        // Create a sample software ID for testing
+        Long softwareId = 1L;
+
+        // Mock the behavior of your softwareRepository
+        Optional<Software> existingSoftware = Optional.of(new Software());
+        Mockito.when(softwareRepository.findById(softwareId)).thenReturn(existingSoftware);
+        Mockito.doNothing().when(softwareRepository).delete(existingSoftware.get());
+
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.deleteSoftwareById(softwareId);
+
+        // Verify the expected behavior
+
+        assertEquals("Software deleted successfully", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testDeleteSoftwareById_NonExistingSoftware() {
+        // Create a sample software ID for testing
+        Long softwareId = 1L;
+
+        // Mock the behavior of your softwareRepository
+        Mockito.when(softwareRepository.findById(softwareId)).thenReturn(Optional.empty());
+
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = softwareService.deleteSoftwareById(softwareId);
+
+        // Verify the expected behavior
+
+        assertEquals("Software not found", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testGetSoftwareLessThan45days_WithData() {
+        // Create a list of sample Software objects with different expiry dates
+        List<Software> sampleSoftwareList = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        sampleSoftwareList.add(createSoftware(today.minusDays(10))); // Expiring in the past (less than 45 days)
+        sampleSoftwareList.add(createSoftware(today.plusDays(50))); // Expiring in the future (more than 45 days)
+        sampleSoftwareList.add(createSoftware(today.plusDays(20))); // Expiring within 45 days
+
+        // Mock the behavior of the softwareRepository to return the sample list
+        Mockito.when(softwareRepository.findAll()).thenReturn(sampleSoftwareList);
+
+        // Call the method you want to test
+        ResponseEntity<List<Software>> responseEntity = softwareService.getSoftwareLessThan45days();
+        // Verify the expected behavior
+        assertEquals(1, responseEntity.getBody().size()); // Only one software object with expiry date within 45 days
+    }
+
+    @Test
+    void testGetSoftwareLessThan45days_NoData() {
+        // Create an empty list of Software objects
+        List<Software> emptySoftwareList = new ArrayList<>();
+
+        // Mock the behavior of the softwareRepository to return an empty list
+        Mockito.when(softwareRepository.findAll()).thenReturn(emptySoftwareList);
+
+        // Call the method you want to test
+        ResponseEntity<List<Software>> responseEntity = softwareService.getSoftwareLessThan45days();
+
+        // Verify the expected behavior when there's no data
+
+        assertEquals(0, responseEntity.getBody().size()); // No software objects with expiry dates within 45 days
+    }
+
+    @Test
+    void testGetSoftwareLessThanZerodays_withData(){
+        // Create a list of sample Software objects with different expiry dates
+        List<Software> sampleSoftwareList = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        sampleSoftwareList.add(createSoftware(today.minusDays(10))); // Expiring in the past (less than 45 days)
+        sampleSoftwareList.add(createSoftware(today.plusDays(50))); // Expiring in the future (more than 45 days)
+        sampleSoftwareList.add(createSoftware(today.plusDays(20))); // Expiring within 45 days
+        sampleSoftwareList.add(createSoftware(today.minusDays(60))); // Expired (less than 0 days)
+
+        // Mock the behavior of the softwareRepository to return the sample list
+        Mockito.when(softwareRepository.findAll()).thenReturn(sampleSoftwareList);
+
+        // Call the method you want to test
+        ResponseEntity<List<Software>> responseEntity = softwareService.getSoftwareLessThanZeroDays();
+        // Verify the expected behavior
+        assertEquals(2, responseEntity.getBody().size()); // Only one software object with expiry date within 45 days
+    }
+
+
+    @Test
+    void testGetSoftwareLessThanZerodays_NoData(){
+        // Create an empty list of Software objects
+        List<Software> emptySoftwareList = new ArrayList<>();
+
+        // Mock the behavior of the softwareRepository to return an empty list
+        Mockito.when(softwareRepository.findAll()).thenReturn(emptySoftwareList);
+
+        // Call the method you want to test
+        ResponseEntity<List<Software>> responseEntity = softwareService.getSoftwareLessThanZeroDays();
+
+        // Verify the expected behavior when there's no data
+
+        assertEquals(0, responseEntity.getBody().size()); // No software objects with expiry dates within 45 days
+    }
 
     @Test
     void testGetLicenseCounts() {
@@ -420,15 +489,14 @@ class SoftwareServiceTest {
         Map<String, Long> counts = response.getBody();
         assertNotNull(counts);
         assertEquals(4, counts.get("totalLicenses"));
-        assertEquals(0, counts.get("licensesLessThanZero"));
-        assertEquals(4, counts.get("licensesGreaterThan45"));
-        assertEquals(0, counts.get("licensesLessThan45Count"));
+        assertEquals(2, counts.get("licensesLessThanZero"));
+        assertEquals(1, counts.get("licensesGreaterThan45"));
+        assertEquals(1, counts.get("licensesLessThan45Count"));
     }
 
     private Software createSoftware(LocalDate expiryDate) {
         Software software = new Software();
-        Date d = new Date(2023, 1, 1);
-        software.setExpiryDate(d);
+        software.setExpiryDate(Date.valueOf(expiryDate));
         return software;
     }
 

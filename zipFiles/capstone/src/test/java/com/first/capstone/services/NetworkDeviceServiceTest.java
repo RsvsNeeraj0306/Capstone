@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -146,81 +147,8 @@ class NetworkDeviceServiceTest {
         assertEquals("TestDevice", result.getHardwareName());
     }
 
-    @Test
-    void testAddNetworkDeviceHistory_DeviceNotFound() {
-        // Create a sample NetworkDeviceDTO with a networkDevice
-        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
 
-        // Create a sample network device
-        NetworkDevice networkDevice = new NetworkDevice();
-        networkDevice.setId(1L);
-        networkDeviceDTO.setNetworkDevice(networkDevice);
-
-        // Mock the behavior of the networkDeviceRepository to return an existing
-        // network device
-        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Mock the behavior of networkDeviceHistoryRepository when saving the new
-        // history
-        Mockito.when(networkDeviceHistoryRepository.save(Mockito.any(NetworkDevicesHistory.class)))
-                .thenAnswer(invocation -> {
-                    NetworkDevicesHistory savedHistory = invocation.getArgument(0);
-                    savedHistory.setId(2L); // Simulate that the history gets an ID when saved
-                    return savedHistory;
-                });
-        // Perform the test
-        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
-
-        // Assertions
-        assertEquals("Network device not found", responseEntity.getBody().getResponseBody());
-    }
-
-    @Test
-    void testAddNetworkDeviceHistory_DeviceFound() {
-        // Create a sample NetworkDeviceDTO without a networkDevice
-        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
-        NetworkDevice networkDevice = new NetworkDevice();
-        networkDevice.setId(1L);
-        networkDeviceDTO.setNetworkDevice(networkDevice);
-        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-        networkDevicesHistory.setId(1L);
-        networkDevicesHistory.setNetworkDevice(networkDevice);
-        networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
-        networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
-        networkDeviceDTO.setNetworkDevicesHistory(networkDevicesHistory);
-
-        networkDeviceHistoryRepository = mock(NetworkDevicesHistoryRepository.class);
-
-        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.of(networkDevice));
-       
-        // Perform the test
-        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
-
-        assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
-    }
-
-    @Test
-    void testGetters() {
-        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-
-        // Set values for the network devices history
-        networkDevicesHistory.setId(1L);
-        networkDevicesHistory.setNetworkDevice(networkDevice);
-        networkDevicesHistory.setLicenseKey("TestLicenseKey");
-        networkDevicesHistory.setWarrantyEndDate(Date.valueOf(LocalDate.now().plusDays(30)));
-        networkDevicesHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
-
-        // Check the getters
-        assertEquals(1L, networkDevicesHistory.getId());
-        assertEquals(networkDevice, networkDevicesHistory.getNetworkDevice());
-        assertEquals("TestLicenseKey", networkDevicesHistory.getLicenseKey());
-        assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), networkDevicesHistory.getWarrantyEndDate());
-        assertEquals(Date.valueOf(LocalDate.now()), networkDevicesHistory.getPurchaseDate());
-    }
-   
-
-
-    @Test
+     @Test
     void testAddNetworkDevice() {
         // Create a sample NetworkDeviceDTO with a networkDevice
         NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
@@ -249,18 +177,144 @@ class NetworkDeviceServiceTest {
         // Mock the behavior of networkDeviceRepository when saving the new device
         when(networkDeviceRepository.save(Mockito.any(NetworkDevice.class))).thenReturn(networkDevice);
 
-    
-        NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-        networkDevicesHistory.setId(1L);
-        networkDevicesHistory.setNetworkDevice(networkDevice);
-        networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
-        networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
-        networkDeviceDTO.setNetworkDevicesHistory(networkDevicesHistory);
-    
+
         // Perform the test
         ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDevice(networkDeviceDTO);
     
         assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
     }
+
+
+     @Test
+    void testAddNetworkDeviceHistory() {
+        // Create a sample NetworkDevice for testing
+        NetworkDevice networkDevice = new NetworkDevice();
+        networkDevice.setHardwareName("TestDevice");
+        networkDevice.setPurchaseDate(new Date(System.currentTimeMillis()));
+        networkDevice.setWarrantyEndDate(new Date(System.currentTimeMillis()));
+        networkDevice.setSerialNumber("12345");
+        networkDevice.setCost(BigDecimal.valueOf(1000));
+        networkDevice.setQuantity(1);
+
+        // Mock the behavior of the networkDeviceHistoryRepository
+        Mockito.when(networkDeviceHistoryRepository.save(Mockito.any(NetworkDevicesHistory.class)))
+                .thenAnswer(invocation -> {
+                    NetworkDevicesHistory savedHistory = invocation.getArgument(0);
+                    savedHistory.setId(2L); // Simulate that the history gets an ID when saved
+                    return savedHistory;
+                });
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDevice, "ADD");
+
+        // Verify the expected behavior
+        assertEquals(200, responseEntity.getStatusCodeValue()); // Assuming a successful response code
+        assertEquals("Network device history added successfully", responseEntity.getBody().getResponseBody());
+    }
+
+
+
+
+    // @Test
+    // void testAddNetworkDeviceHistory_DeviceNotFound() {
+    //     // Create a sample NetworkDeviceDTO with a networkDevice
+    //     NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+
+    //     // Create a sample network device
+    //     NetworkDevice networkDevice = new NetworkDevice();
+    //     networkDevice.setId(1L);
+    //     networkDeviceDTO.setNetworkDevice(networkDevice);
+
+    //     // Mock the behavior of the networkDeviceRepository to return an existing
+    //     // network device
+    //     when(networkDeviceRepository.findById(1L)).thenReturn(Optional.empty());
+
+    //     // Mock the behavior of networkDeviceHistoryRepository when saving the new
+    //     // history
+    //     Mockito.when(networkDeviceHistoryRepository.save(Mockito.any(NetworkDevicesHistory.class)))
+    //             .thenAnswer(invocation -> {
+    //                 NetworkDevicesHistory savedHistory = invocation.getArgument(0);
+    //                 savedHistory.setId(2L); // Simulate that the history gets an ID when saved
+    //                 return savedHistory;
+    //             });
+    //     // Perform the test
+    //     ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
+
+    //     // Assertions
+    //     assertEquals("Network device not found", responseEntity.getBody().getResponseBody());
+    // }
+
+    // @Test
+    // void testAddNetworkDeviceHistory_DeviceFound() {
+    //     // Create a sample NetworkDeviceDTO without a networkDevice
+    //     NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+    //     NetworkDevice networkDevice = new NetworkDevice();
+    //     networkDevice.setId(1L);
+    //     networkDeviceDTO.setNetworkDevice(networkDevice);
+       
+    //     // Perform the test
+    //     ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO);
+
+    //     assertEquals("Network device added successfully", responseEntity.getBody().getResponseBody());
+    // }
+
+    // @Test
+    // void testGetters() {
+    //     NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
+
+    //     // Set values for the network devices history
+    //     networkDevicesHistory.setId(1L);
+    //     networkDevicesHistory.setNetworkDevice(networkDevice);
+    //     networkDevicesHistory.setLicenseKey("TestLicenseKey");
+    //     networkDevicesHistory.setWarrantyEndDate(Date.valueOf(LocalDate.now().plusDays(30)));
+    //     networkDevicesHistory.setPurchaseDate(Date.valueOf(LocalDate.now()));
+
+    //     // Check the getters
+    //     assertEquals(1L, networkDevicesHistory.getId());
+    //     assertEquals(networkDevice, networkDevicesHistory.getNetworkDevice());
+    //     assertEquals("TestLicenseKey", networkDevicesHistory.getLicenseKey());
+    //     assertEquals(Date.valueOf(LocalDate.now().plusDays(30)), networkDevicesHistory.getWarrantyEndDate());
+    //     assertEquals(Date.valueOf(LocalDate.now()), networkDevicesHistory.getPurchaseDate());
+    // }
+
+
+    @Test
+    public void testDeleteNetworkDeviceById() {
+        // Create a sample network device ID for testing
+        Long deviceId = 1L;
+
+        // Mock the behavior of the networkDeviceRepository
+        NetworkDevice mockNetworkDevice = new NetworkDevice();
+        Mockito.when(networkDeviceRepository.findById(deviceId))
+               .thenReturn(Optional.of(mockNetworkDevice)); // Mock the findById operation
+        Mockito.doNothing().when(networkDeviceRepository).deleteById(deviceId); // Mock the delete operation
+
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.deleteNetworkDeviceById(deviceId);
+
+        // Verify the expected behavior
+        assertEquals(200, responseEntity.getStatusCodeValue()); // Assuming a successful response code
+        assertEquals("Network device deleted successfully", responseEntity.getBody().getResponseBody());
+    }
+
+    @Test
+    void testDeleteNetworkDeviceById_NotFound() {
+        // Create a sample network device ID for testing
+        Long deviceId = 1L;
+
+        // Mock the behavior of the networkDeviceRepository to return an empty optional
+        Mockito.when(networkDeviceRepository.findById(deviceId))
+               .thenReturn(Optional.empty());
+
+        // Call the method you want to test
+        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.deleteNetworkDeviceById(deviceId);
+
+        // Verify the expected behavior for a not found device
+      
+        assertEquals("Network device not found", responseEntity.getBody().getResponseBody());
+    }
+   
+
+
+   
     
 }

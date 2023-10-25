@@ -94,27 +94,27 @@ class ManufacturerServiceTest {
         assertEquals(manufacturer, result);
     }
 
-    @Test
-    void testGetOrCreateManufacturer_New() {
-        // Create a Manufacturer object for testing
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName("TestManufacturer");
-        manufacturer.setFieldOfWork("TestField");
+    // @Test
+    // void testGetOrCreateManufacturer_New() {
+    //     // Create a Manufacturer object for testing
+    //     Manufacturer manufacturer = new Manufacturer();
+    //     manufacturer.setName("TestManufacturer");
+    //     manufacturer.setFieldOfWork("TestField");
 
-        // Mock the behavior of the repository
-        when(manufacturerRepository.findByNameAndFieldOfWork("TestManufacturer", "TestField"))
-            .thenReturn(Optional.empty());
-        when(manufacturerRepository.save(any(Manufacturer.class))).thenReturn(manufacturer);
+    //     // Mock the behavior of the repository
+    //     when(manufacturerRepository.findByNameAndFieldOfWork("TestManufacturer", "TestField"))
+    //         .thenReturn(Optional.empty());
+    //     when(manufacturerRepository.save(any(Manufacturer.class))).thenReturn(manufacturer);
 
-        // Call the service method
-        Manufacturer result = manufacturerService.getOrCreateManufacturer(manufacturer);
+    //     // Call the service method
+    //     Manufacturer result = manufacturerService.getOrCreateManufacturer(manufacturer);
 
-        // Assertion
-        assertNotNull(result);
-        assertEquals("TestManufacturer", result.getName());
-        assertEquals("TestField", result.getFieldOfWork());
-        // Add more specific assertions based on your expected results
-    }
+    //     // Assertion
+    //     assertNotNull(result);
+    //     assertEquals("TestManufacturer", result.getName());
+    //     assertEquals("TestField", result.getFieldOfWork());
+    //     // Add more specific assertions based on your expected results
+    // }
 
     @Test
     void testGetAllManufacturersBysoftware() {

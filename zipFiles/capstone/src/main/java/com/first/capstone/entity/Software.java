@@ -1,7 +1,6 @@
 package com.first.capstone.entity;
 
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,6 +8,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +19,6 @@ import jakarta.persistence.ManyToOne;
  @Getter
  @Setter
  @RequiredArgsConstructor
- @EqualsAndHashCode
 public class Software {
 
     @Id
@@ -27,7 +26,7 @@ public class Software {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Manufacturer manufacturer;
 
     private String softwareName;
@@ -35,7 +34,8 @@ public class Software {
     private Date expiryDate;
     private String typeOfPlan;
     private String licenseKey;
-    private Integer usersCanUse;
+    private Integer quantity;
+    private String version;
     private BigDecimal priceOfSoftware;
 
 }

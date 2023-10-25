@@ -5,18 +5,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
- @Getter
- @Setter
- @RequiredArgsConstructor
- 
-public class Manufacturer {
+@Getter
+@Setter
+public class ManufactureHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private Long id;
 
@@ -24,8 +21,7 @@ public class Manufacturer {
     private String fieldOfWork;
     private String companyWebsiteLink;
     private String emailId;
+    private String action;
 
+    
 }
-
-
-

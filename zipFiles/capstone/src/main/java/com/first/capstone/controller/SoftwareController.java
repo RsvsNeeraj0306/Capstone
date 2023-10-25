@@ -40,7 +40,7 @@ public class SoftwareController {
     }
 
     @PostMapping("/addSoftware")
-    public ResponseEntity<ResponseDTO> addSoftware(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+    public ResponseEntity<Software> addSoftware(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         return softwareService.addSoftware(softwareDeviceDTO);
     }
 
@@ -74,22 +74,18 @@ public class SoftwareController {
         return softwareService.deleteSoftwareById(softwareId);
     }
 
-    @GetMapping("/getSoftwareLessThan45day")
+    @GetMapping("/getSoftwareLessThan45days")
     public ResponseEntity<List<Software>> getSoftwareLessThan45day()
     {
         return softwareService.getSoftwareLessThan45days();
     }
 
-    @GetMapping("/getSoftwareLessThanZeroday")
+    @GetMapping("/getSoftwareLessThanZerodays")
     public ResponseEntity<List<Software>> getSoftwareLessThanZeroday()
     {
             return softwareService.getSoftwareLessThanZeroDays();
     }
 
-    @GetMapping("")
-    public ResponseEntity<ResponseDTO> licenseNotification()
-    {
-        return softwareService.checkAndSendLicenseExpirationNotifications();
-    }
+   
 
 }

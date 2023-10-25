@@ -24,7 +24,7 @@ public class SoftwareAnalysis {
 
     private double averageTimeUsage;
     private int activeUsers;
-    private double globalRating;
+    private double companyRating;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Software software;
