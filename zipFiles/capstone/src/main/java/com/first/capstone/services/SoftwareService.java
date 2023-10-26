@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.first.capstone.entity.Software;
 import com.first.capstone.entity.SoftwareAnalysis;
 import com.first.capstone.entity.SoftwareLicenseHistory;
 import com.first.capstone.entity.SoftwareRMA;
+import com.first.capstone.respositories.SoftwareAnalysisRespository;
 import com.first.capstone.respositories.SoftwareLicenseHistoryRepository;
 import com.first.capstone.respositories.SoftwareRMARepository;
 import com.first.capstone.respositories.SoftwareRepository;
@@ -44,6 +46,9 @@ public class SoftwareService {
 
     @Autowired
     private GmailService gmailService;
+
+    @Autowired
+    private SoftwareAnalysisRespository softwareAnalysisRepository;
 
     @Autowired
     private SoftwareLicenseHistoryRepository softwareLicenseHistoryRepository;
@@ -142,51 +147,57 @@ public class SoftwareService {
         }
     }
 
-    public ResponseEntity<ResponseDTO> refundSoftware(SoftwareDeviceDTO softwareDeviceDTO) {
+    public ResponseEntity<SoftwareRMA> refundSoftware(SoftwareDeviceDTO softwareDeviceDTO) {
         Software software = softwareDeviceDTO.getSoftware();
+        if (software.getId() == null) {
+            return ResponseEntity.badRequest().body(null); // Handle the case where ID is null
+        }
+        
         Optional<Software> existingSoftware = softwareRepository.findById(software.getId());
-        SoftwareRMA softwareRMA = new SoftwareRMA();
         if (existingSoftware.isPresent()) {
-            softwareRMA.setRefunDate(softwareRMA.getRefunDate());
+            SoftwareRMA softwareRMA = new SoftwareRMA();
             softwareRMA.setRefundAmount(software.getPriceOfSoftware());
-            softwareRMA.setRefundReason(softwareRMA.getRefundReason());
-            softwareRMA.setSoftware(software);
+            softwareRMA.setRefundReason(softwareDeviceDTO.getSoftwareRMA().getRefundReason());
+            softwareRMA.setSoftware(existingSoftware.get());
+            softwareRMA.setRefunDate(java.sql.Date.valueOf(LocalDate.now()));
+            
             addLicenseHistory(existingSoftware.get(), Action.REFUND.toString());
             softwareRMARepository.save(softwareRMA);
-
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Software refunded successfully");
-            return ResponseEntity.ok().body(responseDTO);
-
+            
+            return ResponseEntity.ok().body(softwareRMA);
         } else {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody(ERROR_MESSAGE);
-            return ResponseEntity.badRequest().body(responseDTO);
+            return ResponseEntity.notFound().build();
         }
     }
+    
 
-    public ResponseEntity<ResponseDTO> setSoftwareAnalysis(SoftwareDeviceDTO softwareDeviceDTO) {
+    public ResponseEntity<SoftwareAnalysis> setSoftwareAnalysis(SoftwareDeviceDTO softwareDeviceDTO) {
         Software software = softwareDeviceDTO.getSoftware();
         Optional<Software> existingSoftware = softwareRepository.findById(software.getId());
-        SoftwareAnalysis softwareAnalysis = new SoftwareAnalysis();
         if (existingSoftware.isPresent()) {
+            SoftwareAnalysis softwareAnalysis = new SoftwareAnalysis();
             softwareAnalysis.setSoftware(existingSoftware.get());
-            softwareAnalysis.setActiveUsers(softwareAnalysis.getActiveUsers());
-            softwareAnalysis.setAverageTimeUsage(softwareAnalysis.getAverageTimeUsage());
-            softwareAnalysis.setCompanyRating(softwareAnalysis.getCompanyRating());
+            softwareAnalysis.setActiveUsers(softwareDeviceDTO.getSoftwareAnalysis().getActiveUsers());  // Set activeUsers
+            softwareAnalysis.setAverageTimeUsage(softwareDeviceDTO.getSoftwareAnalysis().getAverageTimeUsage());  // Set averageTimeUsage
+            softwareAnalysis.setCompanyRating(softwareDeviceDTO.getSoftwareAnalysis().getCompanyRating());  // Set companyRating
+            softwareAnalysisRepository.save(softwareAnalysis);
             addLicenseHistory(existingSoftware.get(), Action.ANALYSIS.toString());
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Software Analysis added successfully");
-            return ResponseEntity.ok().body(responseDTO);
-
+            return ResponseEntity.ok().body(softwareAnalysis);
         } else {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody(ERROR_MESSAGE);
-            return ResponseEntity.badRequest().body(responseDTO);
+            return ResponseEntity.notFound().build();
         }
     }
 
-    public ResponseEntity<ResponseDTO> deleteSoftwareById(Long softwareId) {
+    public List<SoftwareAnalysis> getSoftwareAnalysis() {
+        List<SoftwareAnalysis> softwareAnalysis = softwareAnalysisRepository.findAll();
+        if (!softwareAnalysis.isEmpty()) {
+            return softwareAnalysis;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public ResponseEntity<Software> deleteSoftwareById(Long softwareId) {
         // Retrieve the software by its ID
         Optional<Software> softwareOptional = softwareRepository.findById(softwareId);
 
@@ -194,13 +205,9 @@ public class SoftwareService {
             addLicenseHistory(softwareOptional.get(), Action.DELETED.toString());
             softwareRepository.delete(softwareOptional.get());
 
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Software deleted successfully");
-            return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok().body(softwareOptional.get());
         } else {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody(ERROR_MESSAGE);
-            return ResponseEntity.badRequest().body(responseDTO);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -222,6 +229,15 @@ public class SoftwareService {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setResponseBody("License history added successfully");
         return ResponseEntity.ok().body(responseDTO);
+    }
+
+    public List<SoftwareLicenseHistory> getLicenseHistory() {
+        List<SoftwareLicenseHistory> softwareLicenseHistory = softwareLicenseHistoryRepository.findAll();
+        if (!softwareLicenseHistory.isEmpty()) {
+            return softwareLicenseHistory;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public ResponseEntity<Map<String, Long>> getLicenseCounts() {

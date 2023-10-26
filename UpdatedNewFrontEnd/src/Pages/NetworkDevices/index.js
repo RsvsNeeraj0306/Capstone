@@ -31,10 +31,10 @@ function NetworkDevices() {
 
   return (
     <Space size={20} direction="vertical">
-      <Typography.Title level={4}>Hardware Devices</Typography.Title>
+      <Typography.Title level={4}>Network Devices</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
-        <Tab key="NetworkDevices" tab="Total Hardware" />
-        <Tab key="NetworkDeviceForm" tab="Add Hardware" />
+        <Tab key="NetworkDevices" tab="Total Network Devices" />
+        <Tab key="NetworkDeviceForm" tab="Add Network Device" />
       </Tabs>
       {activeTab === "NetworkDevices" && (
        <TableContainer sx={{ maxHeight: 440 }}>

@@ -12,6 +12,7 @@ const NetworkDeviceForm = () => {
         purchaseDate: '',
         warrantyEndDate: '',
         hardwareNameSerialnumber: '',
+        serialnumber: '',
         quantity: '',
         cost: ''
         },
@@ -108,6 +109,7 @@ const NetworkDeviceForm = () => {
                     purchaseDate: '',
                     warrantyEndDate: '',
                     hardwareNameSerialnumber: '',
+                    serialnumber: '',
                     quantity: '',
                     cost: '',
                     priceOfHardware: '',
@@ -118,6 +120,7 @@ const NetworkDeviceForm = () => {
                 setError('Error adding Network Device: ' + error);
                 console.error('Error adding Network Device:', error);
             });
+            console.log(networkDeviceDTO);
     };
 
     return (

@@ -80,7 +80,7 @@ function LessThan45Days() {
                     <TableCell>{software.quantity}</TableCell>
                     <TableCell>{daysLeft}</TableCell>
                     <TableCell>
-                      <Link to="/SoftwareDevices">
+                      <Link to="/RenewSoftwareForm">
                         <Button variant="contained" color="primary">
                           Renew
                         </Button>

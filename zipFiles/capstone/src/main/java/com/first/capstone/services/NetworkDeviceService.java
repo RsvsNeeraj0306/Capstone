@@ -1,5 +1,6 @@
 package com.first.capstone.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,7 +109,15 @@ public class NetworkDeviceService {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setResponseBody("Network device history added successfully");
         return ResponseEntity.ok().body(responseDTO);
+    }
 
+    public List<NetworkDevicesHistory> getNetworkDeviceHistory() {
+        List<NetworkDevicesHistory> networkDevicesHistory = networkDeviceHistoryRepository.findAll();
+        if (!networkDevicesHistory.isEmpty()) {
+            return networkDevicesHistory;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public ResponseEntity<ResponseDTO> deleteNetworkDeviceById(Long id) {
@@ -150,7 +159,7 @@ public class NetworkDeviceService {
         }
     }
 
-    public ResponseEntity<ResponseDTO> setNetworkDeviceRMA(NetworkDeviceDTO networkDeviceDTO) {
+    public ResponseEntity<NetworkDeviceRMA> setNetworkDeviceRMA(NetworkDeviceDTO networkDeviceDTO) {
         Optional<NetworkDevice> networkDevice = networkDeviceRepository
                 .findById(networkDeviceDTO.getNetworkDevice().getId());
         NetworkDeviceRMA networkDeviceRMA = networkDeviceDTO.getNetworkDeviceRMA();
@@ -163,14 +172,10 @@ public class NetworkDeviceService {
             newNetworkDeviceRMA.setNetworkDevice(networkDevice.get());
             networkDeviceRMARepository.save(newNetworkDeviceRMA);
             addNetworkDeviceHistory(networkDevice.get(), Action.RMA.toString());
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Network device RMA added successfully");
-            return ResponseEntity.ok(responseDTO);
-        } else {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody(ERROR_MESSAGE);
-            return ResponseEntity.ok(responseDTO);
-        }
 
+            return ResponseEntity.ok(newNetworkDeviceRMA);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

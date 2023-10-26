@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.first.capstone.dto.ResponseDTO;
+import com.first.capstone.entity.ManufactureHistory;
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.respositories.ManufacturerRepository;
 import com.first.capstone.services.ManufacturerService;
@@ -59,6 +60,11 @@ public class ManufactureController {
     @PutMapping("/updateManufacturer/{id}")
     public ResponseEntity<ResponseDTO> updateManufacturer(@PathVariable Long id, @RequestBody Manufacturer manufacturer) {
         return manufacturerService.updateManufactureById(id, manufacturer);
+    }
+
+    @GetMapping("/getManufacturerHistory")
+    public List<ManufactureHistory> getManufacturerHistory() {
+        return manufacturerService.getManufactureHistory();
     }
     
 

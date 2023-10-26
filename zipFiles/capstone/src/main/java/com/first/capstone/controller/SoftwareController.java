@@ -18,7 +18,9 @@ import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.dto.SoftwareDeviceDTO;
 
 import com.first.capstone.entity.Software;
-
+import com.first.capstone.entity.SoftwareAnalysis;
+import com.first.capstone.entity.SoftwareLicenseHistory;
+import com.first.capstone.entity.SoftwareRMA;
 import com.first.capstone.respositories.SoftwareRepository;
 
 import com.first.capstone.services.SoftwareService;
@@ -70,7 +72,7 @@ public class SoftwareController {
     }
 
     @DeleteMapping("/deleteSoftware/{softwareId}")
-    public ResponseEntity<ResponseDTO> deleteSoftwareById(@PathVariable Long softwareId) {
+    public ResponseEntity<Software> deleteSoftwareById(@PathVariable Long softwareId) {
         return softwareService.deleteSoftwareById(softwareId);
     }
 
@@ -85,6 +87,28 @@ public class SoftwareController {
     {
             return softwareService.getSoftwareLessThanZeroDays();
     }
+
+    @PostMapping("/refund")
+    public ResponseEntity<SoftwareRMA> refundSoftware(@RequestBody SoftwareDeviceDTO refundRequest) {
+        return softwareService.refundSoftware(refundRequest);
+    }
+
+    @PostMapping("/analysis")
+    public ResponseEntity<SoftwareAnalysis> analysisSoftware(@RequestBody SoftwareDeviceDTO analysisRequest) {
+        return softwareService.setSoftwareAnalysis(analysisRequest);
+    }
+
+    @GetMapping("/getSoftwareAnalysis")
+    public List<SoftwareAnalysis> getSoftwareAnalysis() {
+        return softwareService.getSoftwareAnalysis();
+    }
+
+    @GetMapping("/getSoftwareHistory")
+    public List<SoftwareLicenseHistory> getSoftwareHistory() {
+        return softwareService. getLicenseHistory();
+    }
+
+
 
    
 

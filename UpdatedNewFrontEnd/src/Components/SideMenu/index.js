@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TerminalIcon from '@mui/icons-material/Terminal';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import HistoryIcon from '@mui/icons-material/History';
 
 
 function SideMenu() {
@@ -50,6 +53,24 @@ function SideMenu() {
             key: "/Manufacturer",
             icon: <UserOutlined />,
           },
+          {
+            label: "Software Services",
+            key: "/Services",
+            icon: <DesignServicesIcon />,
+
+          },
+          {
+            label:"Network Services",
+            key:"/NetworkServices",
+            icon:<StorefrontIcon />
+
+          },
+
+          {
+            label:"History",
+            key:"/AllHistory",
+            icon:<HistoryIcon />
+          }
         ]}
       ></Menu>
     </div>

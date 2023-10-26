@@ -1,5 +1,6 @@
 package com.first.capstone.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -140,6 +141,15 @@ public class ManufacturerService {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setResponseBody("Manufacturer history added successfully");
         return ResponseEntity.ok(responseDTO);
+    }
+
+    public List<ManufactureHistory> getManufactureHistory() {
+        List<ManufactureHistory> manufacturerHistory = manufacturerHistoryRepository.findAll();
+        if (!manufacturerHistory.isEmpty()) {
+            return manufacturerHistory;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     

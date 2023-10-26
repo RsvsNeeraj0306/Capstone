@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.first.capstone.dto.NetworkDeviceDTO;
 import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.entity.NetworkDevice;
-
+import com.first.capstone.entity.NetworkDeviceRMA;
+import com.first.capstone.entity.NetworkDevicesHistory;
 import com.first.capstone.services.NetworkDeviceService;
 
 import jakarta.transaction.Transactional;
@@ -53,6 +54,23 @@ public class HardwareController {
   @Transactional
   public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
     return networkDeviceService.addNetworkDeviceHistory(networkDeviceDTO.getNetworkDevice(), "ADD");
+  }
+
+  @PostMapping("/setRMA")
+  @Transactional
+  public ResponseEntity<NetworkDeviceRMA> setRMA(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
+    return networkDeviceService.setNetworkDeviceRMA(networkDeviceDTO);
+  }
+
+  @PostMapping("/setAnalysis")
+  @Transactional
+  public ResponseEntity<ResponseDTO> setAnalysis(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
+    return networkDeviceService.setNetworkDeviceAnalysis(networkDeviceDTO);
+  }
+
+  @GetMapping("/getNetworkDeviceHistory")
+  public List<NetworkDevicesHistory> getNetworkDeviceHistory() {
+    return networkDeviceService.getNetworkDeviceHistory();
   }
 
 
