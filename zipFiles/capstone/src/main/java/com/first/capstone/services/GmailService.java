@@ -1,5 +1,8 @@
 package com.first.capstone.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +20,8 @@ public class GmailService {
 
     @Autowired
     private JavaMailSender sender;
+
+
 
     public ResponseEntity<ResponseDTO> sendMail() {
         MimeMessage message = sender.createMimeMessage();
@@ -39,13 +44,17 @@ public class GmailService {
         return ResponseEntity.ok(responseDTO);
     }
 
-     public void sendLicenseExpirationEmail(Software software) {
+     public void sendLicenseExpirationEmail(List<Software> software) {
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
            helper.setTo("neerajrenkireddy01@gmail.com");
             helper.setSubject("License Expiration Notification");
-            helper.setText("Your license for software "  + "'"+ software.getSoftwareName() + "'" +" has expired. Please renew the license.");
+            List<String> softwareList = new ArrayList<>();
+            for(Software s : software) {
+                softwareList.add("Your license for software " + " ' " + s.getSoftwareName() + " ' " + " has expired. Please renew the license.");
+            }
+            helper.setText(softwareList.toString());
         } catch (MessagingException e) {
             e.printStackTrace();
             // Handle the exception

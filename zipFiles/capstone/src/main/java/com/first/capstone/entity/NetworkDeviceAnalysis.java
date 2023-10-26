@@ -1,6 +1,7 @@
 package com.first.capstone.entity;
 
-import java.util.Date;
+
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -13,24 +14,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter 
+@Getter
 @Setter
 @RequiredArgsConstructor
-
-public class NetworkDevicePastHistory {
+public class NetworkDeviceAnalysis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date pastRepairDate;
-    private Date pastReplacemntDate;
-    private Integer pastRepairCost;
-    private Date pastRefunDate;
-    private Integer pastRefundAmount; 
-
     @ManyToOne(cascade = CascadeType.ALL)
     private NetworkDevice networkDevice;
 
+    private Integer activeDevice;
+    private Integer averageTimeUsage;
+    private Integer companyRating;
 
+
+
+    
 }

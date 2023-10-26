@@ -1,7 +1,9 @@
 package com.first.capstone.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,9 @@ public class SoftwareService {
 
     @Autowired
     private ManufacturerService manufacturerService;
+
+    @Autowired
+    private GmailService gmailService;
 
     @Autowired
     private SoftwareLicenseHistoryRepository softwareLicenseHistoryRepository;
@@ -102,10 +107,6 @@ public class SoftwareService {
             existingSoftware.get().setPurchaseDate(software.getPurchaseDate());
             existingSoftware.get().setExpiryDate(software.getExpiryDate());
             existingSoftware.get().setLicenseKey(software.getLicenseKey());
-            existingSoftware.get().setVersion(software.getVersion());
-            existingSoftware.get().setQuantity(software.getQuantity());
-            existingSoftware.get().setPriceOfSoftware(software.getPriceOfSoftware());
-            existingSoftware.get().setTypeOfPlan(software.getTypeOfPlan());
             saveSoftware(existingSoftware.get());
 
             addLicenseHistory(existingSoftware.get(), Action.RENEWED.toString());
@@ -120,12 +121,14 @@ public class SoftwareService {
         }
     }
 
-    public ResponseEntity<ResponseDTO> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+    public ResponseEntity<Software> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         Software software = softwareDeviceDTO.getSoftware();
         Optional<Software> existingSoftware = softwareRepository.findById(software.getId());
 
         if (existingSoftware.isPresent()) {
             existingSoftware.get().setLicenseKey(software.getLicenseKey());
+            existingSoftware.get().setExpiryDate(software.getExpiryDate());
+            existingSoftware.get().setPurchaseDate(software.getPurchaseDate());
             existingSoftware.get().setTypeOfPlan(software.getTypeOfPlan());
             existingSoftware.get().setQuantity(software.getQuantity());
             existingSoftware.get().setPriceOfSoftware(software.getPriceOfSoftware());
@@ -133,13 +136,9 @@ public class SoftwareService {
 
             addLicenseHistory(existingSoftware.get(), Action.CHANGED_PLAN.toString());
 
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Software Plan changed successfully");
-            return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok().body(existingSoftware.get());
         } else {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody(ERROR_MESSAGE);
-            return ResponseEntity.badRequest().body(responseDTO);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -149,9 +148,9 @@ public class SoftwareService {
         SoftwareRMA softwareRMA = new SoftwareRMA();
         if (existingSoftware.isPresent()) {
             softwareRMA.setRefunDate(softwareRMA.getRefunDate());
-            softwareRMA.setRefundAmount(softwareRMA.getRefundAmount());
+            softwareRMA.setRefundAmount(software.getPriceOfSoftware());
             softwareRMA.setRefundReason(softwareRMA.getRefundReason());
-            softwareRMA.setSoftware(softwareRMA.getSoftware());
+            softwareRMA.setSoftware(software);
             addLicenseHistory(existingSoftware.get(), Action.REFUND.toString());
             softwareRMARepository.save(softwareRMA);
 
@@ -292,22 +291,15 @@ public class SoftwareService {
 
     }
 
-    public ResponseEntity<List<Software>> getSoftwareLessThanZeroDays() {
-        List<Software> licenses = softwareRepository.findAll();
-        List<Software> listOfSoftwareLessThanZeroDays = licenses.stream()
-                .filter(license -> {
-                    LocalDate expiryDate = license.getExpiryDate().toLocalDate();
-                    LocalDate today = LocalDate.now();
-                    long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
-                    return daysDifference <= 0;
-                })
-                .toList();
-        if (listOfSoftwareLessThanZeroDays != null) {
-            return ResponseEntity.ok().body(listOfSoftwareLessThanZeroDays);
+     public List<Software> getSoftwareLessThanZeroDays() {
+        List<Software> licenses = softwareRepository.findExpiredSoftware(LocalDate.now());
+        if(!licenses.isEmpty()) {
+            gmailService.sendLicenseExpirationEmail(licenses);
+            return licenses;
         } else {
-            return ResponseEntity.notFound().build();
+            return new ArrayList<>();
         }
-
+        
     }
 
 }

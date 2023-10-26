@@ -1,5 +1,6 @@
 package com.first.capstone.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import jakarta.persistence.CascadeType;
@@ -23,7 +24,7 @@ public class SoftwareRMA {
     private Long id;
 
     private Date refunDate;
-    private Integer refundAmount; 
+    private BigDecimal refundAmount; 
     private String refundReason;
 
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.entity.ManufactureHistory;
@@ -22,17 +23,18 @@ public class ManufacturerService {
 
     private final ManufacturerRepository manufacturerRepository;
 
-    private ManufactureHistory manufacturerHistory = new ManufactureHistory();
 
     @Autowired
     private ManufactureHistoryRepository manufacturerHistoryRepository;
+    
 
     enum Action {
         ADD, UPDATE, DELETED
     }
 
-    public ManufacturerService(ManufacturerRepository manufacturerRepository) {
+    public ManufacturerService(ManufacturerRepository manufacturerRepository, ManufactureHistoryRepository manufacturerHistoryRepository) {
         this.manufacturerRepository = manufacturerRepository;
+        this.manufacturerHistoryRepository = manufacturerHistoryRepository;
     }
 
     public boolean manufacturerExists(String name, String fieldOfWork) {
@@ -109,8 +111,10 @@ public class ManufacturerService {
             updatedManufacturer.setFieldOfWork(manufacturer.getFieldOfWork());
             updatedManufacturer.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
             updatedManufacturer.setEmailId(manufacturer.getEmailId());
+            
+            // Call save to update the existing manufacturer
             manufacturerRepository.save(updatedManufacturer);
-
+    
             addManufactureHistory(updatedManufacturer, Action.UPDATE.toString());
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Manufacturer updated successfully");
@@ -118,12 +122,14 @@ public class ManufacturerService {
         } else {
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Manufacturer not found");
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
-    
     }
+    
 
-    public ResponseEntity<ResponseDTO> addManufactureHistory(Manufacturer manufacturer, String action) {
+    public ResponseEntity<ResponseDTO> addManufactureHistory(@RequestBody Manufacturer manufacturer, String action) {
+
+        ManufactureHistory  manufacturerHistory = new ManufactureHistory();
         manufacturerHistory.setName(manufacturer.getName());
         manufacturerHistory.setFieldOfWork(manufacturer.getFieldOfWork());
         manufacturerHistory.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());

@@ -65,7 +65,7 @@ public class SoftwareController {
     }
 
     @PostMapping("/changePlan") // Update the API endpoint name
-    public ResponseEntity<ResponseDTO> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
+    public ResponseEntity<Software> changePlan(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {
         return softwareService.changePlan(softwareDeviceDTO); // Update method call.
     }
 
@@ -81,7 +81,7 @@ public class SoftwareController {
     }
 
     @GetMapping("/getSoftwareLessThanZerodays")
-    public ResponseEntity<List<Software>> getSoftwareLessThanZeroday()
+    public List<Software> getSoftwareLessThanZeroday()
     {
             return softwareService.getSoftwareLessThanZeroDays();
     }

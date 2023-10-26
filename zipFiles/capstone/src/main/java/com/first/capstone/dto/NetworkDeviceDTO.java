@@ -4,7 +4,8 @@ package com.first.capstone.dto;
 
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
-import com.first.capstone.entity.NetworkDevicesHistory;
+import com.first.capstone.entity.NetworkDeviceAnalysis;
+import com.first.capstone.entity.NetworkDeviceRMA;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,8 @@ import lombok.Setter;
 public class NetworkDeviceDTO {
     private NetworkDevice networkDevice;
     private Manufacturer manufacturer;
-    private NetworkDevicesHistory networkDevicesHistory;
-   
+    private NetworkDeviceAnalysis networkDeviceAnalysis;
+    private NetworkDeviceRMA networkDeviceRMA;
     // Constructors, getters, and setters
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, version } from 'react';
 
 const SoftwareRenewalForm = () => {
   const [softwareId, setSoftwareId] = useState('');
@@ -9,11 +9,12 @@ const SoftwareRenewalForm = () => {
   const [softwareList, setSoftwareList] = useState([]);
   const [newPlan, setNewPlan] = useState('');            // New plan field
   const [newPrice, setNewPrice] = useState('');          // New price field
-  const [newUsers, setNewUsers] = useState('');          // New users field
+       // New users field
   const [newLicenseKey, setNewLicenseKey] = useState(''); // New license key field
   const [newPurchaseDate, setNewPurchaseDate] = useState(''); // New purchase date field
   const [newExpiryDate, setNewExpiryDate] = useState(''); // New expiry date field
   const [renewFormVisible, setRenewFormVisible] = useState(true); // To control which form is visible
+  const[newQuantity,setNewQuantity]=useState(''); // New quantity field
   
 
 
@@ -24,11 +25,11 @@ const SoftwareRenewalForm = () => {
     setLicenseKey(''); // Reset license key
     setNewPlan(''); // Reset new plan
     setNewPrice(''); // Reset new price
-    setNewUsers(''); // Reset new users
     setNewLicenseKey(''); // Reset new license key
     setNewPurchaseDate(''); // Reset new purchase date
     setNewExpiryDate(''); // Reset new expiry date
     setMessage(''); // Reset the message
+    setNewQuantity(''); // Reset new quantity
   };
 
 
@@ -60,6 +61,8 @@ const SoftwareRenewalForm = () => {
         purchaseDate,
         expiryDate,
         licenseKey,
+
+
       },
 
       
@@ -95,10 +98,11 @@ const SoftwareRenewalForm = () => {
         id: softwareId,
         typeOfPlan: newPlan,
         priceOfSoftware: newPrice,
-        usersCanUse: newUsers,
-        licenseKey: newLicenseKey,         // New license key
+        licenseKey: newLicenseKey,     // New license key
         purchaseDate: newPurchaseDate,     // New purchase date
         expiryDate: newExpiryDate, 
+        quantity:newQuantity,   
+
         
       },
     };
@@ -115,6 +119,7 @@ const SoftwareRenewalForm = () => {
       if (response.ok) {
         const data = await response.json();
         setMessage(data.responseBody);
+        console.log(data);
       } else {
         setMessage('Failed to change plan. Please check the software ID and new plan details.');
       }
@@ -162,6 +167,7 @@ const SoftwareRenewalForm = () => {
           </label>
           <button type="submit">Renew Software</button>
         </form>
+        
       ) : (
         // Change Plan Form
         <form onSubmit={handleChangePlanSubmit}>
@@ -189,8 +195,8 @@ const SoftwareRenewalForm = () => {
           <input type="text" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
         </label>
         <label className="form-label">
-          New Users:
-          <input type="text" value={newUsers} onChange={(e) => setNewUsers(e.target.value)} />
+          New Quantity:
+          <input type="text" value={newQuantity} onChange={(e) => setNewQuantity(e.target.value)} />
         </label>
         <label className="form-label">
           New License Key:

@@ -1,22 +1,26 @@
 import { Space, Typography } from "antd";
-import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow,Button } from "@mui/material";
 import axios from "axios";
-import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function LessThan45Days() {
   const [softwareList, setSoftwareList] = useState([]);
+  const hasMounted = useRef(false);
 
   useEffect(() => {
-    // Fetch software data from your API or backend here
-    axios.get('http://localhost:8080/api/allSoftware')  // Adjust the API endpoint as needed
-      .then((response) => {
-        setSoftwareList(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (hasMounted.current) {
+      axios.get('http://localhost:8080/api/allSoftware')
+        .then((response) => {
+          setSoftwareList(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    return () => {
+      hasMounted.current = true;
+    }
   }, []);
 
   // Function to calculate days left until the expiry date
@@ -48,7 +52,7 @@ function LessThan45Days() {
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Software Devices</Typography.Title>
       <TableContainer sx={{ maxHeight: 440 }}>
-       <Table stickyHeader aria-label="sticky table">
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>Serial Number</TableCell>
@@ -65,7 +69,7 @@ function LessThan45Days() {
             {softwareList.map((software) => {
               const daysLeft = calculateDaysLeft(software.expiryDate);
               // Show software if days left is less than 45
-              if (daysLeft < 45 && daysLeft > 0) {
+              if (daysLeft < 45 && daysLeft >= 0) {
                 return (
                   <TableRow key={software.id}>
                     <TableCell>{serialNumber++}</TableCell>

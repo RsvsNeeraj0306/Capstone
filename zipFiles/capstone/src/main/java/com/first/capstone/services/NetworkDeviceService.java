@@ -12,13 +12,15 @@ import com.first.capstone.dto.NetworkDeviceDTO;
 import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.entity.Manufacturer;
 import com.first.capstone.entity.NetworkDevice;
+import com.first.capstone.entity.NetworkDeviceAnalysis;
+import com.first.capstone.entity.NetworkDeviceRMA;
 import com.first.capstone.entity.NetworkDevicesHistory;
-
+import com.first.capstone.respositories.NetworkDeviceAnalysisRepository;
+import com.first.capstone.respositories.NetworkDeviceRMARepository;
 import com.first.capstone.respositories.NetworkDeviceRepository;
 import com.first.capstone.respositories.NetworkDevicesHistoryRepository;
 
 import jakarta.transaction.Transactional;
-
 
 @Service
 @Transactional
@@ -33,15 +35,25 @@ public class NetworkDeviceService {
     @Autowired
     private NetworkDevicesHistoryRepository networkDeviceHistoryRepository;
 
+    @Autowired
+    private NetworkDeviceAnalysisRepository networkDeviceAnalysisRepository;
+
+    @Autowired
+    private NetworkDeviceRMARepository networkDeviceRMARepository;
+
+    private static final String ERROR_MESSAGE = "Network device not found";
+
     enum Action {
-        ADD, UPDATE, DELETED
+        ADD, UPDATE, DELETED, RMA, ANALYSIS
     }
 
     public NetworkDeviceService(NetworkDeviceRepository networkDeviceRepository,
-            ManufacturerService manufacturerService, NetworkDevicesHistoryRepository networkDeviceHistoryRepository) {
+            ManufacturerService manufacturerService, NetworkDevicesHistoryRepository networkDeviceHistoryRepository, NetworkDeviceAnalysisRepository networkDeviceAnalysisRepository, NetworkDeviceRMARepository networkDeviceRMARepository) {
         this.networkDeviceRepository = networkDeviceRepository;
         this.manufacturerService = manufacturerService;
         this.networkDeviceHistoryRepository = networkDeviceHistoryRepository;
+        this.networkDeviceAnalysisRepository = networkDeviceAnalysisRepository;
+        this.networkDeviceRMARepository = networkDeviceRMARepository;
     }
 
     public List<NetworkDevice> findAllNetworkDevices() {
@@ -68,7 +80,6 @@ public class NetworkDeviceService {
                 });
     }
 
-    
     public ResponseEntity<ResponseDTO> addNetworkDevice(@RequestBody NetworkDeviceDTO networkDeviceDTO) {
         Manufacturer manufacturer = manufacturerService.getOrCreateManufacturer(networkDeviceDTO.getManufacturer());
 
@@ -80,10 +91,11 @@ public class NetworkDeviceService {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDevice networkDevice, String action) {
+    public ResponseEntity<ResponseDTO> addNetworkDeviceHistory(@RequestBody NetworkDevice networkDevice,
+            String action) {
 
         NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-        networkDevicesHistory.setDeviceNameAndId(networkDevice.getHardwareName()+ " ID: " + networkDevice.getId());
+        networkDevicesHistory.setDeviceNameAndId(networkDevice.getHardwareName() + " ID: " + networkDevice.getId());
         networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
         networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
         networkDevicesHistory.setSerialNumber(networkDevice.getSerialNumber());
@@ -103,17 +115,62 @@ public class NetworkDeviceService {
         Optional<NetworkDevice> networkDevice = networkDeviceRepository.findById(id);
         if (networkDevice.isPresent()) {
 
-            addNetworkDeviceHistory(networkDevice.get(), Action.DELETED.toString());    
+            addNetworkDeviceHistory(networkDevice.get(), Action.DELETED.toString());
             networkDeviceRepository.deleteById(networkDevice.get().getId());
-            
+
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Network device deleted successfully");
             return ResponseEntity.ok(responseDTO);
         } else {
             ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseBody("Network device not found");
+            responseDTO.setResponseBody(ERROR_MESSAGE);
             return ResponseEntity.ok(responseDTO);
         }
     }
 
+    public ResponseEntity<ResponseDTO> setNetworkDeviceAnalysis(NetworkDeviceDTO networkDeviceDTO) {
+        Optional<NetworkDevice> networkDevice = networkDeviceRepository
+                .findById(networkDeviceDTO.getNetworkDevice().getId());
+        NetworkDeviceAnalysis networkDeviceAnalysis = networkDeviceDTO.getNetworkDeviceAnalysis();
+        if (networkDevice.isPresent()) {
+            NetworkDeviceAnalysis newNetworkDeviceAnalysis = new NetworkDeviceAnalysis();
+            newNetworkDeviceAnalysis.setActiveDevice(networkDeviceAnalysis.getActiveDevice());
+            newNetworkDeviceAnalysis.setAverageTimeUsage(networkDeviceAnalysis.getAverageTimeUsage());
+            newNetworkDeviceAnalysis.setCompanyRating(networkDeviceAnalysis.getCompanyRating());
+            newNetworkDeviceAnalysis.setNetworkDevice(networkDevice.get());
+            networkDeviceAnalysisRepository.save(newNetworkDeviceAnalysis);
+            addNetworkDeviceHistory(networkDevice.get(), Action.ANALYSIS.toString());
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Network device analysis added successfully");
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody(ERROR_MESSAGE);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
+
+    public ResponseEntity<ResponseDTO> setNetworkDeviceRMA(NetworkDeviceDTO networkDeviceDTO) {
+        Optional<NetworkDevice> networkDevice = networkDeviceRepository
+                .findById(networkDeviceDTO.getNetworkDevice().getId());
+        NetworkDeviceRMA networkDeviceRMA = networkDeviceDTO.getNetworkDeviceRMA();
+        if (networkDevice.isPresent()) {
+            NetworkDeviceRMA newNetworkDeviceRMA = new NetworkDeviceRMA();
+            newNetworkDeviceRMA.setActionType(networkDeviceRMA.getActionType());
+            newNetworkDeviceRMA.setAmount(networkDeviceRMA.getAmount());
+            newNetworkDeviceRMA.setDateOfAction(networkDeviceRMA.getDateOfAction());
+            newNetworkDeviceRMA.setReason(networkDeviceRMA.getReason());
+            newNetworkDeviceRMA.setNetworkDevice(networkDevice.get());
+            networkDeviceRMARepository.save(newNetworkDeviceRMA);
+            addNetworkDeviceHistory(networkDevice.get(), Action.RMA.toString());
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Network device RMA added successfully");
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody(ERROR_MESSAGE);
+            return ResponseEntity.ok(responseDTO);
+        }
+
+    }
 }

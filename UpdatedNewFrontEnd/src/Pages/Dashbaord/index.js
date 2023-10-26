@@ -43,7 +43,7 @@ ChartJS.register(
 function Dashboard() {
   const navigate = useNavigate();
   const handleNavigateToSoftwareDevices = () => {
-    navigate('/TotalSoftwareDevices'); // Change the route as needed
+    navigate( '/TotalSoftwareDevices'); // Change the route as needed
   };
 
   const handleNavigateLessThan45Days = () => {
