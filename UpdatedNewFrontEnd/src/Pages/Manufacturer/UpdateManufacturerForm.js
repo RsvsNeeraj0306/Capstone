@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import EditIcon from '@mui/icons-material/Edit';
 
 const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
   const [manufacturerData, setManufacturerData] = useState({
@@ -16,7 +17,9 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
     if (selectedManufacturerId) {
       setLoading(true);
       axios
-        .get(`http://localhost:8080/api/getManufacturer/${selectedManufacturerId}`)
+        .get(`http://localhost:8080/api/getManufacturer/${selectedManufacturerId}`,{headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }})
         .then((response) => {
           const selectedManufacturerData = response.data;
           setManufacturerData(selectedManufacturerData);
@@ -41,7 +44,9 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
     e.preventDefault();
 
     axios
-      .put(`http://localhost:8080/api/updateManufacturer/${selectedManufacturerId}`, manufacturerData)
+      .put(`http://localhost:8080/api/updateManufacturer/${selectedManufacturerId}`, manufacturerData,{headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }})
       .then((response) => {
         // Handle the response (e.g., show a success message)
         console.log('Manufacturer updated:', response.data);

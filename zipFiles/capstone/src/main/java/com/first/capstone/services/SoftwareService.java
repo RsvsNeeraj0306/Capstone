@@ -214,7 +214,7 @@ public class SoftwareService {
     public ResponseEntity<ResponseDTO> addLicenseHistory(@RequestBody Software software, String action) {
 
         SoftwareLicenseHistory softwareLicenseHistory = new SoftwareLicenseHistory();
-        softwareLicenseHistory.setSoftwareNameAndId(software.getSoftwareName());
+        softwareLicenseHistory.setSoftwareName(software.getSoftwareName());
         softwareLicenseHistory.setLicenseKey(software.getLicenseKey());
         softwareLicenseHistory.setExpiryDate(software.getExpiryDate());
         softwareLicenseHistory.setPurchaseDate(software.getPurchaseDate());
@@ -223,6 +223,7 @@ public class SoftwareService {
         softwareLicenseHistory.setQuantity(software.getQuantity());
         softwareLicenseHistory.setVersion(software.getVersion());
         softwareLicenseHistory.setAction(action);
+        softwareLicenseHistory.setDate(java.sql.Date.valueOf(LocalDate.now()));
 
         softwareLicenseHistoryRepository.save(softwareLicenseHistory);
 

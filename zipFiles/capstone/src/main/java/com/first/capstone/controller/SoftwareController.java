@@ -36,10 +36,6 @@ public class SoftwareController {
     @Autowired
     private SoftwareService softwareService;
 
-    @GetMapping("/helloSoftware")
-    public String getHello() {
-        return ("welcome to my Software project");
-    }
 
     @PostMapping("/addSoftware")
     public ResponseEntity<Software> addSoftware(@RequestBody SoftwareDeviceDTO softwareDeviceDTO) {

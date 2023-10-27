@@ -48,7 +48,7 @@ function SoftwareHistory() {
                 {softwareList.map((software) => (
                     <TableRow key={software.id}>
                     <TableCell>{serialNumber++}</TableCell>
-                    <TableCell>{software.softwareNameAndId}</TableCell>
+                    <TableCell>{software.softwareName}</TableCell>
                     <TableCell>{software.purchaseDate}</TableCell>
                     <TableCell>{software.expiryDate}</TableCell>
                     <TableCell>{software.typeOfPlan}</TableCell>

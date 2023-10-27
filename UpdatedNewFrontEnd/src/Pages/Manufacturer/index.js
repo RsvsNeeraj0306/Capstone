@@ -3,6 +3,7 @@ import { Space, Typography, Tabs } from "antd";
 import { Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import ManufacturerForm from './ManufacturerForm';
 import UpdateManufacturerForm from './UpdateManufacturerForm';
+import ModeEditSharpIcon from '@mui/icons-material/ModeEditSharp';
 
 
 const Manufacturer = () => {
@@ -22,7 +23,9 @@ const Manufacturer = () => {
 
   useEffect(() => {
     // Fetch the manufacturer data from your API
-    fetch('http://localhost:8080/api/allManufacture')
+    fetch('http://localhost:8080/api/allManufacture',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }})
       .then((response) => response.json())
       .then((data) => {
         setManufacturers(data);
@@ -52,7 +55,7 @@ const Manufacturer = () => {
                 <TableCell>Field of Work</TableCell>
                 <TableCell>Company Website Link</TableCell>
                 <TableCell>Email ID</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>Edit</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -67,7 +70,7 @@ const Manufacturer = () => {
                   <TableCell>
                     <button variant="contained" color="primary"
                     onClick={() => handleUpdateManufacturer(manufacturer.id)} className="manufacturer-update-button">
-                      Update
+                      <ModeEditSharpIcon />
                     </button>
                   </TableCell>
                 </TableRow>

@@ -70,10 +70,11 @@ function AppHeader() {
             return (
               <List.Item>
                 <Typography.Text strong>{item.title}</Typography.Text> has been
-                ordered!
+                ordered!  mg
               </List.Item>
             );
           }}
+          
         ></List>
       </Drawer>
       <ToastContainer

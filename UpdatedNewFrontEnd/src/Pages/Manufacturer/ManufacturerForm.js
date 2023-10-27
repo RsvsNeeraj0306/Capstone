@@ -23,7 +23,9 @@ const ManufacturerForm = () => {
 
 
     axios
-    .post('http://localhost:8080/api/addManufacturer', manufacturerData) // Adjust the API endpoint as needed
+    .post('http://localhost:8080/api/addManufacturer',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }}, manufacturerData) // Adjust the API endpoint as needed
     .then((response) => {
       // Handle the response (e.g., show a success message)
       console.log('Manufacturer added:', response.data);

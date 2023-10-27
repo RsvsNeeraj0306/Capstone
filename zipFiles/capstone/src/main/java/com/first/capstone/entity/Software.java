@@ -26,7 +26,7 @@ public class Software {
     private Long id;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private Manufacturer manufacturer;
 
     private String softwareName;

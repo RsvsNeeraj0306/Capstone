@@ -1,5 +1,6 @@
 package com.first.capstone.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -136,6 +137,7 @@ public class ManufacturerService {
         manufacturerHistory.setCompanyWebsiteLink(manufacturer.getCompanyWebsiteLink());
         manufacturerHistory.setEmailId(manufacturer.getEmailId());
         manufacturerHistory.setAction(action);
+        manufacturerHistory.setDate(java.sql.Date.valueOf(LocalDate.now()));
         manufacturerHistoryRepository.save(manufacturerHistory);
 
         ResponseDTO responseDTO = new ResponseDTO();

@@ -19,7 +19,7 @@ import NetworkDeviceAnalysisForm from "../../Pages/NetworkServices/NetworkDevice
 import AllHistory from "../../Pages/AllHistory";
 import ManufacturerHistory from "../../Pages/AllHistory/ManufacturerHistory";
 import SoftwareHistory from "../../Pages/AllHistory/SoftwareHistory";
-
+import LoginPage from "../../Pages/Login/LoginPage";
 
 
 
@@ -46,6 +46,7 @@ function AppRoutes() {
       <Route path='/AllHistory' element={<AllHistory />}></Route>
       <Route path='/ManufacturerHistory' element={<ManufacturerHistory />}></Route>
       <Route path='/SoftwareHistory' element={<SoftwareHistory />}></Route>
+      <Route path='/login' element={<LoginPage />}></Route>
     </Routes>
   );
 }

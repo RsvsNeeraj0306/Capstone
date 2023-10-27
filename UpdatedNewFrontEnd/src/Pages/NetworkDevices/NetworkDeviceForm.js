@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 const NetworkDeviceForm = () => {
     const [networkDeviceData, setNetworkDeviceData] = useState({
@@ -8,13 +9,13 @@ const NetworkDeviceForm = () => {
             fieldOfWork: 'Hardware',
         },
         networkDevice: {
-        hardwareName: '',
-        purchaseDate: '',
-        warrantyEndDate: '',
-        hardwareNameSerialnumber: '',
-        serialnumber: '',
-        quantity: '',
-        cost: ''
+            hardwareName: '',
+            purchaseDate: '',
+            warrantyEndDate: '',
+            hardwareNameSerialnumber: '',
+            serialnumber: '',
+            quantity: '',
+            cost: ''
         },
     });
 
@@ -23,7 +24,9 @@ const NetworkDeviceForm = () => {
     const [responseMessage, setResponseMessage] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/allManufacture')
+        fetch('http://localhost:8080/api/allManufacture',{headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }})
             .then((response) => response.json())
             .then((data) => setManufacturers(data))
             .catch((error) => console.error('Error fetching manufacturers: ', error));
@@ -50,6 +53,7 @@ const NetworkDeviceForm = () => {
     const isSubmitDisabled = () => {
         // Check if any of the required fields are empty
         return (
+            !networkDeviceData.manufacturer.name ||
             !networkDeviceData.hardwareName ||
             !networkDeviceData.purchaseDate ||
             !networkDeviceData.warrantyEndDate ||
@@ -87,10 +91,12 @@ const NetworkDeviceForm = () => {
                 networkDeviceHistory: networkDeviceData.networkDeviceHistory,
             }
 
-            
+
         };
 
-        fetch('http://localhost:8080/api/addNetworkDevices', {
+        fetch('http://localhost:8080/api/addNetworkDevices', {headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }},{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,12 +121,14 @@ const NetworkDeviceForm = () => {
                     priceOfHardware: '',
                 });
                 console.log('Network Device added successfully:', data);
+                toast.success('Network Device added successfully');
             })
             .catch((error) => {
                 setError('Error adding Network Device: ' + error);
                 console.error('Error adding Network Device:', error);
+                toast.error('An error occurred while adding Network Device');
             });
-            console.log(networkDeviceDTO);
+        console.log(networkDeviceDTO);
     };
 
     return (
@@ -143,7 +151,7 @@ const NetworkDeviceForm = () => {
                                 </option>
                             ))}
                     </select>
-                    <Link to="/manufacturer">New Manufacturer ?</Link>
+                    <Link to="/ManufacturerForm">New Manufacturer ?</Link>
                 </label>
                 <label className='form-label'>Hardware Name:
                     <input
@@ -203,9 +211,22 @@ const NetworkDeviceForm = () => {
                     <button type="submit" disabled={isSubmitDisabled()} className="form-button">Add Network Device</button>
                     {error && <div className="form-error">{error}</div>}
                     {responseMessage && <div className="form-success">{responseMessage}</div>}
+
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="light"
+                    />
                 </div>
             </form>
-           
+
         </div>
     );
 };

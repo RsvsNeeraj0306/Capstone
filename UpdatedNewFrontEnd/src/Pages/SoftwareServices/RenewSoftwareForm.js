@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { TextField, Button } from '@mui/material';
+import './RenewSoftwareForm.css';
+
 
 const RenewSoftwareForm = ({ onRenew }) => {
   const [softwareId, setSoftwareId] = useState('');
@@ -16,7 +19,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
   };
 
   const handleRenewSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh on form submission
+    e.preventDefault();
 
     const renewalData = {
       software: {
@@ -39,7 +42,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
       if (response.ok) {
         const data = await response.json();
         setMessage(data.responseBody);
-        onRenew(); // Notify the parent component about the successful renewal
+        onRenew();
       } else {
         setMessage('Failed to renew software. Please check the software ID.');
       }
@@ -51,13 +54,14 @@ const RenewSoftwareForm = ({ onRenew }) => {
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container"> 
       <h2>Renew Software</h2>
       <form onSubmit={handleRenewSubmit}>
         <label>
           Software ID:
           <input
             type="text"
+            className="custom-textfield"
             value={softwareId}
             onChange={(e) => setSoftwareId(e.target.value)}
           />
@@ -66,6 +70,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
           Purchase Date:
           <input
             type="date"
+            className="custom-textfield" 
             value={purchaseDate}
             onChange={(e) => setPurchaseDate(e.target.value)}
           />
@@ -74,6 +79,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
           Expiry Date:
           <input
             type="date"
+            className="custom-textfield" 
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
           />
@@ -82,13 +88,16 @@ const RenewSoftwareForm = ({ onRenew }) => {
           License Key:
           <input
             type="text"
+            className="custom-textfield" 
             value={licenseKey}
             onChange={(e) => setLicenseKey(e.target.value)}
           />
         </label>
-        <button type="submit">Renew Software</button>
+        <button type="submit" className="custom-button">Renew Software</button> {/* Apply the CSS class */}
       </form>
-      <div className="message">{message}</div>
+      <div className="message">
+        {message}
+      </div>
     </div>
   );
 };

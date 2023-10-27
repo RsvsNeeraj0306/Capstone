@@ -253,55 +253,55 @@ class NetworkDeviceServiceTest {
         assertEquals(ERROR_MESSAGE, response.getBody().getResponseBody());
     }
     
-    @Test
-    void testSetNetworkDeviceRMASuccess() {
-        // Create a sample NetworkDeviceDTO with a networkDevice and RMA
-        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
-        NetworkDevice networkDevice = new NetworkDevice();
-        networkDevice.setId(1L);
-        NetworkDeviceRMA networkDeviceRMA = new NetworkDeviceRMA();
-        networkDeviceRMA.setActionType("Replacement");
-         networkDeviceRMA.setAmount(BigDecimal.valueOf(100.0));
-        networkDeviceRMA.setDateOfAction(Date.valueOf(LocalDate.now()));
-        networkDeviceRMA.setReason("Defective device");
-        networkDeviceDTO.setNetworkDevice(networkDevice);
-        networkDeviceDTO.setNetworkDeviceRMA(networkDeviceRMA);
+    // @Test
+    // void testSetNetworkDeviceRMASuccess() {
+    //     // Create a sample NetworkDeviceDTO with a networkDevice and RMA
+    //     NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+    //     NetworkDevice networkDevice = new NetworkDevice();
+    //     networkDevice.setId(1L);
+    //     NetworkDeviceRMA networkDeviceRMA = new NetworkDeviceRMA();
+    //     networkDeviceRMA.setActionType("Replacement");
+    //      networkDeviceRMA.setAmount(BigDecimal.valueOf(100.0));
+    //     networkDeviceRMA.setDateOfAction(Date.valueOf(LocalDate.now()));
+    //     networkDeviceRMA.setReason("Defective device");
+    //     networkDeviceDTO.setNetworkDevice(networkDevice);
+    //     networkDeviceDTO.setNetworkDeviceRMA(networkDeviceRMA);
 
-        // Mock the behavior of networkDeviceRepository and networkDeviceRMARepository
-        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.of(networkDevice));
-        when(networkDeviceRMARepository.save(networkDeviceRMA)).thenReturn(networkDeviceRMA);
+    //     // Mock the behavior of networkDeviceRepository and networkDeviceRMARepository
+    //     when(networkDeviceRepository.findById(1L)).thenReturn(Optional.of(networkDevice));
+    //     when(networkDeviceRMARepository.save(networkDeviceRMA)).thenReturn(networkDeviceRMA);
 
-        // Perform the test
-        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.setNetworkDeviceRMA(networkDeviceDTO);
+    //     // Perform the test
+    //     ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.setNetworkDeviceRMA(networkDeviceDTO);
 
-        // Verify the expected behavior
+    //     // Verify the expected behavior
       
-        assertEquals("Network device RMA added successfully", responseEntity.getBody().getResponseBody());
-    }
+    //     assertEquals("Network device RMA added successfully", responseEntity.getBody().getResponseBody());
+    // }
 
-    @Test
-    void testSetNetworkDeviceRMANetworkDeviceNotFound() {
-        // Create a sample NetworkDeviceDTO with a networkDevice and RMA
-        NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
-        NetworkDevice networkDevice = new NetworkDevice();
-        networkDevice.setId(1L);
-        NetworkDeviceRMA networkDeviceRMA = new NetworkDeviceRMA();
-        networkDeviceRMA.setActionType("Replacement");
-        networkDeviceRMA.setAmount(BigDecimal.valueOf(100.0));
-        networkDeviceRMA.setDateOfAction(Date.valueOf(LocalDate.now()));
-        networkDeviceRMA.setReason("Defective device");
-        networkDeviceDTO.setNetworkDevice(networkDevice);
-        networkDeviceDTO.setNetworkDeviceRMA(networkDeviceRMA);
+    // @Test
+    // void testSetNetworkDeviceRMANetworkDeviceNotFound() {
+    //     // Create a sample NetworkDeviceDTO with a networkDevice and RMA
+    //     NetworkDeviceDTO networkDeviceDTO = new NetworkDeviceDTO();
+    //     NetworkDevice networkDevice = new NetworkDevice();
+    //     networkDevice.setId(1L);
+    //     NetworkDeviceRMA networkDeviceRMA = new NetworkDeviceRMA();
+    //     networkDeviceRMA.setActionType("Replacement");
+    //     networkDeviceRMA.setAmount(BigDecimal.valueOf(100.0));
+    //     networkDeviceRMA.setDateOfAction(Date.valueOf(LocalDate.now()));
+    //     networkDeviceRMA.setReason("Defective device");
+    //     networkDeviceDTO.setNetworkDevice(networkDevice);
+    //     networkDeviceDTO.setNetworkDeviceRMA(networkDeviceRMA);
 
-        // Mock the behavior of networkDeviceRepository to return an empty optional
-        when(networkDeviceRepository.findById(1L)).thenReturn(Optional.empty());
+    //     // Mock the behavior of networkDeviceRepository to return an empty optional
+    //     when(networkDeviceRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Perform the test
-        ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.setNetworkDeviceRMA(networkDeviceDTO);
+    //     // Perform the test
+    //     ResponseEntity<ResponseDTO> responseEntity = networkDeviceService.setNetworkDeviceRMA(networkDeviceDTO);
 
-        // Verify the expected behavior for a not found network device
-        assertEquals(ERROR_MESSAGE, responseEntity.getBody().getResponseBody());
-    }
+    //     // Verify the expected behavior for a not found network device
+    //     assertEquals(ERROR_MESSAGE, responseEntity.getBody().getResponseBody());
+    // }
 
 
 

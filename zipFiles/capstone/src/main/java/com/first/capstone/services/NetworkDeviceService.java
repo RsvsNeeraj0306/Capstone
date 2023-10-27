@@ -96,13 +96,14 @@ public class NetworkDeviceService {
             String action) {
 
         NetworkDevicesHistory networkDevicesHistory = new NetworkDevicesHistory();
-        networkDevicesHistory.setDeviceNameAndId(networkDevice.getHardwareName() + " ID: " + networkDevice.getId());
+        networkDevicesHistory.setDeviceName(networkDevice.getHardwareName());
         networkDevicesHistory.setPurchaseDate(networkDevice.getPurchaseDate());
         networkDevicesHistory.setWarrantyEndDate(networkDevice.getWarrantyEndDate());
         networkDevicesHistory.setSerialNumber(networkDevice.getSerialNumber());
         networkDevicesHistory.setCost(networkDevice.getCost());
         networkDevicesHistory.setQuantity(networkDevice.getQuantity());
         networkDevicesHistory.setAction(action);
+        networkDevicesHistory.setDate(new java.sql.Date(System.currentTimeMillis()));
 
         networkDeviceHistoryRepository.save(networkDevicesHistory);
 

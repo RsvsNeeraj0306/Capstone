@@ -24,7 +24,7 @@ public class NetworkDevicesHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String deviceNameAndId;
+    private String deviceName;
 
     private String serialNumber;
     private BigDecimal cost;
@@ -32,4 +32,5 @@ public class NetworkDevicesHistory {
     private Date purchaseDate;
     private Date warrantyEndDate;
     private String action;
+    private Date date;
 }

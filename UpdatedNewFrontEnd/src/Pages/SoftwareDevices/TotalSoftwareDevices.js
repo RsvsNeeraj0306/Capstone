@@ -13,7 +13,9 @@ function TotalSoftwareDevices() {
 
   useEffect(() => {
     if (!hasMounted.current) {
-      axios.get('http://localhost:8080/api/allSoftware')
+      axios.get('http://localhost:8080/api/allSoftware',{headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }})
         .then((response) => {
           setSoftwareList(response.data);
         })

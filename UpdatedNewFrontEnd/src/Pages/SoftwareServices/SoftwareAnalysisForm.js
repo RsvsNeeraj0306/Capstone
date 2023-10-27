@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './RenewSoftwareForm.css'; // Import the RenewSoftwareForm.css file
 
 const SoftwareAnalysisForm = ({ onAnalysis }) => {
   const [softwareId, setSoftwareId] = useState('');
@@ -44,12 +45,11 @@ const SoftwareAnalysisForm = ({ onAnalysis }) => {
         onAnalysis(); // Notify the parent component about the successful analysis
       } else {
         setMessage('Failed to set software analysis. Please check the software ID.');
-
       }
     } catch (error) {
       setMessage('An error occurred while setting software analysis.');
     }
-    console.log(analysisData);
+
     resetForm();
   };
 
@@ -61,6 +61,7 @@ const SoftwareAnalysisForm = ({ onAnalysis }) => {
           Software ID:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={softwareId}
             onChange={(e) => setSoftwareId(e.target.value)}
           />
@@ -69,6 +70,7 @@ const SoftwareAnalysisForm = ({ onAnalysis }) => {
           Active Users:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={activeUsers}
             onChange={(e) => setActiveUsers(e.target.value)}
           />
@@ -77,6 +79,7 @@ const SoftwareAnalysisForm = ({ onAnalysis }) => {
           Average Time Usage:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={averageTimeUsage}
             onChange={(e) => setAverageTimeUsage(e.target.value)}
           />
@@ -85,11 +88,12 @@ const SoftwareAnalysisForm = ({ onAnalysis }) => {
           Company Rating:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={companyRating}
             onChange={(e) => setCompanyRating(e.target.value)}
           />
         </label>
-        <button type="submit">Set Software Analysis</button>
+        <button type="submit" className="custom-button">Set Software Analysis</button>
       </form>
       <div className="message">{message}</div>
     </div>

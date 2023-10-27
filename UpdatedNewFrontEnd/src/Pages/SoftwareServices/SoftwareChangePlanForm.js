@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './RenewSoftwareForm.css'; // Import the RenewSoftwareForm.css file
 
 const SoftwareChangePlanForm = ({ onChangePlan }) => {
   const [softwareId, setSoftwareId] = useState('');
@@ -60,13 +61,14 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
   };
 
   return (
-    <div className="change-plan-form">
+    <div className="form-container">
       <h2>Change Plan</h2>
       <form onSubmit={handlePlanChangeSubmit}>
         <label>
           Software ID:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={softwareId}
             onChange={(e) => setSoftwareId(e.target.value)}
           />
@@ -75,6 +77,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           License Key:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={licenseKey}
             onChange={(e) => setLicenseKey(e.target.value)}
           />
@@ -83,6 +86,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Expiry Date:
           <input
             type="date"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
           />
@@ -91,6 +95,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Purchase Date:
           <input
             type="date"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={purchaseDate}
             onChange={(e) => setPurchaseDate(e.target.value)}
           />
@@ -99,6 +104,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Type of Plan:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={typeOfPlan}
             onChange={(e) => setTypeOfPlan(e.target.value)}
           />
@@ -107,6 +113,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Quantity:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
@@ -115,11 +122,12 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Price of Software:
           <input
             type="text"
+            className="custom-textfield" // Use the class from RenewSoftwareForm.css
             value={priceOfSoftware}
             onChange={(e) => setPriceOfSoftware(e.target.value)}
           />
         </label>
-        <button type="submit">Change Plan</button>
+        <button type="submit" className="custom-button">Change Plan</button>
       </form>
       <div className="message">{message}</div>
     </div>

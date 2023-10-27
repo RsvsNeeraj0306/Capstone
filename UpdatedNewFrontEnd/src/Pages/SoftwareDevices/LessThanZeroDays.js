@@ -14,7 +14,9 @@ function LessThanZeroDays() {
 
   useEffect(() => {
     if (!hasMounted.current) {
-      axios.get('http://localhost:8080/api/getSoftwareLessThanZerodays')
+      axios.get('http://localhost:8080/api/getSoftwareLessThanZerodays,',{headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }})
         .then((response) => {
           setSoftwareList(response.data);
         })
@@ -26,7 +28,9 @@ function LessThanZeroDays() {
   }, []);
 
   const handleSendMailClick = () => {
-    axios.get('http://localhost:8080/api/sendMail')
+    axios.get('http://localhost:8080/api/sendMail',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }})
       .then((response) => {
         setIsEmailSent(true);
       })
@@ -43,7 +47,9 @@ function LessThanZeroDays() {
   const handleDeleteConfirm = () => {
     if (softwareToDelete !== null) {
       axios
-        .delete(`http://localhost:8080/api/deleteSoftware/${softwareToDelete}`)
+        .delete(`http://localhost:8080/api/deleteSoftware/${softwareToDelete}`,{headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }})
         .then(() => {
           setSoftwareList((prevSoftwareList) =>
             prevSoftwareList.filter((software) => software.id !== softwareToDelete)

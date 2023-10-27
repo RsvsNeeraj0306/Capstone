@@ -18,7 +18,9 @@ function NetworkDevices() {
 
   useEffect(() => {
     // Fetch hardware data from your API or backend here
-    axios.get('http://localhost:8080/api/allHardware')
+    axios.get('http://localhost:8080/api/allHardware',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }})
       .then((response) => {
         setHardwareList(response.data);
       })

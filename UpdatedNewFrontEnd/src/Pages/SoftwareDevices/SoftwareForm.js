@@ -26,7 +26,9 @@ const SoftwareForm = () => {
   const [responseMessage, setResponseMessage] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/allManufacture')
+    fetch('http://localhost:8080/api/allManufacture',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }})
       .then((response) => response.json())
       .then((data) => setManufacturers(data))
       .catch((error) => console.error('Error fetching manufacturers: ', error));
@@ -53,6 +55,7 @@ const SoftwareForm = () => {
   const isSubmitDisabled = () => {
     // Check if any of the required fields are empty
     return (
+      !softwareData.manufacturer.name ||
       !softwareData.softwareName ||
       !softwareData.purchaseDate ||
       !softwareData.expiryDate ||
@@ -89,11 +92,14 @@ const SoftwareForm = () => {
       },
     };
 
-    fetch('http://localhost:8080/api/addSoftware', {
+    fetch('http://localhost:8080/api/addSoftware',{headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }}, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      
       body: JSON.stringify(softwareDTO),
     })
       .then((response) => response.json())
@@ -131,7 +137,7 @@ const SoftwareForm = () => {
       <h2 className="form-label">Add Software</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
-        
+
           Publisher:
           <select
             name="manufacturer.name"
@@ -139,7 +145,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
             className="form-input"
           >
-            <option value="">Select a manufacturer</option>
+            <option value="">Select a Publisher</option>
             {manufacturers
               .filter((manufacturer) => manufacturer.fieldOfWork === 'Software')
               .map((manufacturer) => (
@@ -180,7 +186,7 @@ const SoftwareForm = () => {
             onChange={handleChange}
           />
         </label>
-          <label className="form-label">
+        <label className="form-label">
           Version:
           <input
             type="text"
@@ -244,29 +250,29 @@ const SoftwareForm = () => {
 
       <ToastContainer
 
-position="top-right"
+        position="top-right"
 
-autoClose={2000}
+        autoClose={2000}
 
-hideProgressBar={false}
+        hideProgressBar={false}
 
-newestOnTop={false}
+        newestOnTop={false}
 
-closeOnClick
+        closeOnClick
 
-rtl={false}
+        rtl={false}
 
-pauseOnFocusLoss
+        pauseOnFocusLoss
 
-draggable
+        draggable
 
-pauseOnHover
+        pauseOnHover
 
-theme="light"
+        theme="light"
 
-style={{ position: "fixed", top: "60px", right: "0" }}
+        style={{ position: "fixed", top: "60px", right: "0" }}
 
-/>
+      />
     </div>
   );
 };

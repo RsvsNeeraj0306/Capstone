@@ -27,7 +27,7 @@ public class SoftwareLicenseHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String softwareNameAndId;
+    private String softwareName;
     private String licenseKey;
     private Date purchaseDate;
     private Date expiryDate;
@@ -36,5 +36,6 @@ public class SoftwareLicenseHistory {
     private BigDecimal priceOfSoftware;
     private String version;
     private String action;
+    private Date date;
 
 }

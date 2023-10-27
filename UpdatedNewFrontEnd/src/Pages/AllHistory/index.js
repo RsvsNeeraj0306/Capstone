@@ -7,6 +7,7 @@ import SoftwareHistory from "./SoftwareHistory";
 
 
 function AllHistory(){
+    
     const [activeTab, setActiveTab] = useState("AllHistory");
     const [networkHistory, setNetworkHistory]= useState([]);
 
@@ -16,7 +17,9 @@ function AllHistory(){
 
     useEffect(() => {
         // Fetch hardware data from your API or backend here
-        axios.get('http://localhost:8080/api/getNetworkDeviceHistory')
+        axios.get('http://localhost:8080/api/getNetworkDeviceHistory',{headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }})
           .then((response) => {
             setNetworkHistory(response.data);
           })

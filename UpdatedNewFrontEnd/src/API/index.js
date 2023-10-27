@@ -20,7 +20,9 @@ export const getComments = () => {
 };
 
 export const getLicenseCounts = () => {
-  return fetch('http://localhost:8080/api/licenseCounts').then((res) =>
+  return fetch('http://localhost:8080/api/licenseCounts', {headers: {
+    'Authorization': 'Bearer ' + localStorage.getItem('token')
+  }}).then((res) =>
     res.json()
   );
 };
