@@ -12,19 +12,25 @@ function Services() {
     setActiveTab(key);
   };
 
-  return (
-    <Space size={20} direction="vertical">
-      <Typography.Title level={4}>Software Services</Typography.Title>
-      <Tabs activeKey={activeTab} onChange={handleChangeTab}>
-        <Tab key="softwareRenewal" tab="Renew software" />
-        <Tab key="softwareChangePlan" tab="Change Plan" />
-        <Tab key="softwareAnalysis" tab="Software Analysis" />
-      </Tabs>
-      {activeTab === "softwareRenewal" && <RenewSoftwareForm />}
-      {activeTab === "softwareChangePlan" && <SoftwareChangePlanForm />}
-        {activeTab === "softwareAnalysis" && <SoftwareAnalysisForm />}
+  const containerStyle = {
+    padding: '20px', // Add padding to the container
+    backgroundColor: '#f0f0f0', // Add a background color
+  };
 
-    </Space>
+  return (
+    <div style={containerStyle}>
+      <Space size={20} direction="vertical">
+        <Typography.Title level={4}>Software Services</Typography.Title>
+        <Tabs activeKey={activeTab} onChange={handleChangeTab}>
+          <Tab key="softwareRenewal" tab="Renew software" />
+          <Tab key="softwareChangePlan" tab="Change Plan" />
+          <Tab key="softwareAnalysis" tab="Software Analysis" />
+        </Tabs>
+        {activeTab === "softwareRenewal" && <RenewSoftwareForm />}
+        {activeTab === "softwareChangePlan" && <SoftwareChangePlanForm />}
+        {activeTab === "softwareAnalysis" && <SoftwareAnalysisForm />}
+      </Space>
+    </div>
   );
 }
 

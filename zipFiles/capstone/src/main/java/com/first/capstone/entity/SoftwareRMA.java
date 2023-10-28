@@ -28,7 +28,7 @@ public class SoftwareRMA {
     private String refundReason;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private Software software;
 
     

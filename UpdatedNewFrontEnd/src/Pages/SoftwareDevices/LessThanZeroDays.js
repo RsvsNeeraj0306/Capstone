@@ -4,6 +4,9 @@ import { Button, Space, Typography } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Modal } from "antd"; // Import Modal from Ant Design
+import DeleteIcon from '@mui/icons-material/Delete';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 function LessThanZeroDays() {
   const [softwareList, setSoftwareList] = useState([]);
@@ -14,7 +17,7 @@ function LessThanZeroDays() {
 
   useEffect(() => {
     if (!hasMounted.current) {
-      axios.get('http://localhost:8080/api/getSoftwareLessThanZerodays,',{headers: {
+      axios.get('http://localhost:8080/api/getSoftwareLessThanZerodays',{headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }})
         .then((response) => {
@@ -69,7 +72,13 @@ function LessThanZeroDays() {
 
   let serialNumber = 1;
 
+  const containerStyle = {
+    padding: '20px', // Add padding to the container
+    backgroundColor: '#f0f0f0', // Add a background color
+  };
+
   return (
+    <div style={containerStyle}>
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Software Devices</Typography.Title>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -83,7 +92,7 @@ function LessThanZeroDays() {
               <TableCell>Publisher Name</TableCell>
               <TableCell>Users Can Use</TableCell>
               <TableCell>Days Left</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Renew</TableCell>
               <TableCell>Send Mail</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
@@ -102,18 +111,18 @@ function LessThanZeroDays() {
                   <TableCell>
                     <Link to="/Services">
                       <Button type="primary" style={{ marginRight: "10px" }}>
-                        Renew
+                        <AutorenewIcon />
                       </Button>
                     </Link>
                     </TableCell>
                     <TableCell>
                     <Button type="primary" onClick={handleSendMailClick}>
-                      Send Mail
+                      <MailOutlineIcon />
                     </Button>
                     </TableCell>
                   <TableCell>
                     <Button type="primary" onClick={() => handleDeleteClick(software.id)}>
-                      Delete
+                    <DeleteIcon />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -133,6 +142,7 @@ function LessThanZeroDays() {
         <p>Are you sure you want to delete this software?</p>
       </Modal>
     </Space>
+    </div>
   );
 }
 

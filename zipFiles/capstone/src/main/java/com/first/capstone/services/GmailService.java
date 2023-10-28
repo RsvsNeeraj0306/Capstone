@@ -28,7 +28,7 @@ public class GmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
             helper.setTo("neerajrenkireddy01@gmail.com");
-            helper.setText("Greetings :)! Test Run for Capstone NTM project!");
+            helper.setText("Greetings :)! Test Run for Capstone LLM project!");
             helper.setSubject("Mail From Spring Boot");
 
         } catch (MessagingException e) {

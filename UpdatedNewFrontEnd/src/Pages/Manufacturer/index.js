@@ -16,6 +16,11 @@ const Manufacturer = () => {
     setActiveTab(key);
   };
 
+  const containerStyle = {
+    padding: '20px', // Add padding to the container
+    backgroundColor: '#f0f0f0', // Add a background color
+  };
+
   const handleUpdateManufacturer = (id) => {
     setSelectedManufacturerId(id);
     setActiveTab('updateManufacturerForm');
@@ -37,6 +42,8 @@ const Manufacturer = () => {
   let serialNumber = 1;
 
   return (
+    <div style={containerStyle}>
+
     <Space size={20} direction="vertical">
       <Typography.Title level={4} className="manufacturer-title">Manufacture details</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab} className="manufacturer-tabs">
@@ -78,10 +85,12 @@ const Manufacturer = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
       )}
       {activeTab === 'manufacturerForm' && <ManufacturerForm />}
       {activeTab === 'updateManufacturerForm' && <UpdateManufacturerForm selectedManufacturerId={selectedManufacturerId} />}
     </Space>
+    </div>
   );
 };
 

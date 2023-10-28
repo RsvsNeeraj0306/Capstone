@@ -1,24 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {  useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { BarLoader } from "react-spinners";
-import { useLocation } from "react-router-dom";
-import { Box, Button, Container, CssBaseline, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-// import useAuth from "../../Hooks/UseAuth";
 import instance from "../../service/LoginService";
-import axios from "axios";
+import './Login.css'
 
 
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    //   const {isLoading, setIsLoading, persistAuthState } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { state } = useLocation();
+
 
 
     const handleSubmit = async (e) => {
@@ -38,7 +33,6 @@ const LoginPage = () => {
             console.log(res.data);
             localStorage.setItem("token", res.data.token);
             navigate('/');
-            //navigate(state?.from ? state.from : '/home');
         }
     };
 

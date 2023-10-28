@@ -1,12 +1,14 @@
-import { Space, Typography,Tabs } from "antd";
+import { Space, Typography,Tabs, Button } from "antd";
 import { useEffect, useState } from "react";
 import {Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, paper, TablePagination, Paper } from "@mui/material";
 import axios from "axios";
-
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import BuildIcon from '@mui/icons-material/Build';
 
 
 
 import NetworkDeviceForm from "./NetworkDeviceForm";
+import { Link } from "react-router-dom";
 
 function NetworkDevices() {
   const [NetworkDeviceList, setHardwareList] = useState([]);
@@ -15,6 +17,11 @@ function NetworkDevices() {
   const handleChangeTab = (key) => {
     setActiveTab(key);
   }
+
+  const containerStyle = {
+    padding: '20px', // Add padding to the container
+    backgroundColor: '#f0f0f0', // Add a background color
+  };
 
   useEffect(() => {
     // Fetch hardware data from your API or backend here
@@ -32,6 +39,8 @@ function NetworkDevices() {
   let serialNumber = 1; // Initialize the serial number
 
   return (
+    <div style={containerStyle}>
+
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Network Devices</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
@@ -48,6 +57,8 @@ function NetworkDevices() {
               <TableCell>Purchase Date</TableCell>
               <TableCell>Warranty Period</TableCell>
               <TableCell>Manufacturer Name</TableCell>
+              <TableCell>Analyse</TableCell>
+              <TableCell>RMA</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,6 +69,20 @@ function NetworkDevices() {
                 <TableCell>{NetworkDevice.purchaseDate}</TableCell>
                 <TableCell>{NetworkDevice.warrantyEndDate}</TableCell>
                 <TableCell>{NetworkDevice.manufacturer.name}</TableCell>
+                <TableCell>
+                  <Link to="/NetworkDeviceAnalysisForm">
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                     <AutoGraphIcon />
+                    </Button>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link to="/NetworkDeviceRMAForm">
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                      <BuildIcon />
+                    </Button>
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -69,6 +94,7 @@ function NetworkDevices() {
         <NetworkDeviceForm />
       )}
     </Space>
+    </div>
   );
 }
 

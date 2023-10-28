@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.first.capstone.dto.NetworkDeviceDTO;
 import com.first.capstone.dto.ResponseDTO;
 import com.first.capstone.entity.NetworkDevice;
+import com.first.capstone.entity.NetworkDeviceAnalysis;
 import com.first.capstone.entity.NetworkDeviceRMA;
 import com.first.capstone.entity.NetworkDevicesHistory;
 import com.first.capstone.services.NetworkDeviceService;
@@ -70,6 +71,16 @@ public class HardwareController {
   @DeleteMapping("/deleteNetworkDevice/{id}")
   public ResponseEntity<ResponseDTO> deleteNetworkDevice(@PathVariable Long id) {
     return networkDeviceService.deleteNetworkDeviceById(id);
+  }
+
+  @GetMapping("/getNetworkDeviceRMA")
+  public List<NetworkDeviceRMA> getNetworkDeviceRMA() {
+    return networkDeviceService.getNetworkDeviceRMA();
+  }
+
+  @GetMapping("/getNetworkDeviceAnalysis")
+  public List<NetworkDeviceAnalysis> getNetworkDeviceAnalysis() {
+    return networkDeviceService.getNetworkDeviceAnalysis();
   }
 
       

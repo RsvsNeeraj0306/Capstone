@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const ManufacturerForm = () => {
   const [manufacturerData, setManufacturerData] = useState({
@@ -23,17 +25,23 @@ const ManufacturerForm = () => {
 
 
     axios
-    .post('http://localhost:8080/api/addManufacturer',{headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
-    }}, manufacturerData) // Adjust the API endpoint as needed
-    .then((response) => {
-      // Handle the response (e.g., show a success message)
-      console.log('Manufacturer added:', response.data);
-    })
-    .catch((error) => {
-      // Handle errors (e.g., show an error message)
-      console.error('Error adding manufacturer:', error);
-    });
+      .post('http://localhost:8080/api/addManufacturer', manufacturerData, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then((response) => {
+        // Handle the response (e.g., show a success message)
+        toast.success('Manufacturer added successfully!');
+
+      })
+      .catch((error) => {
+        // Handle the error (e.g., show an error message)
+        console.error('Error adding manufacturer:', error);
+        toast.error('Error adding manufacturer!');
+      });
+
+
 
     // Send the manufacturerData to the backend API for saving to the database
 
@@ -54,65 +62,66 @@ const ManufacturerForm = () => {
     return (
       !manufacturerData.name ||
       !manufacturerData.companyWebsiteLink ||
-      !manufacturerData.emailId 
+      !manufacturerData.emailId
     );
   };
 
   // Enable the submit button when the form data is complete
-  
+
 
   return (
     <div className="form-container">
-    <h2 className="form-label">Add Manufaturer</h2>
-    <form onSubmit={handleSubmit}>
+      <h2 className="form-label">Add Manufaturer</h2>
+      <form onSubmit={handleSubmit}>
         <label className="form-label">
-            Name:
-            <input
-                type="text"
-                name="name"
-                value={manufacturerData.name}
-                onChange={handleInputChange}
-                className="form-input"
-            />
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={manufacturerData.name}
+            onChange={handleInputChange}
+            className="form-input"
+          />
         </label>
         <label className="form-label">
-            Company Website Link:
-            <input
-                type="text"
-                name="companyWebsiteLink"
-                value={manufacturerData.companyWebsiteLink}
-                onChange={handleInputChange}
-                className="form-input"
-            />
+          Company Website Link:
+          <input
+            type="text"
+            name="companyWebsiteLink"
+            value={manufacturerData.companyWebsiteLink}
+            onChange={handleInputChange}
+            className="form-input"
+          />
         </label>
         <label className="form-label">
-            Email ID:
-            <input
-                type="text"
-                name="emailId"
-                value={manufacturerData.emailId}
-                onChange={handleInputChange}
-                className="form-input"
-            />
+          Email ID:
+          <input
+            type="text"
+            name="emailId"
+            value={manufacturerData.emailId}
+            onChange={handleInputChange}
+            className="form-input"
+          />
         </label>
         <label className="form-label">
-            Field of Work:
-            <select
-                name="fieldOfWork"
-                value={manufacturerData.fieldOfWork}
-                onChange={handleInputChange}
-                className="form-input"
-            >
-                <option value="Software">Software</option>
-                <option value="Hardware">Hardware</option>
-            </select>
+          Field of Work:
+          <select
+            name="fieldOfWork"
+            value={manufacturerData.fieldOfWork}
+            onChange={handleInputChange}
+            className="form-input"
+          >
+            <option value="Software">Software</option>
+            <option value="Hardware">Hardware</option>
+          </select>
         </label>
-        <button type="submit" disabled={isFormComplete}>
-            Add Manufacturer
+        <button type="submit" disabled={isFormComplete()}>
+          Add Manufacturer
         </button>
-    </form>
-</div>
-    );
+
+      </form>
+    </div>
+  );
 };
 
 export default ManufacturerForm;

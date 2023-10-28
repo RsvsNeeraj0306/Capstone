@@ -6,5 +6,7 @@ import com.first.capstone.entity.NetworkDeviceAnalysis;
 
 
 public interface NetworkDeviceAnalysisRepository extends JpaRepository<NetworkDeviceAnalysis, Long> {
+
+    void deleteByNetworkDeviceId(Long id);
     
 }

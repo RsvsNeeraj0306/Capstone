@@ -1,39 +1,53 @@
-.App{
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-}
-.AppHeader{
+.AppHeader {
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 20px 4px 12px;
+    padding: 0 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
-.AppFooter{
-height: 50px;
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-border-top: 1px solid rgba(0, 0, 0, 0.15);
 
-}
-.SideMenuAndPageContent{
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
-    align-items: flex-start;
-    background-color: rgba(0, 0, 0, 0.05) ;
-}
-.SideMenu{
-    height: 100%;
-}
-.SideMenuVertical{
-    height: 100%;
-}
 .PageContent{
     padding-left: 12px;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    flex: 1;
+    display: flex;
+    justify-content: flex-start
+
+
 }
 
+
+/* Add this to your app.css file */
+/* react-toastify styles */
+.Toastify__toast-container {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px; /* Adjust the width as needed */
+  }
+  
+  .Toastify__toast--info {
+    background: #3498db;
+  }
+  
+  .Toastify__toast--success {
+    background: #07bc0c;
+  }
+  
+  .Toastify__toast--warning {
+    background: #f39c12;
+  }
+  
+  .Toastify__toast--error {
+    background: #e74c3c;
+  }
+  

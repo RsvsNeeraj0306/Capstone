@@ -104,6 +104,11 @@ public class SoftwareController {
         return softwareService. getLicenseHistory();
     }
 
+    @GetMapping("/getSoftwareRMA")
+    public List<SoftwareRMA> getSoftwareRMA() {
+        return softwareService.getRefundSoftware();
+    }
+
 
 
    

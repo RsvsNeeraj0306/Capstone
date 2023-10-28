@@ -6,7 +6,9 @@ import ManufacturerHistory from "./ManufacturerHistory";
 import SoftwareHistory from "./SoftwareHistory";
 
 
+
 function AllHistory(){
+
     
     const [activeTab, setActiveTab] = useState("AllHistory");
     const [networkHistory, setNetworkHistory]= useState([]);
@@ -14,6 +16,11 @@ function AllHistory(){
     const handleChangeTab = (key) => {
         setActiveTab(key);
     };
+
+    const containerStyle = {
+        padding: '20px', // Add padding to the container
+        backgroundColor: '#f0f0f0', // Add a background color
+        };
 
     useEffect(() => {
         // Fetch hardware data from your API or backend here
@@ -31,6 +38,7 @@ function AllHistory(){
         let serialNumber = 1; // Initialize the serial number
 
         return (
+            <div style={containerStyle}>
             <Space size={20} direction="vertical">
                 <Typography.Title level={4}>Network Devices History</Typography.Title>
                 <Tabs activeKey={activeTab} onChange={handleChangeTab}>
@@ -54,7 +62,7 @@ function AllHistory(){
                         {networkHistory.map((networkHistory) => (
                         <TableRow key={networkHistory.id}>
                             <TableCell>{serialNumber++}</TableCell>
-                            <TableCell>{networkHistory.hardwareName}</TableCell>
+                            <TableCell>{networkHistory.deviceName}</TableCell>
                             <TableCell>{networkHistory.purchaseDate}</TableCell>
                             <TableCell>{networkHistory.warrantyEndDate}</TableCell>
                             <TableCell>{networkHistory.action}</TableCell>
@@ -67,6 +75,7 @@ function AllHistory(){
                 {activeTab === "ManufacturerHistory" && <ManufacturerHistory />}
                 {activeTab === "SoftwareHistory" && <SoftwareHistory />}
             </Space>
+            </div>
         );
 }
 

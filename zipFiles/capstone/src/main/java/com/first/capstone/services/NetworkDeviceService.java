@@ -126,7 +126,10 @@ public class NetworkDeviceService {
         if (networkDevice.isPresent()) {
 
             addNetworkDeviceHistory(networkDevice.get(), Action.DELETED.toString());
-            networkDeviceRepository.deleteById(networkDevice.get().getId());
+           
+            networkDeviceAnalysisRepository.deleteByNetworkDeviceId(networkDevice.get().getId());
+            networkDeviceRMARepository.deleteByNetworkDeviceId(networkDevice.get().getId());
+             networkDeviceRepository.deleteById(networkDevice.get().getId());
 
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Network device deleted successfully");
@@ -160,6 +163,15 @@ public class NetworkDeviceService {
         }
     }
 
+    public List<NetworkDeviceAnalysis> getNetworkDeviceAnalysis() {
+        List<NetworkDeviceAnalysis> networkDeviceAnalysis = networkDeviceAnalysisRepository.findAll();
+        if (!networkDeviceAnalysis.isEmpty()) {
+            return networkDeviceAnalysis;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     public ResponseEntity<NetworkDeviceRMA> setNetworkDeviceRMA(NetworkDeviceDTO networkDeviceDTO) {
         Optional<NetworkDevice> networkDevice = networkDeviceRepository
                 .findById(networkDeviceDTO.getNetworkDevice().getId());
@@ -177,6 +189,15 @@ public class NetworkDeviceService {
             return ResponseEntity.ok(newNetworkDeviceRMA);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    public List<NetworkDeviceRMA> getNetworkDeviceRMA() {
+        List<NetworkDeviceRMA> networkDeviceRMA = networkDeviceRMARepository.findAll();
+        if (!networkDeviceRMA.isEmpty()) {
+            return networkDeviceRMA;
+        } else {
+            return new ArrayList<>();
         }
     }
 }

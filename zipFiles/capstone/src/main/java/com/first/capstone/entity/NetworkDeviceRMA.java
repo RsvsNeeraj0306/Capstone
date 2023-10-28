@@ -29,7 +29,7 @@ public class NetworkDeviceRMA {
     private String actionType;
     private BigDecimal amount; 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private NetworkDevice networkDevice;
 
 

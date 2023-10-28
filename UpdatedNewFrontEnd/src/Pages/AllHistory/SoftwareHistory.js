@@ -14,7 +14,9 @@ function SoftwareHistory() {
     
     useEffect(() => {
         // Fetch software data from your API or backend here
-        axios.get('http://localhost:8080/api/getSoftwareHistory')  // Adjust the API endpoint as needed
+        axios.get('http://localhost:8080/api/getSoftwareHistory',{headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }})// Adjust the API endpoint as needed
         .then((response) => {
             setSoftwareList(response.data);
         })

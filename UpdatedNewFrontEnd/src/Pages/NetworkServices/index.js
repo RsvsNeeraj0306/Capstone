@@ -11,8 +11,14 @@ function NetworkServices(){
     const handleChangeTab = (key) => {
         setActiveTab(key);
     };
+
+    const containerStyle = {
+        padding: '20px', // Add padding to the container
+        backgroundColor: '#f0f0f0', // Add a background color
+      };
     
     return (
+        <div style={containerStyle}>
         <Space size={20} direction="vertical">
         <Typography.Title level={4}>Network Services</Typography.Title>
         <Tabs activeKey={activeTab} onChange={handleChangeTab}>
@@ -24,6 +30,7 @@ function NetworkServices(){
         {activeTab === "NetworkRMA" && <NetworkDeviceRMAForm />}
         {activeTab === "NetworkAnalysis" && <NetworkDeviceAnalysisForm />}
         </Space>
+        </div>
     );
 }
 

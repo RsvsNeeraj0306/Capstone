@@ -10,6 +10,7 @@ import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import HistoryIcon from '@mui/icons-material/History';
+import './SideMenu.css'
 
 
 function SideMenu() {
@@ -25,8 +26,6 @@ function SideMenu() {
   return (
     <div className="SideMenu">
       <Menu
-        className="SideMenuVertical"
-        mode="vertical"
         onClick={(item) => {
           //item.key
           navigate(item.key);
@@ -70,7 +69,19 @@ function SideMenu() {
             label:"History",
             key:"/AllHistory",
             icon:<HistoryIcon />
-          }
+          },
+
+          {
+            label:"History",
+            key:"/AllHistory",
+            icon:<HistoryIcon />
+          },
+
+          {
+            label:"History",
+            key:"/AllHistory",
+            icon:<HistoryIcon />
+          },
         ]}
       ></Menu>
     </div>

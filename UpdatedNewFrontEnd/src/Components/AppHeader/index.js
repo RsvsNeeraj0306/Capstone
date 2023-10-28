@@ -1,10 +1,11 @@
 import { BellFilled, MailOutlined } from "@ant-design/icons";
-import { Badge, Drawer, Image, List, Space, Typography } from "antd";
+import { Badge, Drawer, List, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getComments, getOrders } from "../../API";
 import LocalPoliceSharpIcon from '@mui/icons-material/LocalPoliceSharp';
 import { ToastContainer } from "react-toastify";
 function AppHeader() {
+
   const [comments, setComments] = useState([]);
   const [orders, setOrders] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -21,7 +22,7 @@ function AppHeader() {
 
   return (
     <div className="AppHeader">
-        <LocalPoliceSharpIcon />
+      <LocalPoliceSharpIcon />
       <Typography.Title>Dashboard</Typography.Title>
       <Space>
         <Badge count={comments.length} dot>
@@ -74,37 +75,37 @@ function AppHeader() {
               </List.Item>
             );
           }}
-          
+
         ></List>
       </Drawer>
       <ToastContainer
 
-position="top-right"
+        position="top-right"
 
-autoClose={2000}
+        autoClose={2000}
 
-hideProgressBar={false}
+        hideProgressBar={false}
 
-newestOnTop={false}
+        newestOnTop={false}
 
-closeOnClick
+        closeOnClick
 
-rtl={false}
+        rtl={false}
 
-pauseOnFocusLoss
+        pauseOnFocusLoss
 
-draggable
+        draggable
 
-pauseOnHover
+        pauseOnHover
 
-theme="light"
+        theme="light"
 
-style={{ position: "fixed", top: "60px", right: "0" }}
+        style={{ position: "fixed", top: "60px", right: "0" }}
 
-/>
+      />
     </div>
   );
 
-  
+
 }
 export default AppHeader;

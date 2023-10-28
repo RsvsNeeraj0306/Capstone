@@ -15,7 +15,9 @@ function ManufacturerHistory() {
     
     useEffect(() => {
         // Fetch manufacturer data from your API or backend here
-        axios.get('http://localhost:8080/api/getManufacturerHistory')  // Adjust the API endpoint as needed
+        axios.get('http://localhost:8080/api/getManufacturerHistory',{headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }})
         .then((response) => {
             setManufacturerList(response.data);
         })
@@ -46,8 +48,8 @@ function ManufacturerHistory() {
                     <TableRow key={manufacturer.id}>
                     <TableCell>{serialNumber++}</TableCell>
                     <TableCell>{manufacturer.name}</TableCell>
-                    <TableCell>{manufacturer.emailID}</TableCell>
-                    <TableCell>{manufacturer.companyWebsite}</TableCell>
+                    <TableCell>{manufacturer.emailId}</TableCell>
+                    <TableCell>{manufacturer.companyWebsiteLink}</TableCell>
                     <TableCell>{manufacturer.fieldOfWork}</TableCell>
                     <TableCell>{manufacturer.action}</TableCell>
                 </TableRow>

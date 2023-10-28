@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NetworkDeviceRMAForm = () => {
     const [networkDeviceId, setNetworkDeviceId] = useState('');
-    const [actionType, setActionType] = useState('');
+    const [actionType, setActionType] = useState('Replace'); // Default to 'Replace'
     const [amount, setAmount] = useState('');
     const [dateOfAction, setDateOfAction] = useState('');
     const [reason, setReason] = useState('');
@@ -11,7 +13,7 @@ const NetworkDeviceRMAForm = () => {
 
     const resetForm = () => {
         setNetworkDeviceId('');
-        setActionType('');
+        setActionType(''); // Reset to 'Replace'
         setAmount('');
         setDateOfAction('');
         setReason('');
@@ -37,18 +39,19 @@ const NetworkDeviceRMAForm = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
                 body: JSON.stringify(rmaData),
             });
 
             if (response.ok) {
                 const data = await response.json();
-                alert(data.responseBody);
+                toast.success('Network device RMA added successfully!');
             } else {
-                alert('Failed to add network device RMA. Please check the network device ID.');
+                toast.error('Error')
             }
         } catch (error) {
-            alert('An error occurred while adding network device RMA.');
+            toast.error('Error')
         }
 
         resetForm();
@@ -56,19 +59,21 @@ const NetworkDeviceRMAForm = () => {
     }
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/allHardware')
+        fetch('http://localhost:8080/api/allHardware', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
             .then((response) => response.json())
             .then((data) => {
                 setNetworkDevices(data);
             })
             .catch((error) => console.error('Error fetching network devices: ', error));
-    }
-
-    );
+    });
 
     return (
         <div className="form-container">
-            <h2>Set Network Device RMA</h2>
+            <h2>Network Device RMA</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Network Device ID:
@@ -84,15 +89,22 @@ const NetworkDeviceRMAForm = () => {
                         ))}
                     </select>
                 </label>
+                <br />
+                <br />
                 <label>
                     Action Type:
-                    <input
-                        type="text"
+                    <select
                         value={actionType}
                         onChange={(e) => setActionType(e.target.value)}
-                    />
+                    >
+                        <option value="Replace">Replace</option>
+                        <option value="Refund">Refund</option>
+                        <option value="Repair">Repair</option>
+                    </select>
                 </label>
                 <label>
+                    <br />
+                    <br />
                     Amount:
                     <input
                         type="text"
@@ -116,6 +128,8 @@ const NetworkDeviceRMAForm = () => {
                         onChange={(e) => setReason(e.target.value)}
                     />
                 </label>
+                <br />
+                 <br />
                 <button type="submit">Set Network Device RMA</button>
             </form>
         </div>

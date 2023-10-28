@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import './RenewSoftwareForm.css';
+import { toast } from 'react-toastify';
 
 
 const RenewSoftwareForm = ({ onRenew }) => {
@@ -9,6 +10,8 @@ const RenewSoftwareForm = ({ onRenew }) => {
   const [expiryDate, setExpiryDate] = useState('');
   const [licenseKey, setLicenseKey] = useState('');
   const [message, setMessage] = useState('');
+
+  const [software, setSoftware] = useState([]);
 
   const resetForm = () => {
     setSoftwareId('');
@@ -20,7 +23,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
 
   const handleRenewSubmit = async (e) => {
     e.preventDefault();
-
+  
     const renewalData = {
       software: {
         id: softwareId,
@@ -29,29 +32,60 @@ const RenewSoftwareForm = ({ onRenew }) => {
         licenseKey,
       },
     };
-
+  
     try {
       const response = await fetch('http://localhost:8080/api/renewSoftware', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
         },
         body: JSON.stringify(renewalData),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        setMessage(data.responseBody);
-        onRenew();
-      } else {
-        setMessage('Failed to renew software. Please check the software ID.');
+        toast.success('Software renewed successfully!');
+      } 
+      else {
+        toast.error('Failed to renew software. Please check the software ID.');
       }
     } catch (error) {
-      setMessage('An error occurred while renewing the software.');
+      if(error.message.includes("401")){
+        toast.error('Unauthorized Access');
+      }else{
+        toast.error('Failed to renew software. Please check the software ID.');
+      }
     }
+
 
     resetForm();
   };
+  
+  useEffect(() => {
+    const fetchSoftwareDevices = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/allSoftware',{headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }});
+            const data = await response.json();
+            setSoftware(data);
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    fetchSoftwareDevices();
+}
+, []);
+
+
+const softwareOptions = software.map((software) => (
+  <option key={software.id} value={software.id}>
+      {software.id}
+  </option>
+));
 
   return (
     <div className="form-container"> 
@@ -59,12 +93,15 @@ const RenewSoftwareForm = ({ onRenew }) => {
       <form onSubmit={handleRenewSubmit}>
         <label>
           Software ID:
-          <input
-            type="text"
-            className="custom-textfield"
+          <select
             value={softwareId}
             onChange={(e) => setSoftwareId(e.target.value)}
-          />
+          >
+            <option value="">Select a software</option>
+            {softwareOptions}
+          </select>
+          <br />
+          <br />
         </label>
         <label>
           Purchase Date:

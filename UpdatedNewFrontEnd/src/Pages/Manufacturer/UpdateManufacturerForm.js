@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import EditIcon from '@mui/icons-material/Edit';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 
 const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
   const [manufacturerData, setManufacturerData] = useState({
@@ -44,25 +46,36 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
     e.preventDefault();
 
     axios
-      .put(`http://localhost:8080/api/updateManufacturer/${selectedManufacturerId}`, manufacturerData,{headers: {
+    .put(`http://localhost:8080/api/updateManufacturer/${selectedManufacturerId}`, manufacturerData, {
+      headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }})
-      .then((response) => {
-        // Handle the response (e.g., show a success message)
-        console.log('Manufacturer updated:', response.data);
-        setSuccessMessage('Manufacturer updated successfully');
-        // Clear the success message after a few seconds
-        setTimeout(() => {
-          setSuccessMessage('');
-        }, 5000);
-      })
-      .catch((error) => {
-        // Handle errors (e.g., show an error message)
-        console.error('Error updating manufacturer:', error);
-        setSuccessMessage('Error updating manufacturer');
-      });
-  };
+      }
+    })
+    .then((response) => {
+      // Handle the response (e.g., show a success message)
+      console.log('Manufacturer updated:', response.data);
+      setSuccessMessage('Manufacturer updated successfully');
+      // Clear the success message after a few seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 5000);
+      toast.success('Manufacturer updated successfully!');
+    })
+    .catch((error) => {
+      // Handle errors (e.g., show an error message)
+      console.error('Error updating manufacturer:', error);
+      toast.error('Error updating manufacturer!');
 
+    });
+  };  
+  const isFormComplete = () => {
+    return (
+      !manufacturerData.name ||
+      !manufacturerData.companyWebsiteLink ||
+      !manufacturerData.emailId
+    );
+  };
+  
   return (
     <div className="form-container">
       <h2 className="form-label">Update Manufacturer</h2>
@@ -110,10 +123,12 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
             <option value="Hardware">Hardware</option>
           </select>
         </label>
-        <button type="submit">Update Manufacturer</button>
+        <button type="submit" disabled={isFormComplete()}>
+          Update Manufacturer
+        </button>
       </form>
     </div>
   );
-};
+}
 
 export default UpdateManufacturerForm;

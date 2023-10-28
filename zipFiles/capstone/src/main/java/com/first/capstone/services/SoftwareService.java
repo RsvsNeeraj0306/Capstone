@@ -1,10 +1,8 @@
 package com.first.capstone.services;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +77,7 @@ public class SoftwareService {
     }
 
     public Software getOrCreateNewSoftware(Software software, Manufacturer manufacturer) {
-        return softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName())//id:manufucturer id name:software name
+        return softwareRepository.findByIdAndSoftwareName(manufacturer.getId(), software.getSoftwareName())
                 .orElseGet(() -> {
                     Software newSoftware = new Software();
                     newSoftware.setSoftwareName(software.getSoftwareName());
@@ -147,29 +145,37 @@ public class SoftwareService {
         }
     }
 
-    public ResponseEntity<SoftwareRMA> refundSoftware(SoftwareDeviceDTO softwareDeviceDTO) {
-        Software software = softwareDeviceDTO.getSoftware();
-        if (software.getId() == null) {
-            return ResponseEntity.badRequest().body(null); // Handle the case where ID is null
-        }
-        
-        Optional<Software> existingSoftware = softwareRepository.findById(software.getId());
-        if (existingSoftware.isPresent()) {
-            SoftwareRMA softwareRMA = new SoftwareRMA();
-            softwareRMA.setRefundAmount(software.getPriceOfSoftware());
-            softwareRMA.setRefundReason(softwareDeviceDTO.getSoftwareRMA().getRefundReason());
-            softwareRMA.setSoftware(existingSoftware.get());
-            softwareRMA.setRefunDate(java.sql.Date.valueOf(LocalDate.now()));
-            
-            addLicenseHistory(existingSoftware.get(), Action.REFUND.toString());
-            softwareRMARepository.save(softwareRMA);
-            
-            return ResponseEntity.ok().body(softwareRMA);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
+    // public ResponseEntity<SoftwareRMA> refundSoftware(SoftwareDeviceDTO softwareDeviceDTO) {
+    //     Software software = softwareDeviceDTO.getSoftware();
+    //     if (software.getId() == null) {
+    //         return ResponseEntity.badRequest().body(null); // Handle the case where ID is null
+    //     }
+
+    //     Optional<Software> existingSoftware = softwareRepository.findById(software.getId());
+    //     if (existingSoftware.isPresent()) {
+    //         SoftwareRMA softwareRMA = new SoftwareRMA();
+    //         softwareRMA.setRefundAmount(software.getPriceOfSoftware());
+    //         softwareRMA.setRefundReason(softwareDeviceDTO.getSoftwareRMA().getRefundReason());
+    //         softwareRMA.setSoftware(existingSoftware.get());
+    //         softwareRMA.setRefunDate(java.sql.Date.valueOf(LocalDate.now()));
+
+    //         addLicenseHistory(existingSoftware.get(), Action.REFUND.toString());
+    //         softwareRMARepository.save(softwareRMA);
+
+    //         return ResponseEntity.ok().body(softwareRMA);
+    //     } else {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
+
+    // public List<SoftwareRMA> getRefundSoftware() {
+    //     List<SoftwareRMA> softwareRMA = softwareRMARepository.findAll();
+    //     if (!softwareRMA.isEmpty()) {
+    //         return softwareRMA;
+    //     } else {
+    //         return new ArrayList<>();
+    //     }
+    // }
 
     public ResponseEntity<SoftwareAnalysis> setSoftwareAnalysis(SoftwareDeviceDTO softwareDeviceDTO) {
         Software software = softwareDeviceDTO.getSoftware();
@@ -177,9 +183,9 @@ public class SoftwareService {
         if (existingSoftware.isPresent()) {
             SoftwareAnalysis softwareAnalysis = new SoftwareAnalysis();
             softwareAnalysis.setSoftware(existingSoftware.get());
-            softwareAnalysis.setActiveUsers(softwareDeviceDTO.getSoftwareAnalysis().getActiveUsers());  // Set activeUsers
-            softwareAnalysis.setAverageTimeUsage(softwareDeviceDTO.getSoftwareAnalysis().getAverageTimeUsage());  // Set averageTimeUsage
-            softwareAnalysis.setCompanyRating(softwareDeviceDTO.getSoftwareAnalysis().getCompanyRating());  // Set companyRating
+            softwareAnalysis.setActiveUsers(softwareDeviceDTO.getSoftwareAnalysis().getActiveUsers());                                                                                       
+            softwareAnalysis.setAverageTimeUsage(softwareDeviceDTO.getSoftwareAnalysis().getAverageTimeUsage()); 
+            softwareAnalysis.setCompanyRating(softwareDeviceDTO.getSoftwareAnalysis().getCompanyRating()); 
             softwareAnalysisRepository.save(softwareAnalysis);
             addLicenseHistory(existingSoftware.get(), Action.ANALYSIS.toString());
             return ResponseEntity.ok().body(softwareAnalysis);
@@ -203,6 +209,8 @@ public class SoftwareService {
 
         if (softwareOptional.isPresent()) {
             addLicenseHistory(softwareOptional.get(), Action.DELETED.toString());
+            softwareAnalysisRepository.deleteBySoftwareId(softwareId);
+            softwareRMARepository.deleteBySoftwareId(softwareId);
             softwareRepository.delete(softwareOptional.get());
 
             return ResponseEntity.ok().body(softwareOptional.get());
@@ -271,7 +279,7 @@ public class SoftwareService {
                     LocalDate today = LocalDate.now();
                     LocalDate expiryDate = license.getExpiryDate().toLocalDate();
                     long daysDifference = ChronoUnit.DAYS.between(today, expiryDate);
-                    return daysDifference >= 1 && daysDifference <= 45;
+                    return daysDifference >= 1 && daysDifference < 45;
                 })
                 .count();
 
@@ -308,15 +316,16 @@ public class SoftwareService {
 
     }
 
-     public List<Software> getSoftwareLessThanZeroDays() {
+    public List<Software> getSoftwareLessThanZeroDays() {
         List<Software> licenses = softwareRepository.findExpiredSoftware(LocalDate.now());
-        if(!licenses.isEmpty()) {
+        if (!licenses.isEmpty()) {
             gmailService.sendLicenseExpirationEmail(licenses);
             return licenses;
         } else {
             return new ArrayList<>();
         }
-        
+
     }
+
 
 }

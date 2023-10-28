@@ -23,7 +23,7 @@ public class NetworkDeviceAnalysis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private NetworkDevice networkDevice;
 
     private Integer activeDevice;

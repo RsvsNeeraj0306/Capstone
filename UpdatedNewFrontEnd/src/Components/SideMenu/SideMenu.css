@@ -1,0 +1,38 @@
+.SideMenuAndPageContent{
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: rgba(0, 0, 0, 0.05) ;
+}
+.SideMenu{
+    display: flex;
+  flex-direction: column;
+  background-color:white;
+  width: 240px;
+  padding-bottom: 12%;
+
+
+}
+
+.Menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: left; /* Ensure text is left-aligned */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+  }
+  
+  /* Style for the selected menu item */
+  .Menu-item-selected {
+    background-color: #555;
+  }
+
+.SideMenuVertical{
+    height: 100%;
+    width: 1
+}

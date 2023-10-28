@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NetworkDeviceForm = () => {
     const [networkDeviceData, setNetworkDeviceData] = useState({
@@ -65,11 +66,13 @@ const NetworkDeviceForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        console.log('handleSubmit called'); // Add this line
+    
         if (isSubmitDisabled()) {
             setError('Please fill in all required fields before submitting.');
             return;
         }
+    
 
         const networkDeviceDTO = {
             networkDevice: {
@@ -94,18 +97,16 @@ const NetworkDeviceForm = () => {
 
         };
 
-        fetch('http://localhost:8080/api/addNetworkDevices', {headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-          }},{
+        fetch('http://localhost:8080/api/addNetworkDevices', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify(networkDeviceDTO),
-        })
+          })          
             .then((response) => response.json())
             .then((data) => {
-                setResponseMessage('Network Device added successfully!');
                 setNetworkDeviceData({
                     manufacturer: {
                         name: '',
@@ -212,21 +213,9 @@ const NetworkDeviceForm = () => {
                     {error && <div className="form-error">{error}</div>}
                     {responseMessage && <div className="form-success">{responseMessage}</div>}
 
-                    <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme="light"
-                    />
+                   
                 </div>
             </form>
-
         </div>
     );
 };
