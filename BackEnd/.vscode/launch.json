@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CapstoneApplication<capstone>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.first.capstone.CapstoneApplication",
+            "projectName": "capstone",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
