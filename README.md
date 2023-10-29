@@ -31,9 +31,8 @@ The License Management System (LMS) is a web-based application designed to assis
 - [x] Holistic license and lifecycle management to track the current status and lifecycle stage (e.g., commissioning, relocation, return merchandise authorization).
 
 ## Related Documents
-- [x] [Backend API Documentation]([https://github.com/exampleuser/lms-backend/docs/api.md](https://github.com/RsvsNeeraj0306/Capstone/blob/main/apidocu.md))
-- [x] [Detailed Requirement Specifications](https://github.com/exampleuser/lms-requirements)
-- [x] [Frontend Documentation]([https://github.com/exampleuser/lms-frontend/docs/frontend.md](https://github.com/RsvsNeeraj0306/Capstone/blob/main/frontendDocument.md))
+- [x] [Backend API Documentation](https://github.com/exampleuser/lms-backend/docs/api.md](https://github.com/RsvsNeeraj0306/Capstone/blob/main/apidocu.md)
+- [x] [Frontend Documentation](https://github.com/exampleuser/lms-frontend/docs/frontend.md](https://github.com/RsvsNeeraj0306/Capstone/blob/main/frontendDocument.md)
 - [x] [Code Coverage Report](https://github.com/RsvsNeeraj0306/Capstone/blob/main/capstone1.PNG)
 - [x] [Database Schema](https://github.com/RsvsNeeraj0306/Capstone/blob/main/ERCapstone.PNG)
 
