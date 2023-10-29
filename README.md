@@ -2,7 +2,7 @@
 
 ## Table of Contents
 1. [System Overview](#system-overview)
-2. [Repository Links](#repository-links)
+2. [Code Links](#Links)
 3. [Functional Requirements](#functional-requirements)
 4. [Additional Features](#additional-features)
 5. [Related Documents](#related-documents)
@@ -15,7 +15,7 @@
 ## System Overview
 The License Management System (LMS) is a web-based application designed to assist enterprises in effectively managing their network devices and software licenses. LMS provides a user-friendly dashboard for real-time monitoring of license statuses, automated email notifications to remind users about expiring licenses, and a user interface for easy license status updates.
 
-## Repository Links
+## Links
 - [Frontend Repository](https://github.com/RsvsNeeraj0306/Capstone/tree/main/UpdatedNewFrontEnd/src)
 - [Backend Repository](https://github.com/RsvsNeeraj0306/Capstone/tree/main/zipFiles/capstone/src)
 
