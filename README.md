@@ -17,7 +17,7 @@ The License Management System (LMS) is a web-based application designed to assis
 
 ## Repository Links
 - [Frontend Repository]([UpdatedNewFrontEnd/src](https://github.com/RsvsNeeraj0306/Capstone/tree/main/UpdatedNewFrontEnd/src))
-- [Backend Repository]([https://github.com/exampleuser/lms-backend](https://github.com/RsvsNeeraj0306/Capstone/tree/main/zipFiles/capstone/src))
+- [Backend Repository]([(https://github.com/RsvsNeeraj0306/Capstone/tree/main/zipFiles/capstone/src))
 
 ## Functional Requirements
 - [x] Ability to track network devices and software licenses within an organization.
