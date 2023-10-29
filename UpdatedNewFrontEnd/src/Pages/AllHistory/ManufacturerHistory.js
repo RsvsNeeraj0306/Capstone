@@ -29,7 +29,7 @@ function ManufacturerHistory() {
     let serialNumber = 1; // Initialize the serial number
     
     return (
-        <Space size={20} direction="vertical">
+        <TableContainer sx={{ maxHeight: 440 }}>
         <Typography.Title level={4}>Manufacturer History</Typography.Title>
          <TableContainer sx={{ maxHeight: 440 }}>
          <Table stickyHeader aria-label="sticky table">
@@ -57,7 +57,7 @@ function ManufacturerHistory() {
             </TableBody>
             </Table>
         </TableContainer>
-    </Space>
+        </TableContainer>
     );
 }
 

@@ -51,6 +51,8 @@ public class SoftwareService {
     @Autowired
     private SoftwareLicenseHistoryRepository softwareLicenseHistoryRepository;
 
+
+
     private static final String ERROR_MESSAGE = "Software not found";
 
     enum Action {
@@ -325,6 +327,10 @@ public class SoftwareService {
             return new ArrayList<>();
         }
 
+    }
+
+    public List<SoftwareLicenseHistoryRepository.ActionCount> countActions() {
+        return softwareLicenseHistoryRepository.countActions();
     }
 
 

@@ -71,7 +71,6 @@ function TotalSoftwareDevices() {
 
   return (
     <div style={containerStyle}>
-      <Space size={20} direction="vertical">
         <Typography.Title level={4}>Software Devices</Typography.Title>
         <Link to="/SoftwareForm">
           <Button type="primary" style={{ marginRight: "10px" }}>
@@ -128,7 +127,6 @@ function TotalSoftwareDevices() {
         >
           <p>Are you sure you want to delete this software?</p>
         </Modal>
-      </Space>
     </div>
   );
 }

@@ -24,7 +24,8 @@ function AllHistory(){
 
     useEffect(() => {
         // Fetch hardware data from your API or backend here
-        axios.get('http://localhost:8080/api/getNetworkDeviceHistory',{headers: {
+        axios.get('http://localhost:8080/api/getNetworkDeviceHistory',{
+            headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
           }})
           .then((response) => {
@@ -39,15 +40,16 @@ function AllHistory(){
 
         return (
             <div style={containerStyle}>
-            <Space size={20} direction="vertical">
-                <Typography.Title level={4}>Network Devices History</Typography.Title>
+                <Typography.Title level={4}> History</Typography.Title>
                 <Tabs activeKey={activeTab} onChange={handleChangeTab}>
                     <Tab key="AllHistory" tab="Network Device History" />
                     <Tab key="ManufacturerHistory" tab="Manufacturer History" />
                     <Tab key="SoftwareHistory" tab="Software History" />
                 </Tabs>
                 {activeTab === "AllHistory" && (
+     
                  <TableContainer sx={{ maxHeight: 440 }}>
+                       <Typography.Title level={4}>NetworkDevice History</Typography.Title>
                  <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
@@ -74,7 +76,7 @@ function AllHistory(){
                 )}
                 {activeTab === "ManufacturerHistory" && <ManufacturerHistory />}
                 {activeTab === "SoftwareHistory" && <SoftwareHistory />}
-            </Space>
+        
             </div>
         );
 }

@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 10 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     position: sticky;
@@ -51,3 +51,18 @@
     background: #e74c3c;
   }
   
+
+.navbar-item {
+  list-style-type: none;
+}
+ 
+.left-item {
+  margin-right: auto;
+}
+ 
+.right-item {
+  margin-left: auto;
+}
+ 
+ 
+ 

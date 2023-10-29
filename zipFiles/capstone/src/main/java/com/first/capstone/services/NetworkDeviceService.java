@@ -200,4 +200,18 @@ public class NetworkDeviceService {
             return new ArrayList<>();
         }
     }
+
+    public ResponseEntity<ResponseDTO> deleteNetworkDeviceRMAById(Long id) {
+        Optional<NetworkDeviceRMA> networkDeviceRMA = networkDeviceRMARepository.findById(id);
+        if (networkDeviceRMA.isPresent()) {
+            networkDeviceRMARepository.deleteById(networkDeviceRMA.get().getId());
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody("Network device RMA deleted successfully");
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseBody(ERROR_MESSAGE);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
 }

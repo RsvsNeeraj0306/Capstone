@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './RenewSoftwareForm.css'; // Import the RenewSoftwareForm.css file
 import { toast } from 'react-toastify';
 
 const SoftwareChangePlanForm = ({ onChangePlan }) => {
@@ -89,7 +88,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
   ));
 
   return (
-    <div className="form-container">
+    <div className="form-container" style = {{'top':"95%"}}>
       <h2>Change Plan</h2>
       <form onSubmit={handlePlanChangeSubmit}>
         <label>
@@ -108,7 +107,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           License Key:
           <input
             type="text"
-            className="custom-textfield"
+            className="form-input"
             value={licenseKey}
             onChange={(e) => setLicenseKey(e.target.value)}
           />
@@ -117,7 +116,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Expiry Date:
           <input
             type="date"
-            className="custom-textfield"
+            className="form-input"
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
           />
@@ -126,7 +125,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Purchase Date:
           <input
             type="date"
-            className="custom-textfield"
+            className="form-input"
             value={purchaseDate}
             onChange={(e) => setPurchaseDate(e.target.value)}
           />
@@ -136,7 +135,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           <select
             value={typeOfPlan}
             onChange={(e) => setTypeOfPlan(e.target.value)}
-            className="custom-textfield"
+            className="form-input"
           >
             <option value="">Select a plan</option>
             <option value="Free Plan">Free Plan</option>
@@ -150,7 +149,7 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Quantity:
           <input
             type="text"
-            className="custom-textfield"
+            className="form-input"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
@@ -159,16 +158,16 @@ const SoftwareChangePlanForm = ({ onChangePlan }) => {
           Price of Software:
           <input
             type="text"
-            className="custom-textfield"
+            className="form-input"
             value={priceOfSoftware}
             onChange={(e) => setPriceOfSoftware(e.target.value)}
           />
         </label>
-        <button type="submit" className="custom-button">
+        <button type="submit" className="form-button">
           Change Plan
         </button>
       </form>
-      <div className="message">{message}</div>
+     
     </div>
   );
 };

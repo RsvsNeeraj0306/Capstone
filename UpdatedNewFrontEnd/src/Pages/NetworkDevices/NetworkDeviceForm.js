@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './NetworkDevice.css'
 
 const NetworkDeviceForm = () => {
     const [networkDeviceData, setNetworkDeviceData] = useState({
@@ -13,16 +14,13 @@ const NetworkDeviceForm = () => {
             hardwareName: '',
             purchaseDate: '',
             warrantyEndDate: '',
-            hardwareNameSerialnumber: '',
-            serialnumber: '',
+            serialNumber: '',
             quantity: '',
             cost: ''
         },
     });
 
-    const [error, setError] = useState('');
     const [manufacturers, setManufacturers] = useState([]);
-    const [responseMessage, setResponseMessage] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:8080/api/allManufacture',{headers: {
@@ -58,7 +56,7 @@ const NetworkDeviceForm = () => {
             !networkDeviceData.hardwareName ||
             !networkDeviceData.purchaseDate ||
             !networkDeviceData.warrantyEndDate ||
-            !networkDeviceData.hardwareNameSerialnumber ||
+            !networkDeviceData.serialNumber ||
             !networkDeviceData.quantity ||
             !networkDeviceData.cost
         );
@@ -69,7 +67,6 @@ const NetworkDeviceForm = () => {
         console.log('handleSubmit called'); // Add this line
     
         if (isSubmitDisabled()) {
-            setError('Please fill in all required fields before submitting.');
             return;
         }
     
@@ -79,19 +76,13 @@ const NetworkDeviceForm = () => {
                 hardwareName: networkDeviceData.hardwareName,
                 purchaseDate: networkDeviceData.purchaseDate,
                 warrantyEndDate: networkDeviceData.warrantyEndDate,
-                serialnumber: networkDeviceData.hardwareNameSerialnumber,
+                serialNumber: networkDeviceData.serialNumber,
                 quantity: networkDeviceData.quantity,
                 cost: networkDeviceData.cost
             },
             manufacturer: {
                 name: networkDeviceData.manufacturer.name,
                 fieldOfWork: networkDeviceData.manufacturer.fieldOfWork,
-            },
-            networkDeviceHistory: {
-                networkDeviceName: networkDeviceData.hardwareName,
-                purchaseDate: networkDeviceData.purchaseDate,
-                warrantyEndDate: networkDeviceData.warrantyEndDate,
-                networkDeviceHistory: networkDeviceData.networkDeviceHistory,
             }
 
 
@@ -115,8 +106,7 @@ const NetworkDeviceForm = () => {
                     hardwareName: '',
                     purchaseDate: '',
                     warrantyEndDate: '',
-                    hardwareNameSerialnumber: '',
-                    serialnumber: '',
+                    serialNumber: '',
                     quantity: '',
                     cost: '',
                     priceOfHardware: '',
@@ -125,7 +115,6 @@ const NetworkDeviceForm = () => {
                 toast.success('Network Device added successfully');
             })
             .catch((error) => {
-                setError('Error adding Network Device: ' + error);
                 console.error('Error adding Network Device:', error);
                 toast.error('An error occurred while adding Network Device');
             });
@@ -133,7 +122,7 @@ const NetworkDeviceForm = () => {
     };
 
     return (
-        <div className="form-container">
+        <div className="form-container" style={{'top': '100%'}}>
             <h2 className="form-label">Add Network Device</h2>
             <form onSubmit={handleSubmit}>
                 <label className='form-label'>Manufacturer Name:
@@ -184,8 +173,8 @@ const NetworkDeviceForm = () => {
                 <label className='form-label'>Hardware Name Serial Number:
                     <input
                         type="text"
-                        name="hardwareNameSerialnumber"
-                        value={networkDeviceData.hardwareNameSerialnumber}
+                        name="serialNumber"
+                        value={networkDeviceData.serialNumber}
                         onChange={handleChange}
                         className='form-input'
                     />
@@ -210,8 +199,7 @@ const NetworkDeviceForm = () => {
                 </label>
                 <div className="form-buttons-container">
                     <button type="submit" disabled={isSubmitDisabled()} className="form-button">Add Network Device</button>
-                    {error && <div className="form-error">{error}</div>}
-                    {responseMessage && <div className="form-success">{responseMessage}</div>}
+
 
                    
                 </div>

@@ -10,6 +10,10 @@ import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import HistoryIcon from '@mui/icons-material/History';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+
+
 import './SideMenu.css'
 
 
@@ -66,15 +70,9 @@ function SideMenu() {
           },
 
           {
-            label:"History",
-            key:"/AllHistory",
-            icon:<HistoryIcon />
-          },
-
-          {
-            label:"History",
-            key:"/AllHistory",
-            icon:<HistoryIcon />
+            label:"RMA",
+            key:"/NetworkDeviceRMATable",
+            icon: <BookmarkAddedIcon />
           },
 
           {

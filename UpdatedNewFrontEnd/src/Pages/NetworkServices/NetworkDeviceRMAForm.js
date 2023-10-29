@@ -72,7 +72,7 @@ const NetworkDeviceRMAForm = () => {
     });
 
     return (
-        <div className="form-container">
+        <div className="form-container" style={{'top': '75%'}}>
             <h2>Network Device RMA</h2>
             <form onSubmit={handleSubmit}>
                 <label>
@@ -130,7 +130,7 @@ const NetworkDeviceRMAForm = () => {
                 </label>
                 <br />
                  <br />
-                <button type="submit">Set Network Device RMA</button>
+                <button type="submit"  className="form-button">Set Network Device RMA</button>
             </form>
         </div>
     );

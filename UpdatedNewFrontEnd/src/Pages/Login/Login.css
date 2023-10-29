@@ -22,7 +22,7 @@
 .error {
   background-color: hsla(0, 100%, 50%, 0.297);
   border-radius: 4px;
-  color: hsl(0, 100%, 50%);
+  color: hsl(201, 100%, 50%);
   padding: 0.75rem 0.5rem;
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
@@ -58,17 +58,17 @@ button {
 
 .input-group:has(:not(:focus):not(:placeholder-shown):invalid) > .label,
 .auth-body:has(.error) .input-group > .label {
-  color: hsl(0, 100%, 50%);
+  color: hsl(205, 100%, 50%);
 }
 
 .input-group:has(:not(:focus):not(:placeholder-shown):invalid) > .input-container,
 .auth-body:has(.error) .input-group:has(:focus) > .input-container {
-  border-color: hsl(0, 100%, 50%);
+  border-color: hsl(205, 100%, 50%);
 }
 
 .input-group:has(:not(:focus):not(:placeholder-shown):invalid) > .input-container::after {
   content: attr(data-error);
-  color: hsl(0, 100%, 50%);
+  color: hsl(205, 100%, 50%);
   font-size: 0.6rem;
   text-transform: capitalize;
   position: absolute;
@@ -85,8 +85,8 @@ button {
 
 .input-group:has(:focus) > .label,
 .input-group:has(:focus) > .input-container {
-  color: hsl(0, 100%, 50%);
-  border-color: hsl(0, 100%, 50%);
+  color:hsl(205, 100%, 50%);
+  border-color: hsl(205, 100%, 50%);
 }
 
 .pwd-icon {
@@ -104,7 +104,7 @@ button {
   border-radius: 4px;
   font-size: 1rem;
   font-weight: 500;
-  background-color: #f91a1a;
+  background-color: #1ab6f9;
   color: hsl(0, 0%, 100%);
   transition: all 0.1s ease-in-out;
   margin-bottom: 1rem;
@@ -150,7 +150,7 @@ button {
 }
 
 .link-to {
-  color: #f91a1a;
+  color: #1af9f9;
   font-weight: 500;
   text-decoration: none;
 }
@@ -177,7 +177,7 @@ button {
 }
 
 .remember-me > input:checked {
-  background-color: #f91a1a;
+  background-color: #1af9f9;
   border: none;
 }
 

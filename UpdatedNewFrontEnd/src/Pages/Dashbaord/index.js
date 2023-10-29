@@ -153,54 +153,56 @@ function RecentOrders() {
     </>
   );
 }
-
 function DashboardChart() {
-  const [reveneuData, setReveneuData] = useState({
+  const [actionData, setActionData] = useState({
     labels: [],
     datasets: [],
   });
 
   useEffect(() => {
-    getRevenue().then((res) => {
-      const labels = res.carts.map((cart) => {
-        return `User-${cart.userId}`;
-      });
-      const data = res.carts.map((cart) => {
-        return cart.discountedTotal;
-      });
+    // Fetch data from your API endpoint for action counts
+    fetch("YOUR_ACTION_COUNT_API_ENDPOINT")
+      .then((response) => response.json())
+      .then((data) => {
+        const labels = data.map((item) => item.actionType);
+        const counts = data.map((item) => item.count);
 
-      const dataSource = {
-        labels,
-        datasets: [
-          {
-            label: "Revenue",
-            data: data,
-            backgroundColor: "rgba(255, 0, 0, 1)",
-          },
-        ],
-      };
+        const actionChartData = {
+          labels,
+          datasets: [
+            {
+              label: "Action Counts",
+              data: counts,
+              backgroundColor: "rgba(0, 128, 255, 0.6)",
+            },
+          ],
+        };
 
-      setReveneuData(dataSource);
-    });
+        setActionData(actionChartData);
+      })
+      .catch((error) => {
+        console.error("Error fetching action data:", error);
+      });
   }, []);
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom",
+        display: false, // Hide legend for this chart
       },
       title: {
         display: true,
-        text: "Order Revenue",
+        text: "Action Counts",
       },
     },
   };
 
   return (
     <Card style={{ width: 500, height: 250 }}>
-      <Bar options={options} data={reveneuData} />
+      <Bar options={options} data={actionData} />
     </Card>
   );
 }
+
 export default Dashboard;

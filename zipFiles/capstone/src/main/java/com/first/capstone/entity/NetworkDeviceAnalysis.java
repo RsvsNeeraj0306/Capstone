@@ -29,8 +29,5 @@ public class NetworkDeviceAnalysis {
     private Integer activeDevice;
     private Integer averageTimeUsage;
     private Integer companyRating;
-
-
-
-    
+  
 }

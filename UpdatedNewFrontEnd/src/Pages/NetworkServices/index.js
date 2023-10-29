@@ -19,7 +19,7 @@ function NetworkServices(){
     
     return (
         <div style={containerStyle}>
-        <Space size={20} direction="vertical">
+       
         <Typography.Title level={4}>Network Services</Typography.Title>
         <Tabs activeKey={activeTab} onChange={handleChangeTab}>
             <Tab key="NetworkRMA" tab="RMA" />
@@ -29,7 +29,6 @@ function NetworkServices(){
         </Tabs>
         {activeTab === "NetworkRMA" && <NetworkDeviceRMAForm />}
         {activeTab === "NetworkAnalysis" && <NetworkDeviceAnalysisForm />}
-        </Space>
         </div>
     );
 }

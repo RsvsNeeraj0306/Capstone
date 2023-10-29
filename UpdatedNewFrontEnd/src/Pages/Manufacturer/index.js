@@ -34,7 +34,6 @@ const Manufacturer = () => {
       .then((response) => response.json())
       .then((data) => {
         setManufacturers(data);
-        setLoading(false);
       })
       .catch((error) => console.error('Error fetching manufacturers: ', error));
   }, []);
@@ -43,8 +42,6 @@ const Manufacturer = () => {
 
   return (
     <div style={containerStyle}>
-
-    <Space size={20} direction="vertical">
       <Typography.Title level={4} className="manufacturer-title">Manufacture details</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab} className="manufacturer-tabs">
         <Tab key="manufacturer" tab="Total Manufacturer" />
@@ -89,7 +86,7 @@ const Manufacturer = () => {
       )}
       {activeTab === 'manufacturerForm' && <ManufacturerForm />}
       {activeTab === 'updateManufacturerForm' && <UpdateManufacturerForm selectedManufacturerId={selectedManufacturerId} />}
-    </Space>
+
     </div>
   );
 };

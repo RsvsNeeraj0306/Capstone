@@ -41,7 +41,7 @@ function NetworkDevices() {
   return (
     <div style={containerStyle}>
 
-    <Space size={20} direction="vertical">
+   
       <Typography.Title level={4}>Network Devices</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
         <Tab key="NetworkDevices" tab="Total Network Devices" />
@@ -55,6 +55,7 @@ function NetworkDevices() {
             <TableCell>Serial Number</TableCell>
               <TableCell>Device Name</TableCell>
               <TableCell>Purchase Date</TableCell>
+              <TableCell>Asset Number</TableCell>
               <TableCell>Warranty Period</TableCell>
               <TableCell>Manufacturer Name</TableCell>
               <TableCell>Analyse</TableCell>
@@ -67,6 +68,7 @@ function NetworkDevices() {
                 <TableCell>{serialNumber++}</TableCell>
                 <TableCell>{NetworkDevice.hardwareName}</TableCell>
                 <TableCell>{NetworkDevice.purchaseDate}</TableCell>
+                <TableCell>{NetworkDevice.serialNumber}</TableCell>
                 <TableCell>{NetworkDevice.warrantyEndDate}</TableCell>
                 <TableCell>{NetworkDevice.manufacturer.name}</TableCell>
                 <TableCell>
@@ -93,7 +95,6 @@ function NetworkDevices() {
       {activeTab === "NetworkDeviceForm" && (
         <NetworkDeviceForm />
       )}
-    </Space>
     </div>
   );
 }

@@ -55,7 +55,7 @@ function SoftwareDevices() {
 
   return (
     <div style={containerStyle}>
-      <Space size={20} direction="vertical">
+     
       <Typography.Title level={4}>Software Devices</Typography.Title>
       <Tabs activeKey={activeTab} onChange={handleChangeTab}>
         <Tab key="softwareDevices" tab="Total Software" />
@@ -77,7 +77,6 @@ function SoftwareDevices() {
        </div>
       )}
       {activeTab === "softwareForm" && <SoftwareForm />} {/* Render MoreThan45Days component */}
-    </Space>
     </div>
   );
 

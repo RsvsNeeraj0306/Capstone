@@ -83,5 +83,10 @@ public class HardwareController {
     return networkDeviceService.getNetworkDeviceAnalysis();
   }
 
+  @DeleteMapping("/deleteNetworkDeviceRMA/{id}")
+  public ResponseEntity<ResponseDTO> deleteNetworkDeviceRMA(@PathVariable Long id) {
+    return networkDeviceService.deleteNetworkDeviceRMAById(id);
+  }
+
       
 }

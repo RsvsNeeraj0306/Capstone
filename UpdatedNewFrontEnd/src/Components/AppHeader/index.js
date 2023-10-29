@@ -20,11 +20,13 @@ function AppHeader() {
     });
   }, []);
 
+
+
   return (
-    <div className="AppHeader">
-      <LocalPoliceSharpIcon />
-      <Typography.Title>Dashboard</Typography.Title>
-      <Space>
+    <div className="AppHeader" >
+      <LocalPoliceSharpIcon  className="navbar-item left-item"/>
+      <Typography.Title className="navbar-item">Dashboard</Typography.Title>
+      <Space className="navbar-item right-item">
         <Badge count={comments.length} dot>
           <MailOutlined
             style={{ fontSize: 24 }}

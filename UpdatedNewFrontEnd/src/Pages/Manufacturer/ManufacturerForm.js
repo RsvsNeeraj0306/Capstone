@@ -70,7 +70,7 @@ const ManufacturerForm = () => {
 
 
   return (
-    <div className="form-container">
+    <div className="form-container" style={{'top': '80%'}}>
       <h2 className="form-label">Add Manufaturer</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
@@ -115,7 +115,7 @@ const ManufacturerForm = () => {
             <option value="Hardware">Hardware</option>
           </select>
         </label>
-        <button type="submit" disabled={isFormComplete()}>
+        <button type="submit" disabled={isFormComplete()} className="form-button">
           Add Manufacturer
         </button>
 

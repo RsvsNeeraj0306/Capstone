@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './RenewSoftwareForm.css'; // Import the RenewSoftwareForm.css file
 import { ToastContainer, toast } from 'react-toastify';
 
 const SoftwareAnalysisForm = ({ onAnalysis }) => {
@@ -86,7 +85,7 @@ const softwareOptions = software.map((software) => (
   
 
   return (
-    <div className="form-container">
+    <div className="form-container" style={{'top': '80%'}}>
       <h2>Software Analysis</h2>
       <form onSubmit={handleAnalysisSubmit}>
         <label>
@@ -105,7 +104,7 @@ const softwareOptions = software.map((software) => (
           Active Users:
           <input
             type="text"
-            className="custom-textfield" // Use the class from RenewSoftwareForm.css
+            className="form-input" // Use the class from RenewSoftwareForm.css
             value={activeUsers}
             onChange={(e) => setActiveUsers(e.target.value)}
           />
@@ -114,7 +113,7 @@ const softwareOptions = software.map((software) => (
           Average Time Usage:
           <input
             type="text"
-            className="custom-textfield" // Use the class from RenewSoftwareForm.css
+            className="form-input" // Use the class from RenewSoftwareForm.css
             value={averageTimeUsage}
             onChange={(e) => setAverageTimeUsage(e.target.value)}
           />
@@ -123,15 +122,13 @@ const softwareOptions = software.map((software) => (
           Company Rating:
           <input
             type="text"
-            className="custom-textfield" // Use the class from RenewSoftwareForm.css
+            className="form-input"
             value={companyRating}
             onChange={(e) => setCompanyRating(e.target.value)}
           />
         </label>
-        <button type="submit" className="custom-button">Set Software Analysis</button>
+        <button type="submit"  className="form-button">Set Software Analysis</button>
       </form>
-      <div className="message">{message}</div>
-     
     </div>
   );
 };

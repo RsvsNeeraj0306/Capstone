@@ -21,6 +21,7 @@ import com.first.capstone.entity.Software;
 import com.first.capstone.entity.SoftwareAnalysis;
 import com.first.capstone.entity.SoftwareLicenseHistory;
 import com.first.capstone.entity.SoftwareRMA;
+import com.first.capstone.respositories.SoftwareLicenseHistoryRepository;
 import com.first.capstone.respositories.SoftwareRepository;
 
 import com.first.capstone.services.SoftwareService;
@@ -84,10 +85,10 @@ public class SoftwareController {
             return softwareService.getSoftwareLessThanZeroDays();
     }
 
-    @PostMapping("/refund")
-    public ResponseEntity<SoftwareRMA> refundSoftware(@RequestBody SoftwareDeviceDTO refundRequest) {
-        return softwareService.refundSoftware(refundRequest);
-    }
+    // @PostMapping("/refund")
+    // public ResponseEntity<SoftwareRMA> refundSoftware(@RequestBody SoftwareDeviceDTO refundRequest) {
+    //     return softwareService.refundSoftware(refundRequest);
+    // }
 
     @PostMapping("/analysis")
     public ResponseEntity<SoftwareAnalysis> analysisSoftware(@RequestBody SoftwareDeviceDTO analysisRequest) {
@@ -104,9 +105,9 @@ public class SoftwareController {
         return softwareService. getLicenseHistory();
     }
 
-    @GetMapping("/getSoftwareRMA")
-    public List<SoftwareRMA> getSoftwareRMA() {
-        return softwareService.getRefundSoftware();
+    @GetMapping("/count")
+    public List<SoftwareLicenseHistoryRepository.ActionCount> countActions() {
+        return softwareService.countActions();
     }
 
 

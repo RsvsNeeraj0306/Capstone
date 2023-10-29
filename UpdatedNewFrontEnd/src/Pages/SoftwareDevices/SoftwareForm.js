@@ -128,7 +128,7 @@ const SoftwareForm = () => {
     };
 
     return (
-      <div className="form-container">
+      <div className="form-container" style={{'top': '105%'}}>
         <h2 className="form-label">Add Software</h2>
         <form onSubmit={handleSubmit}>
           <label className="form-label">
@@ -243,9 +243,7 @@ const SoftwareForm = () => {
           <button type="submit" disabled={isSubmitDisabled()} className="form-button">
             Add Software
           </button>
-          {error && <div className="form-error">{error}</div>}
         </form>
-        <div className="form-message">{responseMessage}</div>
 
         <ToastContainer
           position="top-right"

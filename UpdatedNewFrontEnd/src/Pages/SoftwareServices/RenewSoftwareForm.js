@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import './RenewSoftwareForm.css';
+
 import { toast } from 'react-toastify';
 
 
@@ -10,6 +10,7 @@ const RenewSoftwareForm = ({ onRenew }) => {
   const [expiryDate, setExpiryDate] = useState('');
   const [licenseKey, setLicenseKey] = useState('');
   const [message, setMessage] = useState('');
+  
 
   const [software, setSoftware] = useState([]);
 
@@ -88,7 +89,7 @@ const softwareOptions = software.map((software) => (
 ));
 
   return (
-    <div className="form-container"> 
+    <div className="form-container" style={{'top': '80%'}}> 
       <h2>Renew Software</h2>
       <form onSubmit={handleRenewSubmit}>
         <label>
@@ -107,7 +108,7 @@ const softwareOptions = software.map((software) => (
           Purchase Date:
           <input
             type="date"
-            className="custom-textfield" 
+            className="form-input"
             value={purchaseDate}
             onChange={(e) => setPurchaseDate(e.target.value)}
           />
@@ -116,7 +117,7 @@ const softwareOptions = software.map((software) => (
           Expiry Date:
           <input
             type="date"
-            className="custom-textfield" 
+            className="form-input"
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
           />
@@ -125,12 +126,12 @@ const softwareOptions = software.map((software) => (
           License Key:
           <input
             type="text"
-            className="custom-textfield" 
+            className="form-input"
             value={licenseKey}
             onChange={(e) => setLicenseKey(e.target.value)}
           />
         </label>
-        <button type="submit" className="custom-button">Renew Software</button> {/* Apply the CSS class */}
+        <button type="submit"  className="form-button">Renew Software</button> {/* Apply the CSS class */}
       </form>
       <div className="message">
         {message}

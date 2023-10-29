@@ -41,17 +41,7 @@ public class Software {
     @Override
     public String toString() {
         return "Software{" +
-                "id=" + id +
-                ", manufacturer=" + manufacturer +
-                ", softwareName='" + softwareName + '\'' +
-                ", purchaseDate=" + purchaseDate +
-                ", expiryDate=" + expiryDate +
-                ", typeOfPlan='" + typeOfPlan + '\'' +
-                ", licenseKey='" + licenseKey + '\'' +
-                ", quantity=" + quantity +
-                ", version='" + version + '\'' +
-                ", priceOfSoftware=" + priceOfSoftware +
-                '}';
+                "id=" + id;
     }
 
 }

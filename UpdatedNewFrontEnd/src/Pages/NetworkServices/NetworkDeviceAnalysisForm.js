@@ -19,7 +19,23 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
 
     const handleSetAnalysis = async (e) => {
         e.preventDefault();
-
+    
+        // Regular expression to check if the company rating is between 1 and 5.
+        const ratingPattern = /^[1-5]$/;
+    
+        // Regular expression to check if the active time is in hours (e.g., 1.5, 2, 3.5).
+        const activeTimePattern = /^\d+(\.\d+)?$/;
+    
+        if (!ratingPattern.test(companyRating)) {
+            toast.error('Company Rating must be a number between 1 and 5.');
+            return;
+        }
+    
+        if (!activeTimePattern.test(averageTimeUsage)) {
+            toast.error('Active Time must be a valid number in hours (e.g., 1.5, 2, 3.5).');
+            return;
+        }
+    
         const analysisData = {
             networkDevice: {
                 id: networkDeviceId,
@@ -30,7 +46,7 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
                 companyRating,
             },
         };
-
+    
         try {
             const response = await fetch('http://localhost:8080/api/setAnalysis', {
                 method: 'POST',
@@ -40,22 +56,20 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
                 },
                 body: JSON.stringify(analysisData),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 toast.success('Analysis done successfully!');
-            }
-            else {
+            } else {
                 toast.error('Failed to set analysis. Please check the network device ID.');
             }
         } catch (error) {
             console.error('Error:', error);
-           
-
         }
+    
         resetForm();
-     
-    };
+    };    
 
     useEffect(() => {
         const fetchNetworkDevices = async () => {
@@ -84,7 +98,7 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
     ));
 
     return (
-        <div className="form-container">
+        <div className="form-container" style={{'top': '70%'}}>
             <h3> Network Device Analysis</h3>
             <form onSubmit={handleSetAnalysis}>
                 <div>
@@ -112,7 +126,7 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
                     />
                 </div>
                 <div >
-                    <label>Average Time Usage</label>
+                    <label>Average Time Usage(Hours)</label>
                     <input
                         type="text"
                         className="form-control"
@@ -121,19 +135,26 @@ function NetworkDeviceAnalysisForm({ onSetNetworkDeviceAnalysis }) {
                         onChange={(e) => setAverageTimeUsage(e.target.value)}
                     />
                 </div>
-                <div >
-                    <label>Company Rating</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="companyRating"
-                        value={companyRating}
-                        onChange={(e) => setCompanyRating(e.target.value)}
-                    />
-                 <br />
-                 <br />
-                </div>
-                <button type="submit" >Set Analysis</button>
+                <br />
+                <div>
+    <label>Company Rating</label>
+    <select
+        className="form-control"
+        id="companyRating"
+        value={companyRating}
+        onChange={(e) => setCompanyRating(e.target.value)}
+    >
+        <option value="">Select Rating</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <br />
+    <br />
+</div>
+                <button type="submit"   className="form-button">Set Analysis</button>
             </form>
 
         </div>

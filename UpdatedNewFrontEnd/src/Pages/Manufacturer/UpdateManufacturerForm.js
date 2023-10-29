@@ -77,7 +77,7 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
   };
   
   return (
-    <div className="form-container">
+    <div className="form-container" style={{'top': '80%'}}>
       <h2 className="form-label">Update Manufacturer</h2>
       {successMessage && <p className="success-message">{successMessage}</p>}
       <form onSubmit={handleSubmit}>
@@ -123,7 +123,7 @@ const UpdateManufacturerForm = ({ selectedManufacturerId }) => {
             <option value="Hardware">Hardware</option>
           </select>
         </label>
-        <button type="submit" disabled={isFormComplete()}>
+        <button type="submit" disabled={isFormComplete()} className="form-button">
           Update Manufacturer
         </button>
       </form>
