@@ -1,61 +1,81 @@
-# Software Requirement Specification (SRS)
+# License Management System (LMS)
 
-## Project: License Lifecycle Management (LLM) Application
+## Table of Contents
+1. [System Overview](#system-overview)
+2. [Repository Links](#repository-links)
+3. [Functional Requirements](#functional-requirements)
+4. [Additional Features](#additional-features)
+5. [Related Documents](#related-documents)
+6. [Technology Stack](#technology-stack)
+7. [Key Features](#key-features)
+8. [Getting Started](#getting-started)
+9. [Testing and Quality Assurance](#testing-and-quality-assurance)
+10. [Data Visualization](#data-visualization)
 
-### Table of Contents
-1. [Introduction](#1-introduction)
-2. [Project Description](#2-project-description)
-3. [Functional Requirements](#3-functional-requirements)
-4. [Dev/Execution Platform](#4-devexecution-platform)
-5. [References](#5-references)
-6. [Remarks](#6-remarks)
+## System Overview
+The License Management System (LMS) is a web-based application designed to assist enterprises in effectively managing their network devices and software licenses. LMS provides a user-friendly dashboard for real-time monitoring of license statuses, automated email notifications to remind users about expiring licenses, and a user interface for easy license status updates.
 
----
+## Repository Links
+- [Frontend Repository]([UpdatedNewFrontEnd/src](https://github.com/RsvsNeeraj0306/Capstone/tree/main/UpdatedNewFrontEnd/src))
+- [Backend Repository]([https://github.com/exampleuser/lms-backend](https://github.com/RsvsNeeraj0306/Capstone/tree/main/zipFiles/capstone/src))
 
-### 1. Introduction
-This document serves as a Software Requirement Specification (SRS) for the License Lifecycle Management (LLM) Application. The purpose of this application is to track and manage the license details of network devices and software within an enterprise.
+## Functional Requirements
+- [x] Ability to track network devices and software licenses within an organization.
+- [x] Automatic email notifications sent at regular intervals to alert users about impending license expirations.
+- [x] A responsive user interface dashboard for tracking and managing license statuses.
+- [x] User-friendly interface for updating license statuses.
 
-### 2. Project Description
-- **Author/Owner:** Vignesh
-- **Project Name:** LLM
-- **Description:** Build an app to track license details of network devices and software.
-  
-### 3. Functional Requirements
-The LLM Application must fulfill the following functional requirements:
+## Additional Features
+- [x] Automated notifications for impending license expirations to ensure timely renewal.
+- [x] Comprehensive maintenance of essential information, including device IDs, purchase dates, expiration dates, and renewal requirements.
+- [x] Holistic license and lifecycle management to track the current status and lifecycle stage (e.g., commissioning, relocation, return merchandise authorization).
 
-#### 3.1. License Tracking
-- The application shall provide the capability to track devices and software licenses within an enterprise.
-- Information to be tracked includes device/software name, device ID, date of purchase, dates of expiry, and the need to renew.
+## Related Documents
+- [x] [Backend API Documentation](https://github.com/exampleuser/lms-backend/docs/api.md)
+- [x] [Detailed Requirement Specifications](https://github.com/exampleuser/lms-requirements)
+- [x] [Frontend Documentation](https://github.com/exampleuser/lms-frontend/docs/frontend.md)
+- [x] [Code Coverage Report](https://github.com/exampleuser/lms-backend/coverage-report.png)
+- [x] [Database Schema](https://github.com/exampleuser/lms-backend/db-schema.png)
 
-#### 3.2. Email Notifications
-- The application shall send email notifications at regular intervals to remind users about license expiry.
+## Technology Stack
+- **Frontend**: React, JavaScript, Material-UI components, Sass
+- **Backend**: Java 11, Spring Boot
+- **Database**: MySQL
+- **Testing Frameworks**: Mockito, Selenium
+- **Data Visualization Libraries**: Chart.js
 
-#### 3.3. User Interface (UI) Dashboard
-- The application shall maintain a UI dashboard for tracking the license status of devices and software.
-- The dashboard should display all entries and provide filters for easy searching.
+## Key Features
+1. **Device and Software Tracking**: Maintain a comprehensive record of network devices and software licenses. Capture relevant details such as device/software name, license number, vendor name, purchase date, expiry date, and more.
 
-#### 3.4. License Status Update
-- The application shall offer a UI interface to update the status of licenses.
-- Users should be able to mark licenses as renewed or expired through the UI.
+2. **Email Notifications**: Automatically send email notifications at predefined intervals to remind users about upcoming license expirations. Empower users to take timely actions for license renewal.
 
-#### 3.5. License Lifecycle Management
-- The application shall manage the entire lifecycle of licenses, including tracking the current status and lifecycle stage (e.g., commissioned, deployed to another location, RMA).
-  
-### 4. Dev/Execution Platform
-- **Programming Language:** Java 11
-- **Framework:** Spring Boot 2.7.13
-- **User Interface:** React
+3. **User-Friendly Dashboard**: Access an aesthetically pleasing dashboard that offers a quick overview of current license statuses. Quickly identify active, expired, or soon-to-expire licenses.
 
-### 5. References
-- No specific reference documents or videos mentioned.
+4. **License Status Updates**: Effortlessly update license statuses through the intuitive user interface. Mark licenses as active, expired, or with custom status labels.
 
-### 6. Remarks
-- The backend of the application should generate notifications if a license is expiring.
-- The application should maintain crucial information such as device ID, date of purchase, dates of expiry, and the need for renewal.
-- License management and lifecycle tracking are essential components of this application.
-- The application must provide Swagger documentation for API endpoints.
-- A React-based user interface is mandatory for the frontend.
+5. **License Expiration Alerts**: LMS automatically detects licenses nearing expiration based on expiry dates. Generate notifications for administrators and relevant stakeholders.
 
----
+## Getting Started
+To initiate your journey with the License Management System (LMS), follow these steps:
 
-This Software Requirement Specification (SRS) provides an overview of the License Lifecycle Management (LLM) Application's objectives and functional requirements. It serves as a guide for development and ensures that all stakeholders are aligned with the project's goals.
+1. **Repository Cloning**: Clone the LMS GitHub repositories to your local development environment.
+
+2. **Backend Configuration**:
+   - Set up your MySQL database and configure the database connection in the Spring Boot application.properties file.
+   - Adjust email settings in the application.properties file, including SMTP server details and email credentials.
+
+3. **Run the Backend**: Launch the Spring Boot backend by executing the main application class. The LMS backend operates on port 8080, accessible at `http://localhost:8080` or your server-specific URL.
+
+4. **Frontend Configuration**:
+   - Navigate to the `frontend` directory.
+   - Install frontend dependencies using `npm install`.
+   - Configure the backend API URL in the frontend code as required.
+
+5. **Frontend Execution**: Start the React frontend by running `npm start`.
+
+6. **Access the Application**: Open your web browser and navigate to the URL where the frontend is hosted (typically `http://localhost:3000` by default).
+
+## Testing and Quality Assurance
+The License Management System employs Mockito for unit testing to ensure application reliability and correctness. Selenium is utilized for visual testing to confirm proper rendering of UI components.
+
+
