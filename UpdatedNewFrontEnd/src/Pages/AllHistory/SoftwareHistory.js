@@ -29,8 +29,6 @@ function SoftwareHistory() {
     
     return (
         <TableContainer sx={{ maxHeight: 440 }}>
-        <Typography.Title level={4}>Software History</Typography.Title>
-         <TableContainer sx={{ maxHeight: 440 }}>
          <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                 <TableRow>
@@ -62,7 +60,6 @@ function SoftwareHistory() {
                 ))}
                 </TableBody>
             </Table>
-        </TableContainer>
         </TableContainer>
     );
     }

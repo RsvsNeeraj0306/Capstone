@@ -106,7 +106,10 @@ function Dashboard() {
             </div>
           </div>
           <Space>
+          <br />
+          <br />
             <RecentOrders />
+          
             <DashboardChart />
           </Space>
         </Space>
@@ -121,21 +124,40 @@ function RecentOrders() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    getOrders().then((res) => {
-      setDataSource(res.products.splice(0, 3));
-      setLoading(false);
-    });
+    fetch("http://localhost:8080/api/getTop5Software",
+    {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const dataSource = data.map((item) => ({
+          softwareName: item.softwareName,
+          quantity: item.quantity,
+          priceOfSoftware: item.priceOfSoftware,
+          purchaseDate: item.purchaseDate,
+          licenseKey: item.licenseKey,
+        }));
+
+        setDataSource(dataSource);
+        setLoading(false);
+      })
+
+      .catch((error) => {
+        console.error("Error fetching recent orders:", error);
+        setLoading(false);
+      });
   }, []);
 
-  return (
+   return (
     <>
-      <Typography.Text>Recent Orders</Typography.Text>
+      <Typography.Title level={4}>Recent Orders</Typography.Title>
       <Table
         columns={[
           {
             title: "Title",
-            dataIndex: "title",
+            dataIndex: "softwareName",
           },
           {
             title: "Quantity",
@@ -143,7 +165,15 @@ function RecentOrders() {
           },
           {
             title: "Price",
-            dataIndex: "discountedPrice",
+            dataIndex: "priceOfSoftware",
+          },
+          {
+            title: "Purchase Date",
+            dataIndex: "purchaseDate",
+          },
+          {
+            title: "License Key",
+            dataIndex: "licenseKey",
           },
         ]}
         loading={loading}
@@ -153,6 +183,8 @@ function RecentOrders() {
     </>
   );
 }
+
+
 function DashboardChart() {
   const [actionData, setActionData] = useState({
     labels: [],
@@ -161,11 +193,16 @@ function DashboardChart() {
 
   useEffect(() => {
     // Fetch data from your API endpoint for action counts
-    fetch("YOUR_ACTION_COUNT_API_ENDPOINT")
+    fetch("http://localhost:8080/api/count",
+    {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
       .then((response) => response.json())
       .then((data) => {
         const labels = data.map((item) => item.actionType);
-        const counts = data.map((item) => item.count);
+        const counts = data.map((item) => item.actionCount);
 
         const actionChartData = {
           labels,
@@ -193,7 +230,7 @@ function DashboardChart() {
       },
       title: {
         display: true,
-        text: "Action Counts",
+        text: "License",
       },
     },
   };

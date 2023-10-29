@@ -30,8 +30,6 @@ function ManufacturerHistory() {
     
     return (
         <TableContainer sx={{ maxHeight: 440 }}>
-        <Typography.Title level={4}>Manufacturer History</Typography.Title>
-         <TableContainer sx={{ maxHeight: 440 }}>
          <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                 <TableRow>
@@ -56,7 +54,6 @@ function ManufacturerHistory() {
                 ))}
             </TableBody>
             </Table>
-        </TableContainer>
         </TableContainer>
     );
 }

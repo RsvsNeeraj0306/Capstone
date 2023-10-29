@@ -50,10 +50,9 @@ const NetworkDeviceRMATable = () => {
         if (response.status === 200) {
           // If the delete is successful, update the table by filtering out the deleted entry
           setNetworkDeviceRMAData((prevData) =>
-            prevData.filter((entry) => entry.id !== deletingEntryId)
+            prevData.filter((entry) => entry.id !== deletingEntryId),
           );
-          // Show a success toast notification
-          toast.success('Entry deleted successfully');
+
         } else {
           console.error('Error deleting entry');
           // Show an error toast notification

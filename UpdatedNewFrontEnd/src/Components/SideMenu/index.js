@@ -12,6 +12,7 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import HistoryIcon from '@mui/icons-material/History';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+import InsightsIcon from '@mui/icons-material/Insights';
 
 
 import './SideMenu.css'
@@ -73,6 +74,12 @@ function SideMenu() {
             label:"RMA",
             key:"/NetworkDeviceRMATable",
             icon: <BookmarkAddedIcon />
+          },
+          {
+            label:"Statistics",
+            key:"/AnalyseTable",
+            icon:<InsightsIcon />
+
           },
 
           {

@@ -24,6 +24,9 @@ public interface SoftwareRepository extends JpaRepository<Software, Long> {
  
     @Query("SELECT s FROM Software s WHERE s.expiryDate > :today")
     List<Software> findNonExpiredSoftware(@Param("today") LocalDate today);
+    
+    List<Software> findTop5ByOrderByIdDesc();
+
 
 
 

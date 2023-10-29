@@ -21,6 +21,8 @@ import ManufacturerHistory from "../../Pages/AllHistory/ManufacturerHistory";
 import SoftwareHistory from "../../Pages/AllHistory/SoftwareHistory";
 import LoginPage from "../../Pages/Login/LoginPage";
 import NetworkDeviceRMATable from "../../Pages/RMA/NetworkDeviceRMATable";
+import AnalyseTable from "../../Pages/SoftwareServices/AnalyseTable";
+import NetworkDeviceAnalysisTable from "../../Pages/NetworkServices/ NetworkDeviceAnalysisTable";
 
 
 
@@ -49,6 +51,8 @@ function AppRoutes() {
       <Route path='/SoftwareHistory' element={<SoftwareHistory />}></Route>
       <Route path='/login' element={<LoginPage />}></Route>
       <Route path='/NetworkDeviceRMATable' element={<NetworkDeviceRMATable />}></Route>
+      <Route path='/AnalyseTable' element={<AnalyseTable />}></Route>
+      <Route path='/NetworkDeviceAnalysisTable' element={<NetworkDeviceAnalysisTable />}></Route>
     </Routes>
   );
 }

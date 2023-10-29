@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -108,6 +109,11 @@ public class SoftwareController {
     @GetMapping("/count")
     public List<SoftwareLicenseHistoryRepository.ActionCount> countActions() {
         return softwareService.countActions();
+    }
+
+    @GetMapping("/getTop5Software")
+    public List<Software> getTop5Software() {
+        return softwareService.getTop5Software();
     }
 
 

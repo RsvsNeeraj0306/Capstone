@@ -333,5 +333,10 @@ public class SoftwareService {
         return softwareLicenseHistoryRepository.countActions();
     }
 
+    public List<Software> getTop5Software() {
+        return softwareRepository.findTop5ByOrderByIdDesc();
+    }
+
+
 
 }

@@ -49,7 +49,6 @@ function AllHistory(){
                 {activeTab === "AllHistory" && (
      
                  <TableContainer sx={{ maxHeight: 440 }}>
-                       <Typography.Title level={4}>NetworkDevice History</Typography.Title>
                  <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>

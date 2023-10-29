@@ -129,7 +129,7 @@ public class NetworkDeviceService {
            
             networkDeviceAnalysisRepository.deleteByNetworkDeviceId(networkDevice.get().getId());
             networkDeviceRMARepository.deleteByNetworkDeviceId(networkDevice.get().getId());
-             networkDeviceRepository.deleteById(networkDevice.get().getId());
+            networkDeviceRepository.deleteById(networkDevice.get().getId());
 
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Network device deleted successfully");
@@ -205,6 +205,7 @@ public class NetworkDeviceService {
         Optional<NetworkDeviceRMA> networkDeviceRMA = networkDeviceRMARepository.findById(id);
         if (networkDeviceRMA.isPresent()) {
             networkDeviceRMARepository.deleteById(networkDeviceRMA.get().getId());
+            networkDeviceAnalysisRepository.deleteByNetworkDeviceId(id);
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseBody("Network device RMA deleted successfully");
             return ResponseEntity.ok(responseDTO);
